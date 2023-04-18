@@ -23,15 +23,15 @@ import getApplyJob, {
     deleteJobList,
     deleteApplyJob
 } from "helpers/fakebackend_helper";
-
+import { GET_JOB_LIST_URL } from "helpers/url_helper";
 function* fetchJobsList() {
     try {
-        console.log("asdad")
-        const response = yield call(getJobList)
-        yield put(getJobListSuccess(response))
-    } catch (error) {
+        const allJobs = yield call(getRequestData, GET_JOB_LIST_URL)
+        console.log("allJobs", allJobs)
+        yield put(getJobListSuccess(allJobs))
+      } catch (error) {
         yield put(getJobListFail(error))
-    }
+      }
 }
 
 function* onAddNewJobList({ payload: data }) {
