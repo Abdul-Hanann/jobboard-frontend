@@ -5,7 +5,7 @@ import accessToken from "./jwt-token-access/accessToken";
 const token = accessToken;
 
 //apply base url for axios
-const API_URL = "";
+const API_URL = "http://localhost:8080/";
 
 const axiosApi = axios.create({
   baseURL: API_URL,
@@ -19,9 +19,18 @@ axiosApi.interceptors.response.use(
 );
 
 export async function get(url, config = {}) {
-  return await axiosApi
-    .get(url, { ...config })
-    .then((response) => response.data);
+  console.log(url)
+  axios.get('http://localhost:8080/jobs')
+  .then((response) => response.data)
+    // console.log(response.data);
+    // console.log(response.status);
+    // console.log(response.statusText);
+    // console.log(response.headers);
+    // console.log(response.config);
+  // });
+  // return await axiosApi
+  //   .get(url, { ...config })
+  //   .then((response) => console.log("data:",(response.data)));
 }
 
 export async function post(url, data, config = {}) {

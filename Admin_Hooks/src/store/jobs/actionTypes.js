@@ -1,4 +1,4 @@
-export const GET_JOB_LIST = "GET_JOBLIST"
+export const GET_JOB_LIST = "GET_JOB_LIST"
 export const GET_JOB_LIST_FAIL = "GET_JOB_LIST_FAIL"
 export const GET_JOB_LIST_SUCCESS = "GET_JOB_LIST_SUCCESS"
 export const ADD_NEW_JOB_LIST = "ADD_NEW_JOB_LIST"

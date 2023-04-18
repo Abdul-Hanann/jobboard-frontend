@@ -16,17 +16,17 @@ import {
     deleteApplyJobFail
 } from "./actions"
 
-import {
+import getApplyJob, {
     getJobList,
     addNewJobList,
     updateJobList,
     deleteJobList,
-    getApplyJob,
     deleteApplyJob
 } from "helpers/fakebackend_helper";
 
 function* fetchJobsList() {
     try {
+        console.log("asdad")
         const response = yield call(getJobList)
         yield put(getJobListSuccess(response))
     } catch (error) {

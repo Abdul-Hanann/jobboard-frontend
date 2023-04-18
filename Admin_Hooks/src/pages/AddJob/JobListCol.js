@@ -10,22 +10,19 @@ const JobName = (cell) => {
     return cell.value ? cell.value : "";
 };
 
-const JobDate = (cell) => {
+const RequestedDate = (cell) => {
     return cell.value ? cell.value : "";
 };
 
-const JobNoOfDays = (cell) => {
+const NoOfDays = (cell) => {
     return cell.value ? cell.value : "";
 };
 
-const JobSiteId = (cell) => {
+const NotesAboutJobs = (cell) => {
     return cell.value ? cell.value : "";
 };
 
-const JobNotes = (cell) => {
-    return cell.value ? cell.value : "";
-};
-const JobWBS = (cell) => {
+const ScheduledDays = (cell) => {
     return cell.value ? cell.value : "";
 };
 
@@ -62,4 +59,4 @@ const JobWBS = (cell) => {
 // };
 
 
-export {JobName, JobDate, JobNoOfDays, JobSiteId, JobNotes, JobWBS };
+export { JobName, RequestedDate, NoOfDays, NotesAboutJobs, ScheduledDays};

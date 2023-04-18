@@ -273,13 +273,15 @@ const Navbar = props => {
                     {/* <div className="arrow-down"></div> */}
                   </Link>
                   {/* <div className={classname("dropdown-menu", { show: app })}>
-                    <Link to="/calendar" className="dropdown-item">
-                      {props.t("Calendar")}
+                    <Link to="/addjob" className="dropdown-item">
+                      {/* {props.t("Calendar")} */}
+                      {/* Add Job
                     </Link>
-                    <Link to="/chat" className="dropdown-item">
-                      {props.t("Chat")}
-                    </Link>
-                    <Link to="/apps-filemanager" className="dropdown-item">
+                    <Link to="/joblist" className="dropdown-item"> */}
+                      {/* {props.t("Chat")} */}
+                      {/* Job List
+                    </Link> */} 
+                   {/* <Link to="/apps-filemanager" className="dropdown-item">
                       {props.t("File Manager")}
                     </Link>
                     <div className="dropdown">
@@ -604,8 +606,8 @@ const Navbar = props => {
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </div> */}
+                    </div>*/}
+                  {/* </div>  */}
                 </li>
 
                 <li className="nav-item dropdown">
@@ -959,7 +961,7 @@ const Navbar = props => {
                 <li className="nav-item dropdown">
                   <Link
                     className="nav-link dropdown-toggle arrow-none"
-                    to="/#"
+                    to="/useradmin"
                     // onClick={e => {
                     //   e.preventDefault();
                     //   setextra(!extra);

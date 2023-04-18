@@ -1,3 +1,4 @@
+const baseUrl = process.env.REACT_APP_API_ENDPOINT
 //REGISTER
 export const POST_FAKE_REGISTER = "/post-fake-register";
 
@@ -65,8 +66,8 @@ export const GET_INVOICES = "/invoices";
 export const GET_INVOICE_DETAIL = "/invoice";
 
 // JOBS
-export const GET_JOB_LIST = "/jobs";
-export const ADD_NEW_JOB_LIST = "/add/job";
+export const GET_JOB_LIST = baseUrl + "/jobs";
+export const ADD_NEW_JOB_LIST = baseUrl + "/add/job";
 export const UPDATE_JOB_LIST = "/update/job";
 export const DELETE_JOB_LIST = "/delete/job";
 

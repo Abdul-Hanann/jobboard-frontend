@@ -5,13 +5,11 @@ import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import TableContainer from 'components/Common/TableContainer';
 import * as Yup from "yup";
 import { useFormik } from "formik";
-// import { jobs } from "common/data";
+import { jobs } from "common/data";
 
 //import components
 import Breadcrumbs from 'components/Common/Breadcrumb';
 import DeleteModal from 'components/Common/DeleteModal';
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 
 import {
     getJobList as onGetJobList,
@@ -20,7 +18,7 @@ import {
     deleteJobList as onDeleteJobList,
 } from "store/actions";
 
-import { JobName, JobDate, JobNoOfDays, JobSiteId, JobNotes, JobWBS }
+import { JobName, RequestedDate, NoOfDays, NotesAboutJobs, ScheduledDays}
     from "./JobListCol";
 
 //redux
@@ -45,7 +43,7 @@ import {
     DropdownItem,
 } from "reactstrap";
 
-function JobList() {
+function addJob() {
 
     //meta title
     document.title = "Jobs List | SAIT Job Board";
@@ -55,8 +53,6 @@ function JobList() {
 
     const [jobsList, setJobsList] = useState([]);
     const [job, setJob] = useState(null);
-    const dispatch = useDispatch();
-    const { jobs } = useSelector(state => state.JobReducer);
 
     // validation
     const validation = useFormik({
@@ -64,37 +60,40 @@ function JobList() {
         enableReinitialize: true,
 
         initialValues: {
-            // JobNo: (job && job.JobNo) || '',
+            // jobId: (job && job.jobId) || '',
             JobName: (job && job.JobName) || '',
-            JobDate: (job && job.JobDate) || '',
-            JobNoOfDays: (job && job.JobNoOfDays) || '',
-            JobSiteId: (job && job.JobSiteId) || '',
-            JobNotes: (job && job.JobNotes) || '',
-            JobWBS: (job && job.JobWBS) || '',
+            RequestedDate: (job && job.RequestedDate) || '',
+            NoOfDays: (job && job.NoOfDays) || '',
+            NotesAboutJobs: (job && job.NotesAboutJobs) || '',
+            ScheduledDays: (job && job.ScheduledDays) || '',
+            // type: (job && job.type) || '',
+            // status: (job && job.status) || '',
+
         },
         validationSchema: Yup.object({
-            // JobNo: Yup.string().matches(
+            // jobId: Yup.string().matches(
             //     /[0-9\.\-\s+\/()]+/,
             //     "Please Enter Valid Job Id"
             // ).required("Please Enter Your Job Id"),
             JobName: Yup.string().required("Please Enter Your Job Name"),
-            JobDate: Yup.string().required("Please Enter Your Job Date"),
-            JobNoOfDays: Yup.string().required("Please Enter Your Job No of Days"),
-            JobSiteId: Yup.string().required("Please Enter Your Job Site ID"),
-            JobNotes: Yup.string().required("Please Enter Your Job Notes"),
-            JobWBS: Yup.string().required("Please Enter Your JobWBS"),
+            RequestedDate: Yup.string().required("Please Enter Your ComJob Requested Date"),
+            NoOfDays: Yup.string().required("Please Enter Your Job No of Days"),
+            NotesAboutJobs: Yup.string().required("Please Enter notwes about Jobs"),
+            ScheduledDays: Yup.string().required("Please Enter scheduled days"),
+            // type: Yup.string().required("Please Enter Your Type"),
+            // status: Yup.string().required("Please Enter Your Status"),
         }),
         onSubmit: (values) => {
             if (isEdit) {
                 const updateJobList = {
-                    id: job ? job.id : 0,
-                    // JobNo: values.JobNo,
+                    // id: job ? job.id : 0,
+                    // jobId: values.jobId,
                     JobName: values.JobName,
-                    JobDate: values.JobDate,
-                    JobNoOfDays: values.JobNoOfDays,
-                    JobSiteId: values.JobSiteId,
-                    JobNotes: values.JobNotes,
-                    JobWBS: values.JobWBS,
+                    RequestedDate: values.RequestedDate,
+                    NoOfDays: values.NoOfDays,
+                    NotesAboutJobs: values.NotesAboutJobs,
+                    ScheduledDays: values.ScheduledDays,
+                    // type: values.type,
                     // postedDate: "02 June 2021",
                     // lastDate: "25 June 2021",
                     // status: values.status,
@@ -104,14 +103,14 @@ function JobList() {
                 validation.resetForm();
             } else {
                 const newJobList = {
-                    id: Math.floor(Math.random() * (30 - 20)) + 20,
-                    // JobNo: values["JobNo"],
+                    // id: Math.floor(Math.random() * (30 - 20)) + 20,
+                    // jobId: values["jobId"],
                     JobName: values["JobName"],
-                    JobDate: values["JobDate"],
-                    JobNoOfDays: values["JobNoOfDays"],
-                    JobSiteId: values["JobSiteId"],
-                    JobNotes: values["JobNotes"],
-                    JobWBS: values["JobWBS"],
+                    RequestedDate: values["RequestedDate"],
+                    NoOfDays: values["NoOfDays"],
+                    NotesAboutJobs: values["NotesAboutJobs"],
+                    ScheduledDays: values["ScheduledDays"],
+                    // type: values["type"],
                     // postedDate: "02 June 2021",
                     // lastDate: "25 June 2021",
                     // status: values["status"],
@@ -124,11 +123,16 @@ function JobList() {
         },
     });
 
+    const dispatch = useDispatch();
+    const { jobs } = useSelector(state => ({
+        jobs: state.JobReducer.jobs,
+    }));
 
     useEffect(() => {
-    console.log("jobs",jobs)    
-    dispatch(onGetJobList());       
-    }, []);
+        if (jobs && !jobs.length) {
+            dispatch(onGetJobList());
+        }
+    }, [dispatch, jobs]);
 
     useEffect(() => {
         setJobsList(jobs);
@@ -153,14 +157,14 @@ function JobList() {
     const handleJobClick = arg => {
         const job = arg;
         setJob({
-            id: job.id,
-            // JobNo: job.JobNo,
+            // id: job.id,
+            // jobId: job.jobId,
             JobName: job.JobName,
-            JobDate: job.JobDate,
-            JobNoOfDays: job.JobNoOfDays,
-            JobSiteId: job.JobSiteId,
-            JobNotes: job.JobNotes,
-            JobWBS: job.JobWBS,
+            RequestedDate: job.RequestedDate,
+            NoOfDays: job.NoOfDays,
+            NotesAboutJobs: job.NotesAboutJobs,
+            ScheduledDays: job.ScheduledDays,
+            // type: job.type,
             // status: job.status,
         });
 
@@ -208,43 +212,43 @@ function JobList() {
                 }
             },
             {
-                Header: 'Job Date',
-                accessor: 'JobDate',
+                Header: 'Requested Date',
+                accessor: 'RequestedDate',
                 filterable: true,
                 Cell: (cellProps) => {
-                    return <JobDate {...cellProps} />;
+                    return <RequestedDate {...cellProps} />;
                 }
             },
             {
-                Header: 'Job No Of Days',
-                accessor: 'JobNoOfDays',
+                Header: 'No Of Days',
+                accessor: 'NoOfDays',
                 filterable: true,
                 Cell: (cellProps) => {
-                    return <JobNoOfDays {...cellProps} />;
+                    return <NoOfDays {...cellProps} />;
                 }
             },
             {
-                Header: 'Job Site Id',
-                accessor: 'JobSiteId',
+                Header: 'Notes About Jobs',
+                accessor: 'NotesAboutJobs',
                 filterable: true,
                 Cell: (cellProps) => {
-                    return <JobSiteId {...cellProps} />;
+                    return <NotesAboutJobs {...cellProps} />;
                 }
             },
             {
-                Header: 'Job Notes',
-                accessor: 'JobNotes',
+                Header: 'Scheduled Days',
+                accessor: 'ScheduledDays',
                 Cell: (cellProps) => {
-                    return <JobNotes {...cellProps} />;
+                    return <ScheduledDays {...cellProps} />;
                 }
             },
-            {
-                Header: 'Job WBS',
-                accessor: 'JobWBS',
-                Cell: (cellProps) => {
-                    return <JobWBS {...cellProps} />;
-                }
-            },
+            // {
+            //     Header: 'Type',
+            //     accessor: 'type',
+            //     Cell: (cellProps) => {
+            //         return <Type {...cellProps} />;
+            //     }
+            // },
             // {
             //     Header: 'Posted Date',
             //     accessor: 'postedDate',
@@ -267,56 +271,56 @@ function JobList() {
             //         return <Status {...cellProps} />;
             //     }
             // },
-            {
-                Header: 'Action',
-                accessor: 'action',
-                disableFilters: true,
-                Cell: (cellProps) => {
-                    return (
-                        <ul className="list-unstyled hstack gap-1 mb-0">
-                            <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                <Link to="/job-details" className="btn btn-sm btn-soft-primary">
-                                    <i className="mdi mdi-eye-outline" id="viewtooltip"></i></Link>
-                            </li>
-                            <UncontrolledTooltip placement="top" target="viewtooltip">
-                                View
-                            </UncontrolledTooltip>
+            // {
+            //     Header: 'Action',
+            //     accessor: 'action',
+            //     disableFilters: true,
+            //     Cell: (cellProps) => {
+            //         return (
+            //             <ul className="list-unstyled hstack gap-1 mb-0">
+            //                 <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
+            //                     <Link to="/job-details" className="btn btn-sm btn-soft-primary">
+            //                         <i className="mdi mdi-eye-outline" id="viewtooltip"></i></Link>
+            //                 </li>
+            //                 <UncontrolledTooltip placement="top" target="viewtooltip">
+            //                     View
+            //                 </UncontrolledTooltip>
 
-                            <li>
-                                <Link
-                                    to="#"
-                                    className="btn btn-sm btn-soft-info"
-                                    onClick={() => {
-                                        const jobData = cellProps.row.original;
-                                        handleJobClick(jobData);
-                                    }}
-                                >
-                                    <i className="mdi mdi-pencil-outline" id="edittooltip" />
-                                    <UncontrolledTooltip placement="top" target="edittooltip">
-                                        Edit
-                                    </UncontrolledTooltip>
-                                </Link>
-                            </li>
+            //                 <li>
+            //                     <Link
+            //                         to="#"
+            //                         className="btn btn-sm btn-soft-info"
+            //                         onClick={() => {
+            //                             const jobData = cellProps.row.original;
+            //                             handleJobClick(jobData);
+            //                         }}
+            //                     >
+            //                         <i className="mdi mdi-pencil-outline" id="edittooltip" />
+            //                         <UncontrolledTooltip placement="top" target="edittooltip">
+            //                             Edit
+            //                         </UncontrolledTooltip>
+            //                     </Link>
+            //                 </li>
 
-                            <li>
-                                <Link
-                                    to="#"
-                                    className="btn btn-sm btn-soft-danger"
-                                    onClick={() => {
-                                        const jobData = cellProps.row.original;
-                                        onClickDelete(jobData);
-                                    }}
-                                >
-                                    <i className="mdi mdi-delete-outline" id="deletetooltip" />
-                                    <UncontrolledTooltip placement="top" target="deletetooltip">
-                                        Delete
-                                    </UncontrolledTooltip>
-                                </Link>
-                            </li>
-                        </ul>
-                    );
-                }
-            },
+            //                 <li>
+            //                     <Link
+            //                         to="#"
+            //                         className="btn btn-sm btn-soft-danger"
+            //                         onClick={() => {
+            //                             const jobData = cellProps.row.original;
+            //                             onClickDelete(jobData);
+            //                         }}
+            //                     >
+            //                         <i className="mdi mdi-delete-outline" id="deletetooltip" />
+            //                         <UncontrolledTooltip placement="top" target="deletetooltip">
+            //                             Delete
+            //                         </UncontrolledTooltip>
+            //                     </Link>
+            //                 </li>
+            //             </ul>
+            //         );
+            //     }
+            // },
         ],
         []
     );
@@ -336,11 +340,11 @@ function JobList() {
                             <Card>
                                 <CardBody className="border-bottom">
                                     <div className="d-flex align-items-center">
-                                        <h5 className="mb-0 card-title flex-grow-1">Create New Job</h5>
+                                        <h5 className="mb-0 card-title flex-grow-1">Jobs Lists</h5>
                                         <div className="flex-shrink-0">
-                                            <Link to="#!" onClick={() => setModal(true)} className="btn btn-primary me-1">Create New Job</Link>
-                                            {/* <Link to="#!" className="btn btn-light me-1"><i className="mdi mdi-refresh"></i></Link> */}
-                                            {/* <UncontrolledDropdown className="dropdown d-inline-block me-1">
+                                            <Link to="#!" onClick={() => setModal(true)} className="btn btn-primary me-1">Add New Job</Link>
+                                            {/* <Link to="#!" className="btn btn-light me-1"><i className="mdi mdi-refresh"></i></Link>
+                                            <UncontrolledDropdown className="dropdown d-inline-block me-1">
                                                 <DropdownToggle type="menu" className="btn btn-success" id="dropdownMenuButton1">
                                                     <i className="mdi mdi-dots-vertical"></i></DropdownToggle>
                                                 <DropdownMenu>
@@ -352,7 +356,7 @@ function JobList() {
                                         </div>
                                     </div>
                                 </CardBody>
-                                {/* <CardBody>
+                                <CardBody>
                                     <TableContainer
                                         columns={columns}
                                         data={jobs}
@@ -360,9 +364,9 @@ function JobList() {
                                         isAddOptions={false}
                                         handleJobClicks={handleJobClicks}
                                         isJobListGlobalFilter={true}
-                                        customPageSize={1}
+                                        customPageSize={10}
                                     />
-                                </CardBody> */}
+                                </CardBody>
                             </Card>
                         </Col>
                     </Row>
@@ -403,7 +407,7 @@ function JobList() {
                                         <div className="mb-3">
                                             <Label className="form-label">Job Name</Label>
                                             <Input
-                                                name="jobName"
+                                                name="JobName"
                                                 type="text"
                                                 placeholder="Insert Job Name"
                                                 validate={{
@@ -411,131 +415,113 @@ function JobList() {
                                                 }}
                                                 onChange={validation.handleChange}
                                                 onBlur={validation.handleBlur}
-                                                value={validation.values.jobName || ""}
+                                                value={validation.values.JobName || ""}
                                                 invalid={
-                                                    validation.touched.jobName && validation.errors.jobName ? true : false
+                                                    validation.touched.JobName && validation.errors.JobName ? true : false
                                                 }
                                             />
-                                            {validation.touched.jobName && validation.errors.jobName ? (
-                                                <FormFeedback type="invalid">{validation.errors.jobName}</FormFeedback>
+                                            {validation.touched.JobName && validation.errors.JobName ? (
+                                                <FormFeedback type="invalid">{validation.errors.JobName}</FormFeedback>
                                             ) : null}
                                         </div>
-
                                         <div className="mb-3">
-                                            <Label className="form-label">Job Date</Label>
-                                            <DatePicker
-                                                name="JobDate"
-                                                selected={validation.values.JobDate}
-                                                placeholderText="Insert Job Date"
-                                                onChange={(date) => validation.setFieldValue("JobDate", date)}
-                                                onBlur={validation.handleBlur}
-                                                dateFormat="yyyy-MM-dd"
-                                                // showTimeInput
-                                                className={validation.touched.JobDate && validation.errors.JobDate ? "form-control is-invalid" : "form-control"}
-                                            />
-                                            {validation.touched.JobDate && validation.errors.JobDate ? (
-                                                <FormFeedback type="invalid">{validation.errors.JobDate}</FormFeedback>
-                                            ) : null}
-                                        </div>
-
-                                        {/* <div className="mb-3">
-                                            <Label className="form-label"> Job Date</Label>
+                                            <Label className="form-label">Requested Date</Label>
                                             <Input
-                                                name="JobDate"
-                                                type="datetime"
-                                                placeholder="Insert Job Date"
+                                                name="RequestedDate"
+                                                type="text"
+                                                placeholder="Insert Requested Date"
                                                 onChange={validation.handleChange}
                                                 onBlur={validation.handleBlur}
-                                                value={validation.values.JobDate || ""}
+                                                value={validation.values.RequestedDate || ""}
                                                 invalid={
-                                                    validation.touched.JobDate && validation.errors.JobDate ? true : false
+                                                    validation.touched.RequestedDate && validation.errors.RequestedDate ? true : false
                                                 }
                                             />
-                                            {validation.touched.JobDate && validation.errors.JobDate ? (
-                                                <FormFeedback type="invalid">{validation.errors.JobDate}</FormFeedback>
+                                            {validation.touched.RequestedDate && validation.errors.RequestedDate ? (
+                                                <FormFeedback type="invalid">{validation.errors.RequestedDate}</FormFeedback>
                                             ) : null}
-                                        </div> */}
+                                        </div>
                                         <div className="mb-3">
-                                            <Label className="form-label">Job No Of Days</Label>
+                                            <Label className="form-label">No Of Days</Label>
                                             <Input
-                                                name="JobNoOfDays"
-                                                placeholder="Insert Job No Of Days"
+                                                name="NoOfDays"
+                                                placeholder="Insert No Of Days"
                                                 type="text"
                                                 onChange={validation.handleChange}
                                                 onBlur={validation.handleBlur}
-                                                value={validation.values.JobNoOfDays || ""}
+                                                value={validation.values.NoOfDays || ""}
                                                 invalid={
-                                                    validation.touched.JobNoOfDays && validation.errors.JobNoOfDays ? true : false
+                                                    validation.touched.NoOfDays && validation.errors.NoOfDays ? true : false
                                                 }
                                             />
-                                            {validation.touched.JobNoOfDays && validation.errors.JobNoOfDays ? (
-                                                <FormFeedback type="invalid">{validation.errors.JobNoOfDays}</FormFeedback>
+                                            {validation.touched.NoOfDays && validation.errors.NoOfDays ? (
+                                                <FormFeedback type="invalid">{validation.errors.NoOfDays}</FormFeedback>
                                             ) : null}
                                         </div>
                                         <div className="mb-3">
-                                            <Label className="form-label">Job Site Id</Label>
+                                            <Label className="form-label">Notes About Jobs</Label>
                                             <Input
-                                                name="JobSiteId"
+                                                name="NotesAboutJobs"
                                                 type="text"
-                                                placeholder="Insert Job Site Id"
+                                                placeholder="Insert Notes About Jobs"
                                                 onChange={validation.handleChange}
                                                 onBlur={validation.handleBlur}
                                                 value={
-                                                    validation.values.JobSiteId || ""
+                                                    validation.values.NotesAboutJobs || ""
                                                 }
                                                 invalid={
-                                                    validation.touched.JobSiteId && validation.errors.JobSiteId ? true : false
+                                                    validation.touched.NotesAboutJobs && validation.errors.NotesAboutJobs ? true : false
                                                 }
                                             />
-                                            {validation.touched.JobSiteId && validation.errors.JobSiteId ? (
-                                                <FormFeedback type="invalid">{validation.errors.JobSiteId}</FormFeedback>
+                                            {validation.touched.NotesAboutJobs && validation.errors.NotesAboutJobs ? (
+                                                <FormFeedback type="invalid">{validation.errors.NotesAboutJobs}</FormFeedback>
                                             ) : null}
                                         </div>
                                         <div className="mb-3">
-                                            <Label className="form-label">Job Notes</Label>
+                                            <Label className="form-label">Scheduled Days</Label>
                                             <Input
-                                                name="JobNotes"
+                                                name="ScheduledDays"
                                                 type="text"
-                                                placeholder="Insert Job Notes"
+                                                placeholder="Insert Scheduled Days"
                                                 onChange={validation.handleChange}
                                                 onBlur={validation.handleBlur}
-                                                value={validation.values.JobNotes || ""}
+                                                value={validation.values.ScheduledDays || ""}
                                                 invalid={
-                                                    validation.touched.JobNotes && validation.errors.JobNotes ? true : false
+                                                    validation.touched.ScheduledDays && validation.errors.ScheduledDays ? true : false
                                                 }
                                             />
-                                            {validation.touched.JobNotes && validation.errors.JobNotes ? (
-                                                <FormFeedback type="invalid">{validation.errors.JobNotes}</FormFeedback>
+                                            {validation.touched.ScheduledDays && validation.errors.ScheduledDays ? (
+                                                <FormFeedback type="invalid">{validation.errors.ScheduledDays}</FormFeedback>
                                             ) : null}
                                         </div>
-                                        <div className="mb-3">
-                                            <Label className="form-label">Job WBS</Label>
+                                        {/* <div className="mb-3">
+                                            <Label className="form-label">Type</Label>
                                             <Input
-                                                name="JobWBS"
+                                                name="type"
                                                 type="select"
                                                 className="form-select"
                                                 onChange={validation.handleChange}
                                                 onBlur={validation.handleBlur}
                                                 value={
-                                                    validation.values.JobWBS || ""
+                                                    validation.values.type || ""
                                                 }
                                                 invalid={
-                                                    validation.touched.JobWBS && validation.errors.JobWBS
+                                                    validation.touched.type && validation.errors.type
                                                         ? true
                                                         : false
                                                 }
                                             >
-                                                <option>Job 1</option>
-                                                <option>Job 2</option>
-                                                {/* <option>Freelance</option>
-                                                <option>Internship</option> */}
+                                                <option>Full Time</option>
+                                                <option>Part Time</option>
+                                                <option>Freelance</option>
+                                                <option>Internship</option>
 
                                             </Input>
-                                            {validation.touched.JobWBS && validation.errors.JobWBS ? (
-                                                <FormFeedback type="invalid">{validation.errors.JobWBS}</FormFeedback>
+                                            {validation.touched.type && validation.errors.type ? (
+                                                <FormFeedback type="invalid">{validation.errors.type}</FormFeedback>
                                             ) : null}
                                         </div>
-                                        {/* <div className="mb-3">
+                                        <div className="mb-3">
                                             <Label className="form-label">Status</Label>
                                             <Input
                                                 name="status"
@@ -556,8 +542,8 @@ function JobList() {
                                             {validation.touched.status && validation.errors.status ? (
                                                 <FormFeedback status="invalid">{validation.errors.status}</FormFeedback>
                                             ) : null}
-                                        </div> */}
-                                    </Col>
+                                        </div>*/}
+                                    </Col> 
                                 </Row>
                                 <Row>
                                     <Col>
@@ -566,7 +552,7 @@ function JobList() {
                                                 type="submit"
                                                 className="btn btn-success save-user"
                                             >
-                                                Create job
+                                                ADD
                                             </button>
                                         </div>
                                     </Col>
@@ -581,4 +567,4 @@ function JobList() {
 }
 
 
-export default JobList;
+export default addJob;

@@ -75,6 +75,8 @@ import DashboardCrypto from "../pages/Dashboard-crypto/index";
 import Blog from "../pages/Dashboard-Blog/index";
 import DashboardJob from "../pages/DashboardJob/index";
 
+
+import UserAdmin from "../pages/UserAdmin/index"
 //Crypto
 import CryptoWallet from "../pages/Crypto/CryptoWallet/crypto-wallet";
 import CryptoBuySell from "../pages/Crypto/crypto-buy-sell";
@@ -120,6 +122,7 @@ import JobGrid from "../pages/JobPages/JobGrid/index";
 import JobDetails from "../pages/JobPages/JobDetails";
 import JobCategories from "../pages/JobPages/JobCategories";
 import JobList from "../pages/JobList";
+import AddJob from "../pages/AddJob";
 import ApplyJobs from "../pages/JobPages/ApplyJobs/index";
 import CandidateList from "../pages/JobPages/CandidateList";
 import CandidateOverview from "../pages/JobPages/CandidateOverview";
@@ -178,6 +181,8 @@ import ContactsProfile from "../pages/Contacts/ContactsProfile/contacts-profile"
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
   { path: "/joblist", component: <JobList /> },
+  { path: "/addjob", component: <AddJob /> },
+  { path: "/useradmin", component: <UserAdmin /> },
   { path: "/dashboard-saas", component: <DashboardSaas /> },
   { path: "/dashboard-crypto", component: <DashboardCrypto /> },
   { path: "/blog", component: <Blog /> },

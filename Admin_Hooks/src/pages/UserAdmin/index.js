@@ -5,13 +5,11 @@ import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import TableContainer from 'components/Common/TableContainer';
 import * as Yup from "yup";
 import { useFormik } from "formik";
-// import { jobs } from "common/data";
+import { jobs } from "common/data";
 
 //import components
 import Breadcrumbs from 'components/Common/Breadcrumb';
 import DeleteModal from 'components/Common/DeleteModal';
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 
 import {
     getJobList as onGetJobList,
@@ -20,8 +18,8 @@ import {
     deleteJobList as onDeleteJobList,
 } from "store/actions";
 
-import { JobName, JobDate, JobNoOfDays, JobSiteId, JobNotes, JobWBS }
-    from "./JobListCol";
+import {FirstName, LastName, Email, PhoneNo, UserRoles}
+    from "./UserAdminCol";
 
 //redux
 import { useSelector, useDispatch } from "react-redux";
@@ -39,6 +37,7 @@ import {
     Label,
     Card,
     CardBody,
+    FormGroup,
     UncontrolledDropdown,
     DropdownToggle,
     DropdownMenu,
@@ -55,8 +54,6 @@ function JobList() {
 
     const [jobsList, setJobsList] = useState([]);
     const [job, setJob] = useState(null);
-    const dispatch = useDispatch();
-    const { jobs } = useSelector(state => state.JobReducer);
 
     // validation
     const validation = useFormik({
@@ -65,36 +62,36 @@ function JobList() {
 
         initialValues: {
             // JobNo: (job && job.JobNo) || '',
-            JobName: (job && job.JobName) || '',
-            JobDate: (job && job.JobDate) || '',
-            JobNoOfDays: (job && job.JobNoOfDays) || '',
-            JobSiteId: (job && job.JobSiteId) || '',
-            JobNotes: (job && job.JobNotes) || '',
-            JobWBS: (job && job.JobWBS) || '',
+            FirstName: (job && job.FirstName) || '',
+            LastName: (job && job.LastName) || '',
+            Email: (job && job.Email) || '',
+            UserRoles: (job && job.UserRoles) || '',
+            // JobNotes: (job && job.JobNotes) || '',
+            // JobWBS: (job && job.JobWBS) || '',
         },
         validationSchema: Yup.object({
             // JobNo: Yup.string().matches(
             //     /[0-9\.\-\s+\/()]+/,
             //     "Please Enter Valid Job Id"
             // ).required("Please Enter Your Job Id"),
-            JobName: Yup.string().required("Please Enter Your Job Name"),
-            JobDate: Yup.string().required("Please Enter Your Job Date"),
-            JobNoOfDays: Yup.string().required("Please Enter Your Job No of Days"),
-            JobSiteId: Yup.string().required("Please Enter Your Job Site ID"),
-            JobNotes: Yup.string().required("Please Enter Your Job Notes"),
-            JobWBS: Yup.string().required("Please Enter Your JobWBS"),
+            FirstName: Yup.string().required("Please Enter Your First Name"),
+            LastName: Yup.string().required("Please Enter Your Last Date"),
+            Email: Yup.string().required("Please Enter Your Email"),
+            PhoneNo: Yup.string().required("Please Enter Your Phone Number"),
+            UserRoles: Yup.string().required("Please Select Your Role"),
+            // JobWBS: Yup.string().required("Please Enter Your JobWBS"),
         }),
         onSubmit: (values) => {
             if (isEdit) {
                 const updateJobList = {
                     id: job ? job.id : 0,
                     // JobNo: values.JobNo,
-                    JobName: values.JobName,
-                    JobDate: values.JobDate,
-                    JobNoOfDays: values.JobNoOfDays,
-                    JobSiteId: values.JobSiteId,
-                    JobNotes: values.JobNotes,
-                    JobWBS: values.JobWBS,
+                    FirstName: values.FirstName,
+                    LastName: values.LastName,
+                    Email: values.Email,
+                    PhoneNo: values.PhoneNo,
+                    UserRoles: values.UserRoles,
+                    // JobWBS: values.JobWBS,
                     // postedDate: "02 June 2021",
                     // lastDate: "25 June 2021",
                     // status: values.status,
@@ -106,12 +103,12 @@ function JobList() {
                 const newJobList = {
                     id: Math.floor(Math.random() * (30 - 20)) + 20,
                     // JobNo: values["JobNo"],
-                    JobName: values["JobName"],
-                    JobDate: values["JobDate"],
-                    JobNoOfDays: values["JobNoOfDays"],
-                    JobSiteId: values["JobSiteId"],
-                    JobNotes: values["JobNotes"],
-                    JobWBS: values["JobWBS"],
+                    FirstName: values["FirstName"],
+                    LastName: values["LastName"],
+                    Email: values["Email"],
+                    PhoneNo: values["PhoneNo"],
+                    UserRoles: values["UserRoles"],
+                    // JobWBS: values["JobWBS"],
                     // postedDate: "02 June 2021",
                     // lastDate: "25 June 2021",
                     // status: values["status"],
@@ -124,11 +121,16 @@ function JobList() {
         },
     });
 
+    const dispatch = useDispatch();
+    const { jobs } = useSelector(state => ({
+        jobs: state.JobReducer.jobs,
+    }));
 
     useEffect(() => {
-    console.log("jobs",jobs)    
-    dispatch(onGetJobList());       
-    }, []);
+        if (jobs && !jobs.length) {
+            dispatch(onGetJobList());
+        }
+    }, [dispatch, jobs]);
 
     useEffect(() => {
         setJobsList(jobs);
@@ -155,12 +157,12 @@ function JobList() {
         setJob({
             id: job.id,
             // JobNo: job.JobNo,
-            JobName: job.JobName,
-            JobDate: job.JobDate,
-            JobNoOfDays: job.JobNoOfDays,
-            JobSiteId: job.JobSiteId,
-            JobNotes: job.JobNotes,
-            JobWBS: job.JobWBS,
+            FirstName: job.FirstName,
+            LastName: job.LastName,
+            Email: job.Email,
+            PhoneNo: job.PhoneNo,
+            UserRoles: job.UserRoles,
+            // JobWBS: job.JobWBS,
             // status: job.status,
         });
 
@@ -200,72 +202,80 @@ function JobList() {
             //     }
             // },
             {
-                Header: 'Job Name',
-                accessor: 'JobName',
+                Header: 'First Name',
+                accessor: 'FirstName',
                 filterable: true,
                 Cell: (cellProps) => {
-                    return <JobName {...cellProps} />;
+                    return <FirstName {...cellProps} />;
                 }
             },
             {
-                Header: 'Job Date',
-                accessor: 'JobDate',
+                Header: 'Last Name',
+                accessor: 'LastName',
                 filterable: true,
                 Cell: (cellProps) => {
-                    return <JobDate {...cellProps} />;
+                    return <LastName {...cellProps} />;
                 }
             },
             {
-                Header: 'Job No Of Days',
-                accessor: 'JobNoOfDays',
+                Header: 'Email',
+                accessor: 'Email',
                 filterable: true,
                 Cell: (cellProps) => {
-                    return <JobNoOfDays {...cellProps} />;
+                    return <Email {...cellProps} />;
                 }
             },
             {
-                Header: 'Job Site Id',
-                accessor: 'JobSiteId',
+                Header: 'Phone No',
+                accessor: 'PhoneNo',
                 filterable: true,
                 Cell: (cellProps) => {
-                    return <JobSiteId {...cellProps} />;
-                }
-            },
-            {
-                Header: 'Job Notes',
-                accessor: 'JobNotes',
-                Cell: (cellProps) => {
-                    return <JobNotes {...cellProps} />;
-                }
-            },
-            {
-                Header: 'Job WBS',
-                accessor: 'JobWBS',
-                Cell: (cellProps) => {
-                    return <JobWBS {...cellProps} />;
+                    return <PhoneNo {...cellProps} />;
                 }
             },
             // {
-            //     Header: 'Posted Date',
-            //     accessor: 'postedDate',
+            //     Header: 'Tech Schedule',
+            //     accessor: 'TechSchedule',
+            //     filterable: true,
             //     Cell: (cellProps) => {
-            //         return <PostedDate {...cellProps} />;
+            //         return <TechSchedule {...cellProps} />;
             //     }
             // },
             // {
-            //     Header: 'Last Date',
-            //     accessor: 'lastDate',
+            //     Header: 'Site Admin',
+            //     accessor: 'SiteAdmin',
+            //     filterable: true,
             //     Cell: (cellProps) => {
-            //         return <LastDate {...cellProps} />;
+            //         return <SiteAdmin {...cellProps} />;
             //     }
             // },
             // {
-            //     Header: 'Status',
-            //     accessor: 'status',
-            //     disableFilters: true,
+            //     Header: 'User Admin',
+            //     accessor: 'UserAdmin',
+            //     filterable: true,
             //     Cell: (cellProps) => {
-            //         return <Status {...cellProps} />;
+            //         return <UserAdmin {...cellProps} />;
             //     }
+            // },
+            {
+                Header: 'User Roles',
+                accessor: 'UserRoles',
+                Cell: (cellProps) => {
+                  return <UserRoles {...cellProps} />;
+                },
+              },
+              
+            // {
+            //     Header: 'User Roles',
+            //     accessor: 'userRoles',
+            //     Cell: ({ Cell: { cellProps } }) => {
+            //     return <UserRoles {...cellProps} />;
+            //     }
+            // },
+            // {
+            //     Header: 'User Roles',
+            //     accessor: 'userRoles',
+            //     Cell: ({ cell: { value } }) => <UserRoles value={value} />
             // },
             {
                 Header: 'Action',
@@ -336,9 +346,9 @@ function JobList() {
                             <Card>
                                 <CardBody className="border-bottom">
                                     <div className="d-flex align-items-center">
-                                        <h5 className="mb-0 card-title flex-grow-1">Create New Job</h5>
+                                        <h5 className="mb-0 card-title flex-grow-1">Add Admin</h5>
                                         <div className="flex-shrink-0">
-                                            <Link to="#!" onClick={() => setModal(true)} className="btn btn-primary me-1">Create New Job</Link>
+                                            <Link to="#!" onClick={() => setModal(true)} className="btn btn-primary me-1">Add Admin</Link>
                                             {/* <Link to="#!" className="btn btn-light me-1"><i className="mdi mdi-refresh"></i></Link> */}
                                             {/* <UncontrolledDropdown className="dropdown d-inline-block me-1">
                                                 <DropdownToggle type="menu" className="btn btn-success" id="dropdownMenuButton1">
@@ -352,17 +362,17 @@ function JobList() {
                                         </div>
                                     </div>
                                 </CardBody>
-                                {/* <CardBody>
+                                <CardBody>
                                     <TableContainer
                                         columns={columns}
                                         data={jobs}
                                         isGlobalFilter={true}
                                         isAddOptions={false}
                                         handleJobClicks={handleJobClicks}
-                                        isJobListGlobalFilter={true}
+                                        // isJobListGlobalFilter={true}
                                         customPageSize={1}
                                     />
-                                </CardBody> */}
+                                </CardBody>
                             </Card>
                         </Col>
                     </Row>
@@ -401,97 +411,79 @@ function JobList() {
                                             ) : null}
                                         </div> */}
                                         <div className="mb-3">
-                                            <Label className="form-label">Job Name</Label>
+                                            <Label className="form-label">First Name</Label>
                                             <Input
-                                                name="jobName"
+                                                name="FirstName"
                                                 type="text"
-                                                placeholder="Insert Job Name"
+                                                placeholder="Insert First Name"
                                                 validate={{
                                                     required: { value: true },
                                                 }}
                                                 onChange={validation.handleChange}
                                                 onBlur={validation.handleBlur}
-                                                value={validation.values.jobName || ""}
+                                                value={validation.values.FirstName || ""}
                                                 invalid={
-                                                    validation.touched.jobName && validation.errors.jobName ? true : false
+                                                    validation.touched.FirstName && validation.errors.FirstName ? true : false
                                                 }
                                             />
-                                            {validation.touched.jobName && validation.errors.jobName ? (
-                                                <FormFeedback type="invalid">{validation.errors.jobName}</FormFeedback>
+                                            {validation.touched.FirstName && validation.errors.FirstName ? (
+                                                <FormFeedback type="invalid">{validation.errors.FirstName}</FormFeedback>
                                             ) : null}
                                         </div>
-
                                         <div className="mb-3">
-                                            <Label className="form-label">Job Date</Label>
-                                            <DatePicker
-                                                name="JobDate"
-                                                selected={validation.values.JobDate}
-                                                placeholderText="Insert Job Date"
-                                                onChange={(date) => validation.setFieldValue("JobDate", date)}
-                                                onBlur={validation.handleBlur}
-                                                dateFormat="yyyy-MM-dd"
-                                                // showTimeInput
-                                                className={validation.touched.JobDate && validation.errors.JobDate ? "form-control is-invalid" : "form-control"}
-                                            />
-                                            {validation.touched.JobDate && validation.errors.JobDate ? (
-                                                <FormFeedback type="invalid">{validation.errors.JobDate}</FormFeedback>
-                                            ) : null}
-                                        </div>
-
-                                        {/* <div className="mb-3">
-                                            <Label className="form-label"> Job Date</Label>
+                                            <Label className="form-label"> Last Name</Label>
                                             <Input
-                                                name="JobDate"
-                                                type="datetime"
+                                                name="LastName"
+                                                type="text"
                                                 placeholder="Insert Job Date"
                                                 onChange={validation.handleChange}
                                                 onBlur={validation.handleBlur}
-                                                value={validation.values.JobDate || ""}
+                                                value={validation.values.LastName || ""}
                                                 invalid={
-                                                    validation.touched.JobDate && validation.errors.JobDate ? true : false
+                                                    validation.touched.LastName && validation.errors.LastName ? true : false
                                                 }
                                             />
-                                            {validation.touched.JobDate && validation.errors.JobDate ? (
-                                                <FormFeedback type="invalid">{validation.errors.JobDate}</FormFeedback>
-                                            ) : null}
-                                        </div> */}
-                                        <div className="mb-3">
-                                            <Label className="form-label">Job No Of Days</Label>
-                                            <Input
-                                                name="JobNoOfDays"
-                                                placeholder="Insert Job No Of Days"
-                                                type="text"
-                                                onChange={validation.handleChange}
-                                                onBlur={validation.handleBlur}
-                                                value={validation.values.JobNoOfDays || ""}
-                                                invalid={
-                                                    validation.touched.JobNoOfDays && validation.errors.JobNoOfDays ? true : false
-                                                }
-                                            />
-                                            {validation.touched.JobNoOfDays && validation.errors.JobNoOfDays ? (
-                                                <FormFeedback type="invalid">{validation.errors.JobNoOfDays}</FormFeedback>
+                                            {validation.touched.LastName && validation.errors.LastName ? (
+                                                <FormFeedback type="invalid">{validation.errors.LastName}</FormFeedback>
                                             ) : null}
                                         </div>
                                         <div className="mb-3">
-                                            <Label className="form-label">Job Site Id</Label>
+                                            <Label className="form-label">Email</Label>
                                             <Input
-                                                name="JobSiteId"
+                                                name="Email"
+                                                placeholder="Enter your Email Address"
                                                 type="text"
-                                                placeholder="Insert Job Site Id"
+                                                onChange={validation.handleChange}
+                                                onBlur={validation.handleBlur}
+                                                value={validation.values.Email || ""}
+                                                invalid={
+                                                    validation.touched.Email && validation.errors.Email ? true : false
+                                                }
+                                            />
+                                            {validation.touched.Email && validation.errors.Email ? (
+                                                <FormFeedback type="invalid">{validation.errors.Email}</FormFeedback>
+                                            ) : null}
+                                        </div>
+                                        <div className="mb-3">
+                                            <Label className="form-label">Phone No</Label>
+                                            <Input
+                                                name="PhoneNo"
+                                                type="text"
+                                                placeholder="Enter ypur Phone Number"
                                                 onChange={validation.handleChange}
                                                 onBlur={validation.handleBlur}
                                                 value={
-                                                    validation.values.JobSiteId || ""
+                                                    validation.values.PhoneNo || ""
                                                 }
                                                 invalid={
-                                                    validation.touched.JobSiteId && validation.errors.JobSiteId ? true : false
+                                                    validation.touched.PhoneNo && validation.errors.PhoneNo ? true : false
                                                 }
                                             />
-                                            {validation.touched.JobSiteId && validation.errors.JobSiteId ? (
-                                                <FormFeedback type="invalid">{validation.errors.JobSiteId}</FormFeedback>
+                                            {validation.touched.PhoneNo && validation.errors.PhoneNo ? (
+                                                <FormFeedback type="invalid">{validation.errors.PhoneNo}</FormFeedback>
                                             ) : null}
                                         </div>
-                                        <div className="mb-3">
+                                        {/* <div className="mb-3">
                                             <Label className="form-label">Job Notes</Label>
                                             <Input
                                                 name="JobNotes"
@@ -507,34 +499,50 @@ function JobList() {
                                             {validation.touched.JobNotes && validation.errors.JobNotes ? (
                                                 <FormFeedback type="invalid">{validation.errors.JobNotes}</FormFeedback>
                                             ) : null}
-                                        </div>
+                                        </div> */}
                                         <div className="mb-3">
-                                            <Label className="form-label">Job WBS</Label>
-                                            <Input
-                                                name="JobWBS"
-                                                type="select"
-                                                className="form-select"
-                                                onChange={validation.handleChange}
-                                                onBlur={validation.handleBlur}
-                                                value={
-                                                    validation.values.JobWBS || ""
-                                                }
-                                                invalid={
-                                                    validation.touched.JobWBS && validation.errors.JobWBS
-                                                        ? true
-                                                        : false
-                                                }
-                                            >
-                                                <option>Job 1</option>
-                                                <option>Job 2</option>
-                                                {/* <option>Freelance</option>
-                                                <option>Internship</option> */}
-
-                                            </Input>
-                                            {validation.touched.JobWBS && validation.errors.JobWBS ? (
-                                                <FormFeedback type="invalid">{validation.errors.JobWBS}</FormFeedback>
+                                            <Label className="form-label">User Roles</Label>
+                                            <FormGroup check>
+                                                <Label check>
+                                                <Input
+                                                    type="checkbox"
+                                                    name="techSchedule"
+                                                    checked={validation.values.techSchedule}
+                                                    // onChange={validation.handleChange}
+                                                    onBlur={validation.handleBlur}
+                                                />
+                                                Tech Schedule
+                                                </Label>
+                                            </FormGroup>
+                                            <FormGroup check>
+                                                <Label check>
+                                                <Input
+                                                    type="checkbox"
+                                                    name="siteAdmin"
+                                                    checked={validation.values.siteAdmin}
+                                                    // onChange={validation.handleChange}
+                                                    onBlur={validation.handleBlur}
+                                                />
+                                                Site Admin
+                                                </Label>
+                                            </FormGroup>
+                                            <FormGroup check>
+                                                <Label check>
+                                                <Input
+                                                    type="checkbox"
+                                                    name="userAdmin"
+                                                    checked={validation.values.userAdmin}
+                                                    // onChange={validation.handleChange}
+                                                    onBlur={validation.handleBlur}
+                                                />
+                                                User Admin
+                                                </Label>
+                                            </FormGroup>
+                                            {validation.touched.userRoles && validation.errors.userRoles ? (
+                                                <div className="text-danger">{validation.errors.userRoles}</div>
                                             ) : null}
-                                        </div>
+                                            </div>
+
                                         {/* <div className="mb-3">
                                             <Label className="form-label">Status</Label>
                                             <Input
@@ -566,7 +574,7 @@ function JobList() {
                                                 type="submit"
                                                 className="btn btn-success save-user"
                                             >
-                                                Create job
+                                                Add Admin
                                             </button>
                                         </div>
                                     </Col>
