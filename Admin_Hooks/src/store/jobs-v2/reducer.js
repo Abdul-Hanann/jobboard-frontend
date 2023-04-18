@@ -2,6 +2,9 @@ import {
   FETCH_JOB_LIST,
   FETCH_JOB_LIST_FAIL,
   FETCH_JOB_LIST_SUCCESS,
+  ADD_NEW_JOB,
+  ADD_JOB_SUCCESS,
+  ADD_JOB_FAIL,
 } from "./actionTypes"
 
 const INIT_STATE = {
@@ -35,6 +38,30 @@ const JobListReducer = (state = INIT_STATE, action) => {
         success: false,
         error: action.payload,
       }
+    
+    case ADD_NEW_JOB:
+      return {
+        ...state,
+        isLoading: true,
+        success: false,
+        error: false,
+      }
+
+    case ADD_JOB_SUCCESS:           
+      return {
+          ...state,
+          success: true,
+          error: false,
+          jobs: action.payload,
+      };
+
+    case ADD_JOB_FAIL:
+      return {
+          ...state,
+          isLoading: false,
+          success: false,
+          error: action.payload,
+      };
 
     default:
       return state
