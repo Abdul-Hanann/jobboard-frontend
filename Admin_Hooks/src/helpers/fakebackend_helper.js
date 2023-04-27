@@ -1,5 +1,5 @@
 import axios from "axios"
-import { del, get, post, put } from "./api_helper"
+import { del, get, post, put, getDep } from "./api_helper"
 import * as url from "./url_helper"
 
 // Gets the logged in user data from local session
@@ -192,7 +192,7 @@ export const getInvoiceDetail = id =>
 // export const getJobList = () => get("http://localhost:8080/jobs");
 export const getJobList = () => {
   console.log("url.GET_JOB_LIST", url.GET_JOB_LIST_URL)
-  return get(url.GET_JOB_LIST_URL)
+  return getDep(url.GET_JOB_LIST_URL)
 }
 
 // get Apply Jobs

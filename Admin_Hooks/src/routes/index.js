@@ -177,9 +177,8 @@ import ContactsGrid from "../pages/Contacts/contacts-grid"
 import ContactsList from "../pages/Contacts/ContactList/contacts-list"
 import ContactsProfile from "../pages/Contacts/ContactsProfile/contacts-profile"
 import JobWbs from "pages/JobWbs"
-
 import SiteAdmin from "../pages/SiteAdmin/index"
-
+import Schedule from "pages/Schedule"
 const adminRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
   { path: "/joblist", component: <JobList /> },
@@ -225,6 +224,7 @@ const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
   { path: "/joblist", component: <JobList /> },
   { path: "/jobwbs", component: <JobWbs /> },
+  { path: "/schedule", component: <Schedule /> },
   { path: "/addjob", component: <AddJob /> },
   { path: "/siteadmin", component: <SiteAdmin /> },
   { path: "/useradmin", component: <UserAdmin /> },
