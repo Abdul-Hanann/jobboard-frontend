@@ -54,6 +54,8 @@ import DashboardBlog from "./dashboard-blog/reducer"
 //Dasboard job
 import DashboardJob from "./dashboard-jobs/reducer"
 import JobListReducer from "./jobs-v2/reducer"
+import JobWbsReducer from "./jobWbs/reducer"
+
 const rootReducer = combineReducers({
   // public
   Layout,
@@ -77,6 +79,7 @@ const rootReducer = combineReducers({
   DashboardBlog,
   DashboardJob,
   JobListReducer,
+  JobWbsReducer,
 })
 
 export default rootReducer
