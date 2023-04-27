@@ -1,7 +1,7 @@
-import React from "react";
-import { Carousel } from "react-responsive-carousel";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { Col } from "reactstrap";
+import React from "react"
+import { Carousel } from "react-responsive-carousel"
+import "react-responsive-carousel/lib/styles/carousel.min.css"
+import { Col } from "reactstrap"
 
 const CarouselPage = () => {
   return (
@@ -21,18 +21,22 @@ const CarouselPage = () => {
                         clients
                       </h4>
                       <div dir="ltr">
-                        <Carousel className="owl-carousel owl-theme auth-review-carousel slider_css" id="auth-review-carousel" 
-                        showThumbs={false}>
+                        <Carousel
+                          className="owl-carousel owl-theme auth-review-carousel slider_css"
+                          id="auth-review-carousel"
+                          showThumbs={false}
+                        >
                           <div>
                             <div className="item">
                               <div className="pb-5 pt-3">
                                 <p className="font-size-16 mb-4">
-                                  &quot;Fantastic theme with a ton of options. If
-                                  you just want the HTML to integrate with your
-                                  project, then this is the package. You can
-                                  find the files in the &apos;dist&lsquo; folder...no need
-                                  to install git and all the other stuff the
-                                  documentation talks about. &ldquo;
+                                  &quot;Fantastic theme with a ton of options.
+                                  If you just want the HTML to integrate with
+                                  your project, then this is the package. You
+                                  can find the files in the &apos;dist&lsquo;
+                                  folder...no need to install git and all the
+                                  other stuff the documentation talks about.
+                                  &ldquo;
                                 </p>
 
                                 <div>
@@ -50,10 +54,10 @@ const CarouselPage = () => {
                             <div className="item">
                               <div className="pb-5 pt-3">
                                 <p className="font-size-16 mb-4">
-                                  &quot;If Every Vendor on Envato are as supportive
-                                  as Themesbrand, Development with be a nice
-                                  experience. You guys are Wonderful. Keep us
-                                  the good work. &ldquo;
+                                  &quot;If Every Vendor on Envato are as
+                                  supportive as Themesbrand, Development with be
+                                  a nice experience. You guys are Wonderful.
+                                  Keep us the good work. &ldquo;
                                 </p>
 
                                 <div>
