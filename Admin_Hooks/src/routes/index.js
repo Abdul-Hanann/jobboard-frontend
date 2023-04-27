@@ -176,6 +176,7 @@ import Pages500 from "../pages/Utility/pages-500"
 import ContactsGrid from "../pages/Contacts/contacts-grid"
 import ContactsList from "../pages/Contacts/ContactList/contacts-list"
 import ContactsProfile from "../pages/Contacts/ContactsProfile/contacts-profile"
+import JobWbs from "pages/JobWbs"
 
 import SiteAdmin from "../pages/SiteAdmin/index"
 
@@ -223,6 +224,7 @@ const schedulerRoutes = [
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
   { path: "/joblist", component: <JobList /> },
+  { path: "/jobwbs", component: <JobWbs /> },
   { path: "/addjob", component: <AddJob /> },
   { path: "/siteadmin", component: <SiteAdmin /> },
   { path: "/useradmin", component: <UserAdmin /> },
