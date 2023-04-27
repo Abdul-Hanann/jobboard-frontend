@@ -145,7 +145,7 @@ const Navbar = props => {
                   userType === userTypes.ROLE_TECHNICIAN) && (
                   <li className="nav-item dropdown">
                     <Link
-                      to="/joblist"
+                      to="/job-list"
                       className="nav-link dropdown-togglez arrow-none"
                     >
                       <i className="bx bx-customize me-2"></i>

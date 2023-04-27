@@ -20,6 +20,8 @@ import TasksCreate from "../pages/Tasks/tasks-create"
 // //Projects
 import ProjectsGrid from "../pages/Projects/projects-grid"
 import ProjectsList from "../pages/Projects/projects-list"
+
+// import ProjectsList from "../pages/JobList/index"
 import ProjectsOverview from "../pages/Projects/ProjectOverview/projects-overview"
 import ProjectsCreate from "../pages/Projects/projects-create"
 
@@ -121,6 +123,7 @@ import JobGrid from "../pages/JobPages/JobGrid/index"
 import JobDetails from "../pages/JobPages/JobDetails"
 import JobCategories from "../pages/JobPages/JobCategories"
 import JobList from "../pages/JobList"
+import JobCreate from "../pages/JobList/JobsCreate"
 import AddJob from "../pages/AddJob"
 import ApplyJobs from "../pages/JobPages/ApplyJobs/index"
 import CandidateList from "../pages/JobPages/CandidateList"
@@ -224,6 +227,7 @@ const schedulerRoutes = [
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
   { path: "/joblist", component: <JobList /> },
+  { path: "/jobcreate", component: <JobCreate /> },
   { path: "/jobwbs", component: <JobWbs /> },
   { path: "/addjob", component: <AddJob /> },
   { path: "/siteadmin", component: <SiteAdmin /> },
@@ -248,7 +252,7 @@ const authProtectedRoutes = [
 
   //Projects
   { path: "/projects-grid", component: <ProjectsGrid /> },
-  { path: "/projects-list", component: <ProjectsList /> },
+  { path: "/projectslist", component: <ProjectsList /> },
   { path: "/projects-overview", component: <ProjectsOverview /> },
   { path: "/projects-overview/:id", component: <ProjectsOverview /> },
   { path: "/projects-create", component: <ProjectsCreate /> },

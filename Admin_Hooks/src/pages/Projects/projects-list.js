@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"
 // import { Link, withRouter } from "react-router-dom";
-import { Link } from "react-router-dom";
-import withRouter from "components/Common/withRouter";
-import { isEmpty, map } from "lodash";
-import * as moment from "moment";
+import { Link } from "react-router-dom"
+import withRouter from "components/Common/withRouter"
+import { isEmpty, map } from "lodash"
+import * as moment from "moment"
 import {
   Badge,
   Col,
@@ -22,51 +22,50 @@ import {
   Input,
   FormFeedback,
   Label,
-} from "reactstrap";
-import * as Yup from "yup";
-import { useFormik } from "formik";
+} from "reactstrap"
+import * as Yup from "yup"
+import { useFormik } from "formik"
 
 //Import Component
-import Breadcrumbs from "components/Common/Breadcrumb";
-import DeleteModal from "components/Common/DeleteModal";
+import Breadcrumbs from "components/Common/Breadcrumb"
+import DeleteModal from "components/Common/DeleteModal"
 
 //Import Image
-import images from "assets/images";
-import companies from "assets/images/companies";
+import images from "assets/images"
+import companies from "assets/images/companies"
 
 import {
   getProjects as onGetProjects,
   addNewProject as onAddNewProject,
   updateProject as onUpdateProject,
   deleteProject as onDeleteProject,
-} from "../../store/actions";
+} from "../../store/actions"
 
 //redux
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux"
 
 const ProjectStatus = ({ status }) => {
   switch (status) {
     case "Pending":
-      return <Badge className="bg-warning"> {status} </Badge>;
+      return <Badge className="bg-warning"> {status} </Badge>
 
     case "Delay":
-      return <Badge className="bg-danger"> {status} </Badge>;
+      return <Badge className="bg-danger"> {status} </Badge>
 
     case "Completed":
-      return <Badge className="bg-success"> {status} </Badge>;
+      return <Badge className="bg-success"> {status} </Badge>
 
     default:
-      return <Badge className="bg-success"> {status} </Badge>;
+      return <Badge className="bg-success"> {status} </Badge>
   }
-};
+}
 
 const ProjectsList = () => {
-
   //meta title
-  document.title = "Project List | Skote - React Admin & Dashboard Template";
+  document.title = "Project List | Skote - React Admin & Dashboard Template"
 
-  const dispatch = useDispatch();
-  const [project, setProject] = useState();
+  const dispatch = useDispatch()
+  const [project, setProject] = useState()
   // validation
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -83,20 +82,12 @@ const ProjectsList = () => {
       team: (project && project.team) || "",
     },
     validationSchema: Yup.object({
-      name: Yup.string().required(
-        "Please Enter Your Name"
-      ),
-      description: Yup.string().required(
-        "Please Enter Your Description"
-      ),
-      status: Yup.string().required(
-        "Please Enter Your Status"
-      ),
-      color: Yup.string().required(
-        "Please Enter Your Color"
-      ),
+      name: Yup.string().required("Please Enter Your Name"),
+      description: Yup.string().required("Please Enter Your Description"),
+      status: Yup.string().required("Please Enter Your Status"),
+      color: Yup.string().required("Please Enter Your Color"),
     }),
-    onSubmit: (values) => {
+    onSubmit: values => {
       if (isEdit) {
         const updateProject = {
           id: project.id,
@@ -107,10 +98,10 @@ const ProjectsList = () => {
           color: values.color,
           dueDate: values.dueDate,
           team: values.team,
-        };
+        }
 
         // update project
-        dispatch(onUpdateProject(updateProject));
+        dispatch(onUpdateProject(updateProject))
       } else {
         const newProject = {
           id: Math.floor(Math.random() * (30 - 20)) + 20,
@@ -120,33 +111,33 @@ const ProjectsList = () => {
           color: values["color"],
           dueDate: values["dueDate"],
           team: values["team"],
-        };
+        }
         // save new project
-        dispatch(onAddNewProject(newProject));
+        dispatch(onAddNewProject(newProject))
       }
-      toggle();
+      toggle()
     },
-  });
+  })
 
   const { projects } = useSelector(state => ({
     projects: state.projects.projects,
-  }));
-  const [modal, setModal] = useState(false);
-  const [isEdit, setIsEdit] = useState(false);
-  const [projectList, setProjectList] = useState([]);
+  }))
+  console.log("project 1:", projects)
+  const [modal, setModal] = useState(false)
+  const [isEdit, setIsEdit] = useState(false)
+  const [projectList, setProjectList] = useState([])
 
   const toggle = () => {
     if (modal) {
-      setModal(false);
-      setProject(null);
+      setModal(false)
+      setProject(null)
     } else {
-      setModal(true);
+      setModal(true)
     }
-  };
-
+  }
 
   const handleProjectClick = arg => {
-    const project = arg;
+    const project = arg
 
     setProject({
       id: project.id,
@@ -157,47 +148,48 @@ const ProjectsList = () => {
       color: project.color,
       dueDate: project.dueDate,
       team: project.team,
-    });
+    })
 
-    setIsEdit(true);
+    setIsEdit(true)
 
-    toggle();
-  };
+    toggle()
+  }
 
   //delete order
-  const [deleteModal, setDeleteModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false)
 
-  const onClickDelete = (project) => {
-    setProject(project);
-    setDeleteModal(true);
-  };
+  const onClickDelete = project => {
+    setProject(project)
+    setDeleteModal(true)
+  }
 
   const handleDeleteOrder = () => {
     if (project && project.id) {
-      dispatch(onDeleteProject(project.id));
+      dispatch(onDeleteProject(project.id))
     }
-    setDeleteModal(false);
-  };
-
-
-  useEffect(() => {
-    dispatch(onGetProjects());
-  }, [dispatch]);
+    setDeleteModal(false)
+  }
 
   useEffect(() => {
-    setProjectList(projects);
-  }, [projects]);
+    dispatch(onGetProjects())
+  }, [dispatch])
+
+  useEffect(() => {
+    console.log("projects:", projects)
+    setProjectList(projects)
+  }, [projects])
 
   useEffect(() => {
     if (!isEmpty(projects)) {
-      setProjectList(projects);
+      console.log("projects:2", projects)
+      setProjectList(projects)
     }
-  }, [projects]);
+  }, [projects])
 
   const handleValidDate = date => {
-    const date1 = moment(new Date(date)).format("DD MMM Y");
-    return date1;
-  };
+    const date1 = moment(new Date(date)).format("DD MMM Y")
+    return date1
+  }
 
   return (
     <React.Fragment>
@@ -213,7 +205,7 @@ const ProjectsList = () => {
 
           <Row>
             <Col lg="12">
-              <div >
+              <div>
                 <div className="table-responsive">
                   <Table className="project-list-table table-nowrap align-middle table-borderless">
                     <thead>
@@ -356,10 +348,10 @@ const ProjectsList = () => {
                     </ModalHeader>
                     <ModalBody>
                       <Form
-                        onSubmit={(e) => {
-                          e.preventDefault();
-                          validation.handleSubmit();
-                          return false;
+                        onSubmit={e => {
+                          e.preventDefault()
+                          validation.handleSubmit()
+                          return false
                         }}
                       >
                         <Row>
@@ -384,11 +376,17 @@ const ProjectsList = () => {
                                 onBlur={validation.handleBlur}
                                 value={validation.values.name || ""}
                                 invalid={
-                                  validation.touched.name && validation.errors.name ? true : false
+                                  validation.touched.name &&
+                                  validation.errors.name
+                                    ? true
+                                    : false
                                 }
                               />
-                              {validation.touched.name && validation.errors.name ? (
-                                <FormFeedback type="invalid">{validation.errors.name}</FormFeedback>
+                              {validation.touched.name &&
+                              validation.errors.name ? (
+                                <FormFeedback type="invalid">
+                                  {validation.errors.name}
+                                </FormFeedback>
                               ) : null}
                             </div>
 
@@ -401,11 +399,17 @@ const ProjectsList = () => {
                                 onBlur={validation.handleBlur}
                                 value={validation.values.description || ""}
                                 invalid={
-                                  validation.touched.description && validation.errors.description ? true : false
+                                  validation.touched.description &&
+                                  validation.errors.description
+                                    ? true
+                                    : false
                                 }
                               />
-                              {validation.touched.description && validation.errors.description ? (
-                                <FormFeedback type="invalid">{validation.errors.description}</FormFeedback>
+                              {validation.touched.description &&
+                              validation.errors.description ? (
+                                <FormFeedback type="invalid">
+                                  {validation.errors.description}
+                                </FormFeedback>
                               ) : null}
                             </div>
 
@@ -418,16 +422,17 @@ const ProjectsList = () => {
                                 className="form-select"
                                 onChange={validation.handleChange}
                                 onBlur={validation.handleBlur}
-                                value={
-                                  validation.values.status || ""
-                                }
+                                value={validation.values.status || ""}
                               >
                                 <option>Completed</option>
                                 <option>Pending</option>
                                 <option>Delay</option>
                               </Input>
-                              {validation.touched.status && validation.errors.status ? (
-                                <FormFeedback type="invalid">{validation.errors.status}</FormFeedback>
+                              {validation.touched.status &&
+                              validation.errors.status ? (
+                                <FormFeedback type="invalid">
+                                  {validation.errors.status}
+                                </FormFeedback>
                               ) : null}
                             </div>
 
@@ -441,15 +446,21 @@ const ProjectsList = () => {
                                 onBlur={validation.handleBlur}
                                 value={validation.values.color || ""}
                                 invalid={
-                                  validation.touched.color && validation.errors.color ? true : false
+                                  validation.touched.color &&
+                                  validation.errors.color
+                                    ? true
+                                    : false
                                 }
                               >
                                 <option>success</option>
                                 <option>warning</option>
                                 <option>danger</option>
                               </Input>
-                              {validation.touched.color && validation.errors.color ? (
-                                <FormFeedback type="invalid">{validation.errors.color}</FormFeedback>
+                              {validation.touched.color &&
+                              validation.errors.color ? (
+                                <FormFeedback type="invalid">
+                                  {validation.errors.color}
+                                </FormFeedback>
                               ) : null}
                             </div>
 
@@ -462,12 +473,18 @@ const ProjectsList = () => {
                                 onChange={validation.handleChange}
                                 onBlur={validation.handleBlur}
                                 invalid={
-                                  validation.touched.dueDate && validation.errors.dueDate ? true : false
+                                  validation.touched.dueDate &&
+                                  validation.errors.dueDate
+                                    ? true
+                                    : false
                                 }
                                 value={validation.values.dueDate || ""}
                               ></Input>
-                              {validation.touched.dueDate && validation.errors.dueDate ? (
-                                <FormFeedback type="invalid">{validation.errors.dueDate}</FormFeedback>
+                              {validation.touched.dueDate &&
+                              validation.errors.dueDate ? (
+                                <FormFeedback type="invalid">
+                                  {validation.errors.dueDate}
+                                </FormFeedback>
                               ) : null}
                             </div>
                           </Col>
@@ -505,7 +522,7 @@ const ProjectsList = () => {
         </Container>
       </div>
     </React.Fragment>
-  );
-};
+  )
+}
 
-export default withRouter(ProjectsList);
+export default withRouter(ProjectsList)

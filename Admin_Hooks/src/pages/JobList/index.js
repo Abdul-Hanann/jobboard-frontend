@@ -5,13 +5,15 @@ import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css"
 import TableContainer from "components/Common/TableContainer"
 import * as Yup from "yup"
 import { useFormik } from "formik"
-// import { jobs } from "common/data";
+// import { jobs } from "common/data"
 
 //import components
 import Breadcrumbs from "components/Common/Breadcrumb"
 import DeleteModal from "components/Common/DeleteModal"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
+
+import { map } from "lodash"
 
 import {
   addNewJobList as onAddNewJobList,
@@ -34,6 +36,7 @@ import { useSelector, useDispatch } from "react-redux"
 
 import {
   Col,
+  Container,
   Row,
   UncontrolledTooltip,
   Modal,
@@ -41,6 +44,8 @@ import {
   ModalBody,
   Form,
   Input,
+  Table,
+  Badge,
   FormFeedback,
   Label,
   Card,
@@ -50,6 +55,22 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "reactstrap"
+
+const ProjectStatus = ({ status }) => {
+  switch (status) {
+    case "Pending":
+      return <Badge className="bg-warning"> {status} </Badge>
+
+    case "Delay":
+      return <Badge className="bg-danger"> {status} </Badge>
+
+    case "Completed":
+      return <Badge className="bg-success"> {status} </Badge>
+
+    default:
+      return <Badge className="bg-success"> {status} </Badge>
+  }
+}
 
 function JobList() {
   //meta title
@@ -90,8 +111,8 @@ function JobList() {
       JobWBS: Yup.string().required("Please Enter Your JobWBS"),
     }),
     onSubmit: values => {
-    console.log("okay")
-    console.log("values:",values)
+      console.log("okay")
+      console.log("values:", values)
       if (isEdit) {
         const updateJobList = {
           id: job ? job.id : 0,
@@ -131,6 +152,9 @@ function JobList() {
       toggle()
     },
   })
+  // const { projects } = useSelector(state => ({
+  //   projects: state.projects.projects,
+  // }))
 
   useEffect(() => {
     dispatch(fetchJobList())
@@ -348,8 +372,8 @@ function JobList() {
                     </h5>
                     <div className="flex-shrink-0">
                       <Link
-                        to="#!"
-                        onClick={() => setModal(true)}
+                        to="/jobcreate"
+                        // onClick={() => setModal(true)}
                         className="btn btn-primary me-1"
                       >
                         Create New Job
@@ -367,6 +391,10 @@ function JobList() {
                     </div>
                   </div>
                 </CardBody>
+                {/* ///////////////////////////////////////////////////////// */}
+                {/* <div>
+                  <ProjectsList />
+                </div> */}
                 {/* <CardBody>
                                     <TableContainer
                                         columns={columns}
@@ -395,26 +423,6 @@ function JobList() {
               >
                 <Row>
                   <Col className="col-12">
-                    {/* <div className="mb-3">
-                                            <Label className="form-label"> Job Id</Label>
-                                            <Input
-                                                name="jobId"
-                                                type="text"
-                                                placeholder="Insert Job Id"
-                                                validate={{
-                                                    required: { value: true },
-                                                }}
-                                                onChange={validation.handleChange}
-                                                onBlur={validation.handleBlur}
-                                                value={validation.values.jobId || ""}
-                                                invalid={
-                                                    validation.touched.jobId && validation.errors.jobId ? true : false
-                                                }
-                                            />
-                                            {validation.touched.jobId && validation.errors.jobId ? (
-                                                <FormFeedback type="invalid">{validation.errors.jobId}</FormFeedback>
-                                            ) : null}
-                                        </div> */}
                     <div className="mb-3">
                       <Label className="form-label">Job Name</Label>
                       <Input
@@ -581,28 +589,6 @@ function JobList() {
                         </FormFeedback>
                       ) : null}
                     </div>
-                    {/* <div className="mb-3">
-                                            <Label className="form-label">Status</Label>
-                                            <Input
-                                                name="status"
-                                                type="select"
-                                                onChange={validation.handleChange}
-                                                onBlur={validation.handleBlur}
-                                                value={
-                                                    validation.values.status || ""
-                                                }
-                                                invalid={
-                                                    validation.touched.status && validation.errors.status ? true : false
-                                                }
-                                            >
-                                                <option>Active</option>
-                                                <option>New</option>
-                                                <option>Close</option>
-                                            </Input>
-                                            {validation.touched.status && validation.errors.status ? (
-                                                <FormFeedback status="invalid">{validation.errors.status}</FormFeedback>
-                                            ) : null}
-                                        </div> */}
                   </Col>
                 </Row>
                 <Row>
