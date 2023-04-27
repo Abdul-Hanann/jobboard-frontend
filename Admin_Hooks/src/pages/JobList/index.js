@@ -90,6 +90,8 @@ function JobList() {
       JobWBS: Yup.string().required("Please Enter Your JobWBS"),
     }),
     onSubmit: values => {
+    console.log("okay")
+    console.log("values:",values)
       if (isEdit) {
         const updateJobList = {
           id: job ? job.id : 0,
@@ -122,6 +124,7 @@ function JobList() {
           // status: values["status"],
         }
         // save new Job
+        console.log("okay")
         dispatch(onAddNewJobList(newJobList))
         validation.resetForm()
       }
