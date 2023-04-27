@@ -52,3 +52,5 @@ export * from "./dashboard-blog/actions"
 export * from "./dashboard-jobs/actions"
 
 export * from "./jobs-v2/actions"
+
+export * from "./jobWbs/actions"

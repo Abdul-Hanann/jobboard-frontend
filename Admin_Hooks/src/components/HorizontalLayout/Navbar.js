@@ -169,7 +169,7 @@ const Navbar = props => {
                   <li className="nav-item dropdown">
                     <Link
                       className="nav-link dropdown-toggle arrow-none"
-                      to="/#"
+                      to="/jobwbs"
                     >
                       <i className="bx bx-file me-2"></i>
                       JobWBS Admin

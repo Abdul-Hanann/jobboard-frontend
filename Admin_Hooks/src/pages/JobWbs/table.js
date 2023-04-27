@@ -19,12 +19,12 @@ const TableContainer = ({ data }) => {
   const [paginationItems, setpaginationItems] = useState(1)
   const [selectedPaginationItem, setselectedPaginationItem] = useState(1)
   const [currentTableData, setcurrentTableData] = useState([])
-  const count = data.length
+  const count = data?.length
   const [value, setValue] = useState("")
 
   useEffect(() => {
     if (data) {
-      setpaginationItems(Math.ceil(data.length / showEntries))
+      setpaginationItems(Math.ceil(data?.length / showEntries))
     }
   }, [data, showEntries])
 
@@ -33,8 +33,8 @@ const TableContainer = ({ data }) => {
       let rows = selectedPaginationItem * showEntries
       let selectedRowsStart = rows - showEntries
       let selectedRowsEnd = rows - 1
-      if (selectedRowsEnd > data.length - 1) {
-        selectedRowsEnd = data.length
+      if (selectedRowsEnd > data?.length - 1) {
+        selectedRowsEnd = data?.length
       }
       setcurrentTableData(data.slice(selectedRowsStart, selectedRowsEnd + 1))
     }
@@ -48,9 +48,7 @@ const TableContainer = ({ data }) => {
     let currentList = data.filter(jobWbs => {
       return e.target.value === ""
         ? true
-        : jobWbs.projectName
-            .toLowerCase()
-            .includes(e.target.value.toLowerCase())
+        : jobWbs.name.toLowerCase().includes(e.target.value.toLowerCase())
     })
 
     setcurrentTableData(currentList)
@@ -111,15 +109,16 @@ const TableContainer = ({ data }) => {
             </tr>
           </thead>
           <tbody>
+            {console.log(currentTableData, data)}
             {currentTableData && currentTableData.length !== 0 ? (
               currentTableData.map(jobWbs => (
                 <tr key={jobWbs.id}>
-                  <td className="text-center">{jobWbs.projectName}</td>
+                  <td className="text-center">{jobWbs.name}</td>
                   <td
                     className="text-center"
                     style={{ maxWidth: "200px", textOverflow: "ellipsis" }}
                   >
-                    {jobWbs.requestDate}
+                    {jobWbs.tasks.join(", ")}
                   </td>
                   <td className="d-flex flex-row justify-content-center">
                     <ActionButton
@@ -185,7 +184,7 @@ const TableContainer = ({ data }) => {
                 value={showEntries}
                 onChange={e => {
                   setshowEntries(e.target.value)
-                  setpaginationItems(Math.ceil(data.length / e.target.value))
+                  setpaginationItems(Math.ceil(data?.length / e.target.value))
                   setselectedPaginationItem(1)
                 }}
               >
