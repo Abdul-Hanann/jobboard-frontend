@@ -3,7 +3,7 @@
 // 
 
 .topnav {
-    background: $topnav-bg;
+    // background: $topnav-bg;
     padding: 0 calc(#{$grid-gutter-width} * 0.5);
     box-shadow: $box-shadow;
     margin-top: $header-height;
@@ -75,6 +75,8 @@ body[data-layout="horizontal"] {
 
 @include media-breakpoint-up(lg) {
     .topnav {
+        
+    background-color: black;
         .navbar-nav {
             .nav-item {
                 &:first-of-type {
