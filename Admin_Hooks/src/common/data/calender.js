@@ -16,6 +16,7 @@ const events = [
     id: 3,
     title: "Click For Google",
     start: new Date().setDate(new Date().getDate() + 18),
+    end: new Date().setDate(new Date().getDate() + 19),
     className: "bg-dark text-white",
   },
   {
@@ -49,8 +50,7 @@ const events = [
     end: new Date().setDate(new Date().getDate() - 3),
     className: "bg-warning text-white",
   },
-];
-
+]
 
 const calenderDefaultCategories = [
   {

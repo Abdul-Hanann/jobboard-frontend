@@ -130,7 +130,7 @@ const Navbar = props => {
                   userType === userTypes.ROLE_TECHNICIAN) && (
                   <li className="nav-item dropdown">
                     <Link
-                      to="/#"
+                      to="/schedule"
                       className="nav-link dropdown-toggle arrow-none"
                     >
                       <i className="bx bx-tone me-2"></i>
