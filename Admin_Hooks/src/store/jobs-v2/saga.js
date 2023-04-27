@@ -1,11 +1,17 @@
 import { takeEvery, fork, put, all, call } from "redux-saga/effects"
 
 // Redux States
-import { FETCH_JOB_LIST } from "./actionTypes"
-import { fetchJobListSuccess, fetchJobListFail } from "./actions"
+import { FETCH_JOB_LIST, ADD_NEW_JOB } from "./actionTypes"
+import { 
+  fetchJobListSuccess,
+  fetchJobListFail,
+  addJobSuccess,
+  addJobFail, 
+} from "./actions"
 
 import { GET_JOB_LIST_URL } from "../../helpers/url_helper"
 import { getRequestData } from "../../helpers/GlobalUtils"
+import { addNewJobList } from "helpers/fakebackend_helper";
 
 // Fetching All Notifications
 function* fetchAllJobsSaga() {
@@ -16,9 +22,18 @@ function* fetchAllJobsSaga() {
     yield put(fetchJobListFail(error))
   }
 }
+function* onAddNewJobList({ payload: data }) {
+  try {
+      const response = yield call(addNewJobList, data)
+      yield put(addJobSuccess(response))
+  } catch (error) {
+      yield put(addJobFail(error))
+  }
+}
 
 export function* watchFetchAllJobs() {
   yield takeEvery(FETCH_JOB_LIST, fetchAllJobsSaga)
+  yield takeEvery(ADD_NEW_JOB, onAddNewJobList)
 }
 
 function* AllJobsSaga() {

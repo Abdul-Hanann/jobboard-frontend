@@ -67,7 +67,7 @@ export const GET_INVOICE_DETAIL = "/invoice"
 
 // JOBS
 export const GET_JOB_LIST_URL = baseUrl + "/jobs"
-export const ADD_NEW_JOB_LIST = baseUrl + "/add/job"
+export const ADD_NEW_JOB_LIST = baseUrl + "/job"
 export const UPDATE_JOB_LIST = "/update/job"
 export const DELETE_JOB_LIST = "/delete/job"
 

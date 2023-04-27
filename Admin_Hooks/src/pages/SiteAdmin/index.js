@@ -51,9 +51,9 @@ import {
   DropdownItem,
 } from "reactstrap"
 
-function JobList() {
+function SiteAdmin() {
   //meta title
-  document.title = "Jobs List | SAIT Job Board"
+  document.title = "Site Admin | SAIT Job Board"
 
   const [modal, setModal] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
@@ -61,7 +61,7 @@ function JobList() {
   const [jobsList, setJobsList] = useState([])
   const [job, setJob] = useState(null)
   const dispatch = useDispatch()
-  const { jobs } = useSelector(state => state.JobListReducer)
+  // const { jobs } = useSelector(state => state.JobListReducer)
 
   // validation
   const validation = useFormik({
@@ -90,8 +90,6 @@ function JobList() {
       JobWBS: Yup.string().required("Please Enter Your JobWBS"),
     }),
     onSubmit: values => {
-    console.log("okay")
-    console.log("values:",values)
       if (isEdit) {
         const updateJobList = {
           id: job ? job.id : 0,
@@ -124,7 +122,6 @@ function JobList() {
           // status: values["status"],
         }
         // save new Job
-        console.log("okay")
         dispatch(onAddNewJobList(newJobList))
         validation.resetForm()
       }
@@ -136,16 +133,16 @@ function JobList() {
     dispatch(fetchJobList())
   }, [])
 
-  useEffect(() => {
-    setJobsList(jobs)
-  }, [jobs])
+  // useEffect(() => {
+  //   setJobsList(jobs)
+  // }, [jobs])
 
-  useEffect(() => {
-    if (!isEmpty(jobs) && !!isEdit) {
-      setJobsList(jobs)
-      setIsEdit(false)
-    }
-  }, [jobs])
+  // useEffect(() => {
+  //   if (!isEmpty(jobs) && !!isEdit) {
+  //     setJobsList(jobs)
+  //     setIsEdit(false)
+  //   }
+  // }, [jobs])
 
   const toggle = () => {
     if (modal) {
@@ -156,24 +153,24 @@ function JobList() {
     }
   }
 
-  const handleJobClick = arg => {
-    const job = arg
-    setJob({
-      id: job.id,
-      // JobNo: job.JobNo,
-      JobName: job.JobName,
-      JobDate: job.JobDate,
-      JobNoOfDays: job.JobNoOfDays,
-      JobSiteId: job.JobSiteId,
-      JobNotes: job.JobNotes,
-      JobWBS: job.JobWBS,
-      // status: job.status,
-    })
+  // const handleJobClick = arg => {
+  //   const job = arg
+  //   setJob({
+  //     id: job.id,
+  //     // JobNo: job.JobNo,
+  //     JobName: job.JobName,
+  //     JobDate: job.JobDate,
+  //     JobNoOfDays: job.JobNoOfDays,
+  //     JobSiteId: job.JobSiteId,
+  //     JobNotes: job.JobNotes,
+  //     JobWBS: job.JobWBS,
+  //     // status: job.status,
+  //   })
 
-    setIsEdit(true)
+  //   setIsEdit(true)
 
-    toggle()
-  }
+  //   toggle()
+  // }
 
   //delete Job
   const [deleteModal, setDeleteModal] = useState(false)
@@ -189,144 +186,144 @@ function JobList() {
       setDeleteModal(false)
     }
   }
-  const handleJobClicks = () => {
-    setJobsList("")
-    setIsEdit(false)
-    toggle()
-  }
+  // const handleJobClicks = () => {
+  //   setJobsList("")
+  //   setIsEdit(false)
+  //   toggle()
+  // }
 
-  const columns = useMemo(
-    () => [
-      // {
-      //     Header: 'No',
-      //     accessor: 'jobId',
-      //     filterable: true,
-      //     Cell: (cellProps) => {
-      //         return <JobNo {...cellProps} />;
-      //     }
-      // },
-      {
-        Header: "Job Name",
-        accessor: "JobName",
-        filterable: true,
-        Cell: cellProps => {
-          return <JobName {...cellProps} />
-        },
-      },
-      {
-        Header: "Job Date",
-        accessor: "JobDate",
-        filterable: true,
-        Cell: cellProps => {
-          return <JobDate {...cellProps} />
-        },
-      },
-      {
-        Header: "Job No Of Days",
-        accessor: "JobNoOfDays",
-        filterable: true,
-        Cell: cellProps => {
-          return <JobNoOfDays {...cellProps} />
-        },
-      },
-      {
-        Header: "Job Site Id",
-        accessor: "JobSiteId",
-        filterable: true,
-        Cell: cellProps => {
-          return <JobSiteId {...cellProps} />
-        },
-      },
-      {
-        Header: "Job Notes",
-        accessor: "JobNotes",
-        Cell: cellProps => {
-          return <JobNotes {...cellProps} />
-        },
-      },
-      {
-        Header: "Job WBS",
-        accessor: "JobWBS",
-        Cell: cellProps => {
-          return <JobWBS {...cellProps} />
-        },
-      },
-      // {
-      //     Header: 'Posted Date',
-      //     accessor: 'postedDate',
-      //     Cell: (cellProps) => {
-      //         return <PostedDate {...cellProps} />;
-      //     }
-      // },
-      // {
-      //     Header: 'Last Date',
-      //     accessor: 'lastDate',
-      //     Cell: (cellProps) => {
-      //         return <LastDate {...cellProps} />;
-      //     }
-      // },
-      // {
-      //     Header: 'Status',
-      //     accessor: 'status',
-      //     disableFilters: true,
-      //     Cell: (cellProps) => {
-      //         return <Status {...cellProps} />;
-      //     }
-      // },
-      {
-        Header: "Action",
-        accessor: "action",
-        disableFilters: true,
-        Cell: cellProps => {
-          return (
-            <ul className="list-unstyled hstack gap-1 mb-0">
-              <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                <Link to="/job-details" className="btn btn-sm btn-soft-primary">
-                  <i className="mdi mdi-eye-outline" id="viewtooltip"></i>
-                </Link>
-              </li>
-              <UncontrolledTooltip placement="top" target="viewtooltip">
-                View
-              </UncontrolledTooltip>
+  // const columns = useMemo(
+  //   () => [
+  //     // {
+  //     //     Header: 'No',
+  //     //     accessor: 'jobId',
+  //     //     filterable: true,
+  //     //     Cell: (cellProps) => {
+  //     //         return <JobNo {...cellProps} />;
+  //     //     }
+  //     // },
+  //     {
+  //       Header: "Job Name",
+  //       accessor: "JobName",
+  //       filterable: true,
+  //       Cell: cellProps => {
+  //         return <JobName {...cellProps} />
+  //       },
+  //     },
+  //     {
+  //       Header: "Job Date",
+  //       accessor: "JobDate",
+  //       filterable: true,
+  //       Cell: cellProps => {
+  //         return <JobDate {...cellProps} />
+  //       },
+  //     },
+  //     {
+  //       Header: "Job No Of Days",
+  //       accessor: "JobNoOfDays",
+  //       filterable: true,
+  //       Cell: cellProps => {
+  //         return <JobNoOfDays {...cellProps} />
+  //       },
+  //     },
+  //     {
+  //       Header: "Job Site Id",
+  //       accessor: "JobSiteId",
+  //       filterable: true,
+  //       Cell: cellProps => {
+  //         return <JobSiteId {...cellProps} />
+  //       },
+  //     },
+  //     {
+  //       Header: "Job Notes",
+  //       accessor: "JobNotes",
+  //       Cell: cellProps => {
+  //         return <JobNotes {...cellProps} />
+  //       },
+  //     },
+  //     {
+  //       Header: "Job WBS",
+  //       accessor: "JobWBS",
+  //       Cell: cellProps => {
+  //         return <JobWBS {...cellProps} />
+  //       },
+  //     },
+  //     // {
+  //     //     Header: 'Posted Date',
+  //     //     accessor: 'postedDate',
+  //     //     Cell: (cellProps) => {
+  //     //         return <PostedDate {...cellProps} />;
+  //     //     }
+  //     // },
+  //     // {
+  //     //     Header: 'Last Date',
+  //     //     accessor: 'lastDate',
+  //     //     Cell: (cellProps) => {
+  //     //         return <LastDate {...cellProps} />;
+  //     //     }
+  //     // },
+  //     // {
+  //     //     Header: 'Status',
+  //     //     accessor: 'status',
+  //     //     disableFilters: true,
+  //     //     Cell: (cellProps) => {
+  //     //         return <Status {...cellProps} />;
+  //     //     }
+  //     // },
+  //     {
+  //       Header: "Action",
+  //       accessor: "action",
+  //       disableFilters: true,
+  //       Cell: cellProps => {
+  //         return (
+  //           <ul className="list-unstyled hstack gap-1 mb-0">
+  //             <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
+  //               <Link to="/job-details" className="btn btn-sm btn-soft-primary">
+  //                 <i className="mdi mdi-eye-outline" id="viewtooltip"></i>
+  //               </Link>
+  //             </li>
+  //             <UncontrolledTooltip placement="top" target="viewtooltip">
+  //               View
+  //             </UncontrolledTooltip>
 
-              <li>
-                <Link
-                  to="#"
-                  className="btn btn-sm btn-soft-info"
-                  onClick={() => {
-                    const jobData = cellProps.row.original
-                    handleJobClick(jobData)
-                  }}
-                >
-                  <i className="mdi mdi-pencil-outline" id="edittooltip" />
-                  <UncontrolledTooltip placement="top" target="edittooltip">
-                    Edit
-                  </UncontrolledTooltip>
-                </Link>
-              </li>
+  //             <li>
+  //               <Link
+  //                 to="#"
+  //                 className="btn btn-sm btn-soft-info"
+  //                 onClick={() => {
+  //                   const jobData = cellProps.row.original
+  //                   handleJobClick(jobData)
+  //                 }}
+  //               >
+  //                 <i className="mdi mdi-pencil-outline" id="edittooltip" />
+  //                 <UncontrolledTooltip placement="top" target="edittooltip">
+  //                   Edit
+  //                 </UncontrolledTooltip>
+  //               </Link>
+  //             </li>
 
-              <li>
-                <Link
-                  to="#"
-                  className="btn btn-sm btn-soft-danger"
-                  onClick={() => {
-                    const jobData = cellProps.row.original
-                    onClickDelete(jobData)
-                  }}
-                >
-                  <i className="mdi mdi-delete-outline" id="deletetooltip" />
-                  <UncontrolledTooltip placement="top" target="deletetooltip">
-                    Delete
-                  </UncontrolledTooltip>
-                </Link>
-              </li>
-            </ul>
-          )
-        },
-      },
-    ],
-    []
-  )
+  //             <li>
+  //               <Link
+  //                 to="#"
+  //                 className="btn btn-sm btn-soft-danger"
+  //                 onClick={() => {
+  //                   const jobData = cellProps.row.original
+  //                   onClickDelete(jobData)
+  //                 }}
+  //               >
+  //                 <i className="mdi mdi-delete-outline" id="deletetooltip" />
+  //                 <UncontrolledTooltip placement="top" target="deletetooltip">
+  //                   Delete
+  //                 </UncontrolledTooltip>
+  //               </Link>
+  //             </li>
+  //           </ul>
+  //         )
+  //       },
+  //     },
+  //   ],
+  //   []
+  // )
 
   return (
     <React.Fragment>
@@ -337,14 +334,14 @@ function JobList() {
       />
       <div className="page-content">
         <div className="container-fluid">
-          <Breadcrumbs title="Jobs" breadcrumbItem="Jobs Lists" />
+          <Breadcrumbs title="Admin" breadcrumbItem="Site Admin" />
           <Row>
             <Col lg="12">
               <Card>
                 <CardBody className="border-bottom">
                   <div className="d-flex align-items-center">
                     <h5 className="mb-0 card-title flex-grow-1">
-                      Create New Job
+                      Add Site Admin
                     </h5>
                     <div className="flex-shrink-0">
                       <Link
@@ -352,7 +349,7 @@ function JobList() {
                         onClick={() => setModal(true)}
                         className="btn btn-primary me-1"
                       >
-                        Create New Job
+                        Add Site Admin
                       </Link>
                       {/* <Link to="#!" className="btn btn-light me-1"><i className="mdi mdi-refresh"></i></Link> */}
                       {/* <UncontrolledDropdown className="dropdown d-inline-block me-1">
@@ -626,4 +623,5 @@ function JobList() {
   )
 }
 
-export default JobList
+export default SiteAdmin
+

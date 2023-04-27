@@ -19,12 +19,14 @@ function* loginUser({ payload: { user, history } }) {
     if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
       const response = yield call(
         fireBaseBackend.loginUser,
+        user.role,
         user.email,
         user.password
       );
       yield put(loginSuccess(response));
     } else if (process.env.REACT_APP_DEFAULTAUTH === "jwt") {
       const response = yield call(postJwtLogin, {
+        roleValue: user.role,
         email: user.email,
         password: user.password,
       });
@@ -32,12 +34,15 @@ function* loginUser({ payload: { user, history } }) {
       yield put(loginSuccess(response));
     } else if (process.env.REACT_APP_DEFAULTAUTH === "fake") {
       const response = yield call(postFakeLogin, {
+        roleValue: user.role,
         email: user.email,
         password: user.password,
       });
       localStorage.setItem("authUser", JSON.stringify(response));
       yield put(loginSuccess(response));
     }
+    console.log("Role:",user.role)
+    localStorage.setItem('userType', user.role);
     history('/dashboard');
   } catch (error) {
     yield put(apiError(error));
