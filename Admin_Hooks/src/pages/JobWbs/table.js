@@ -1,21 +1,10 @@
 import React, { Fragment, useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import {
-  useTable,
-  useGlobalFilter,
-  useAsyncDebounce,
-  useSortBy,
-  useFilters,
-  useExpanded,
-  usePagination,
-} from "react-table"
-import {
   Table,
   Row,
   Col,
-  Button,
   Input,
-  CardBody,
   PaginationItem,
   PaginationLink,
   Pagination,
@@ -23,115 +12,16 @@ import {
   FormGroup,
   Label,
 } from "reactstrap"
-import { Filter, DefaultColumnFilter } from "./filters"
-import JobListGlobalFilter from "../../components/Common/GlobalSearchFilter"
 import ActionButton from "components/ActionButton"
 
-// Define a default UI for filtering
-function GlobalFilter({
-  preGlobalFilteredRows,
-  globalFilter,
-  setGlobalFilter,
-  isJobListGlobalFilter,
-}) {
-  const [value, setValue] = React.useState(globalFilter)
-  const onChange = useAsyncDebounce(value => {
-    setGlobalFilter(value || undefined)
-  }, 200)
-
-  return (
-    <React.Fragment>
-      <Col md={4}>
-        <div className="search-box me-xxl-2 my-3 my-xxl-0 d-inline-block">
-          <div className="position-relative">
-            <label htmlFor="search-bar-0" className="search-label">
-              <span id="search-bar-0-label" className="sr-only">
-                Search this table
-              </span>
-              <input
-                onChange={e => {
-                  setValue(e.target.value)
-                  onChange(e.target.value)
-                }}
-                id="search-bar-0"
-                type="text"
-                className="form-control"
-                placeholder={`${count} records...`}
-                value={value || ""}
-              />
-            </label>
-            <i className="bx bx-search-alt search-icon"></i>
-          </div>
-        </div>
-      </Col>
-      {isJobListGlobalFilter && <JobListGlobalFilter />}
-    </React.Fragment>
-  )
-}
-
-const TableContainer = ({
-  columns,
-  data,
-  isGlobalFilter,
-  isJobListGlobalFilter,
-  isAddOptions,
-  isAddUserList,
-  handleOrderClicks,
-  handleUserClick,
-  handleCustomerClick,
-  isAddCustList,
-  customPageSize,
-  className,
-  customPageSizeOptions,
-}) => {
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    page,
-    prepareRow,
-    canPreviousPage,
-    canNextPage,
-    pageOptions,
-    pageCount,
-    gotoPage,
-    nextPage,
-    previousPage,
-    setPageSize,
-    state,
-    preGlobalFilteredRows,
-    setGlobalFilter,
-    state: { pageIndex, pageSize },
-  } = useTable(
-    {
-      columns,
-      data,
-      defaultColumn: { Filter: DefaultColumnFilter },
-      initialState: {
-        pageIndex: 0,
-        pageSize: customPageSize,
-        sortBy: [
-          {
-            desc: true,
-          },
-        ],
-      },
-    },
-    useGlobalFilter,
-    useFilters,
-    useSortBy,
-    useExpanded,
-    usePagination
-  )
+const TableContainer = ({ data }) => {
   const [showEntries, setshowEntries] = useState(10)
   const [paginationItems, setpaginationItems] = useState(1)
   const [selectedPaginationItem, setselectedPaginationItem] = useState(1)
   const [currentTableData, setcurrentTableData] = useState([])
   const count = data.length
   const [value, setValue] = useState("")
-  const generateSortingIndicator = column => {
-    return column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : ""
-  }
+
   useEffect(() => {
     if (data) {
       setpaginationItems(Math.ceil(data.length / showEntries))
@@ -150,14 +40,6 @@ const TableContainer = ({
     }
   }, [data, paginationItems, selectedPaginationItem, showEntries])
 
-  const onChangeInSelect = event => {
-    setPageSize(Number(event.target.value))
-  }
-
-  const onChangeInInput = event => {
-    const page = event.target.value ? Number(event.target.value) - 1 : 0
-    gotoPage(page)
-  }
   const handleSearch = e => {
     setValue(e.target.value)
     // if (e.target.value === "") {
@@ -200,28 +82,28 @@ const TableContainer = ({
           <thead>
             <tr>
               <th
-                style={{
-                  width: "14%",
-                  minWidth: "200px",
-                }}
+                // style={{
+                //   width: "14%",
+                //   minWidth: "200px",
+                // }}
                 className="text-center"
               >
                 Name{" "}
               </th>
               <th
-                style={{
-                  width: "14%",
-                  minWidth: "200px",
-                }}
+                // style={{
+                //   width: "14%",
+                //   minWidth: "200px",
+                // }}
                 className="text-center"
               >
                 Tasks{" "}
               </th>
               <th
-                style={{
-                  width: "10%",
-                  minWidth: "100px",
-                }}
+                // style={{
+                //   width: "10%",
+                //   minWidth: "100px",
+                // }}
                 className="text-center"
               >
                 Actions
@@ -229,11 +111,16 @@ const TableContainer = ({
             </tr>
           </thead>
           <tbody>
-            {currentTableData &&
+            {currentTableData && currentTableData.length !== 0 ? (
               currentTableData.map(jobWbs => (
                 <tr key={jobWbs.id}>
                   <td className="text-center">{jobWbs.projectName}</td>
-                  <td className="text-center">{jobWbs.requestDate}</td>
+                  <td
+                    className="text-center"
+                    style={{ maxWidth: "200px", textOverflow: "ellipsis" }}
+                  >
+                    {jobWbs.requestDate}
+                  </td>
                   <td className="d-flex flex-row justify-content-center">
                     <ActionButton
                       color="secondary"
@@ -273,7 +160,14 @@ const TableContainer = ({
                     />
                   </td>
                 </tr>
-              ))}
+              ))
+            ) : (
+              <tr>
+                <td></td>
+                <td className="text-center">No records</td>
+                <td></td>
+              </tr>
+            )}
           </tbody>
         </Table>
       </div>
