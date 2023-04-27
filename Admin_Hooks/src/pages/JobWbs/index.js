@@ -17,7 +17,7 @@ import {
   addNewJobList as onAddNewJobList,
   updateJobList as onUpdateJobList,
   deleteJobList as onDeleteJobList,
-  fetchJobList,
+  fetchJobWbs,
 } from "store/actions"
 
 //redux
@@ -49,11 +49,10 @@ function JobWbs() {
   const [modal, setModal] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
 
-  const [jobsList, setJobsList] = useState([])
+  const [jobWbsList, setJobWbsList] = useState([])
   const [job, setJob] = useState(null)
   const dispatch = useDispatch()
-  const { jobs } = useSelector(state => state.JobListReducer)
-
+  const { jobWbs } = useSelector(state => state.JobWbsReducer)
   // validation
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -61,56 +60,27 @@ function JobWbs() {
 
     initialValues: {
       // JobNo: (job && job.JobNo) || '',
-      JobName: (job && job.JobName) || "",
-      JobDate: (job && job.JobDate) || "",
-      JobNoOfDays: (job && job.JobNoOfDays) || "",
-      JobSiteId: (job && job.JobSiteId) || "",
-      JobNotes: (job && job.JobNotes) || "",
-      JobWBS: (job && job.JobWBS) || "",
+      name: (job && job.name) || "",
+      tasks: (job && job.tasks) || [""],
     },
     validationSchema: Yup.object({
-      // JobNo: Yup.string().matches(
-      //     /[0-9\.\-\s+\/()]+/,
-      //     "Please Enter Valid Job Id"
-      // ).required("Please Enter Your Job Id"),
-      JobName: Yup.string().required("Please Enter Your Job Name"),
-      JobDate: Yup.string().required("Please Enter Your Job Date"),
-      JobNoOfDays: Yup.string().required("Please Enter Your Job No of Days"),
-      JobSiteId: Yup.string().required("Please Enter Your Job Site ID"),
-      JobNotes: Yup.string().required("Please Enter Your Job Notes"),
-      JobWBS: Yup.string().required("Please Enter Your JobWBS"),
+      name: Yup.string().required("required*"),
+      tasks: Yup.string().required("required*"),
     }),
     onSubmit: values => {
       if (isEdit) {
         const updateJobList = {
-          id: job ? job.id : 0,
-          // JobNo: values.JobNo,
-          JobName: values.JobName,
-          JobDate: values.JobDate,
-          JobNoOfDays: values.JobNoOfDays,
-          JobSiteId: values.JobSiteId,
-          JobNotes: values.JobNotes,
-          JobWBS: values.JobWBS,
-          // postedDate: "02 June 2021",
-          // lastDate: "25 June 2021",
-          // status: values.status,
+          id: job ? job._id : 0,
+          name: values.name,
+          tasks: values.tasks,
         }
         // update Job
         dispatch(onUpdateJobList(updateJobList))
         validation.resetForm()
       } else {
         const newJobList = {
-          id: Math.floor(Math.random() * (30 - 20)) + 20,
-          // JobNo: values["JobNo"],
-          JobName: values["JobName"],
-          JobDate: values["JobDate"],
-          JobNoOfDays: values["JobNoOfDays"],
-          JobSiteId: values["JobSiteId"],
-          JobNotes: values["JobNotes"],
-          JobWBS: values["JobWBS"],
-          // postedDate: "02 June 2021",
-          // lastDate: "25 June 2021",
-          // status: values["status"],
+          name: values["name"],
+          tasks: values["tasks"],
         }
         // save new Job
         dispatch(onAddNewJobList(newJobList))
@@ -121,19 +91,19 @@ function JobWbs() {
   })
 
   useEffect(() => {
-    dispatch(fetchJobList())
+    dispatch(fetchJobWbs())
   }, [])
 
   useEffect(() => {
-    setJobsList(jobs)
-  }, [jobs])
+    setJobWbsList(jobWbs)
+  }, [jobWbs])
 
   useEffect(() => {
-    if (!isEmpty(jobs) && !!isEdit) {
-      setJobsList(jobs)
+    if (!isEmpty(jobWbs) && !!isEdit) {
+      setJobWbsList(jobWbs)
       setIsEdit(false)
     }
-  }, [jobs])
+  }, [jobWbs])
 
   const toggle = () => {
     if (modal) {
@@ -178,7 +148,7 @@ function JobWbs() {
     }
   }
   const handleJobClicks = () => {
-    setJobsList("")
+    setJobWbsList("")
     setIsEdit(false)
     toggle()
   }
@@ -223,14 +193,14 @@ function JobWbs() {
                   </div>
                 </CardBody>
                 <CardBody>
-                  <Table data={jobs} />
+                  <Table data={jobWbs} />
                 </CardBody>
               </Card>
             </Col>
           </Row>
           <Modal isOpen={modal} toggle={toggle}>
             <ModalHeader toggle={toggle} tag="h4">
-              {!!isEdit ? "Edit Job" : "Add Job"}
+              {!!isEdit ? "Edit Job" : "Add Job Wbs"}
             </ModalHeader>
             <ModalBody>
               <Form
@@ -242,214 +212,57 @@ function JobWbs() {
               >
                 <Row>
                   <Col className="col-12">
-                    {/* <div className="mb-3">
-                                            <Label className="form-label"> Job Id</Label>
-                                            <Input
-                                                name="jobId"
-                                                type="text"
-                                                placeholder="Insert Job Id"
-                                                validate={{
-                                                    required: { value: true },
-                                                }}
-                                                onChange={validation.handleChange}
-                                                onBlur={validation.handleBlur}
-                                                value={validation.values.jobId || ""}
-                                                invalid={
-                                                    validation.touched.jobId && validation.errors.jobId ? true : false
-                                                }
-                                            />
-                                            {validation.touched.jobId && validation.errors.jobId ? (
-                                                <FormFeedback type="invalid">{validation.errors.jobId}</FormFeedback>
-                                            ) : null}
-                                        </div> */}
                     <div className="mb-3">
-                      <Label className="form-label">Job Name</Label>
+                      <Label className="form-label">Name</Label>
                       <Input
-                        name="jobName"
+                        name="name"
                         type="text"
-                        placeholder="Insert Job Name"
+                        placeholder="Enter Job Wbs Name"
                         validate={{
                           required: { value: true },
                         }}
                         onChange={validation.handleChange}
                         onBlur={validation.handleBlur}
-                        value={validation.values.jobName || ""}
+                        value={validation.values.name || ""}
                         invalid={
-                          validation.touched.jobName &&
-                          validation.errors.jobName
+                          validation.touched.name && validation.errors.name
                             ? true
                             : false
                         }
                       />
-                      {validation.touched.jobName &&
-                      validation.errors.jobName ? (
+                      {validation.touched.name && validation.errors.name ? (
                         <FormFeedback type="invalid">
-                          {validation.errors.jobName}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-
-                    <div className="mb-3">
-                      <Label className="form-label">Job Date</Label>
-                      <DatePicker
-                        name="JobDate"
-                        selected={validation.values.JobDate}
-                        placeholderText="Insert Job Date"
-                        onChange={date =>
-                          validation.setFieldValue("JobDate", date)
-                        }
-                        onBlur={validation.handleBlur}
-                        dateFormat="yyyy-MM-dd"
-                        // showTimeInput
-                        className={
-                          validation.touched.JobDate &&
-                          validation.errors.JobDate
-                            ? "form-control is-invalid"
-                            : "form-control"
-                        }
-                      />
-                      {validation.touched.JobDate &&
-                      validation.errors.JobDate ? (
-                        <FormFeedback type="invalid">
-                          {validation.errors.JobDate}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-
-                    {/* <div className="mb-3">
-                                            <Label className="form-label"> Job Date</Label>
-                                            <Input
-                                                name="JobDate"
-                                                type="datetime"
-                                                placeholder="Insert Job Date"
-                                                onChange={validation.handleChange}
-                                                onBlur={validation.handleBlur}
-                                                value={validation.values.JobDate || ""}
-                                                invalid={
-                                                    validation.touched.JobDate && validation.errors.JobDate ? true : false
-                                                }
-                                            />
-                                            {validation.touched.JobDate && validation.errors.JobDate ? (
-                                                <FormFeedback type="invalid">{validation.errors.JobDate}</FormFeedback>
-                                            ) : null}
-                                        </div> */}
-                    <div className="mb-3">
-                      <Label className="form-label">Job No Of Days</Label>
-                      <Input
-                        name="JobNoOfDays"
-                        placeholder="Insert Job No Of Days"
-                        type="text"
-                        onChange={validation.handleChange}
-                        onBlur={validation.handleBlur}
-                        value={validation.values.JobNoOfDays || ""}
-                        invalid={
-                          validation.touched.JobNoOfDays &&
-                          validation.errors.JobNoOfDays
-                            ? true
-                            : false
-                        }
-                      />
-                      {validation.touched.JobNoOfDays &&
-                      validation.errors.JobNoOfDays ? (
-                        <FormFeedback type="invalid">
-                          {validation.errors.JobNoOfDays}
+                          {validation.errors.name}
                         </FormFeedback>
                       ) : null}
                     </div>
                     <div className="mb-3">
-                      <Label className="form-label">Job Site Id</Label>
-                      <Input
-                        name="JobSiteId"
-                        type="text"
-                        placeholder="Insert Job Site Id"
-                        onChange={validation.handleChange}
-                        onBlur={validation.handleBlur}
-                        value={validation.values.JobSiteId || ""}
-                        invalid={
-                          validation.touched.JobSiteId &&
-                          validation.errors.JobSiteId
-                            ? true
-                            : false
-                        }
-                      />
-                      {validation.touched.JobSiteId &&
-                      validation.errors.JobSiteId ? (
-                        <FormFeedback type="invalid">
-                          {validation.errors.JobSiteId}
-                        </FormFeedback>
-                      ) : null}
+                      <Label className="form-label">Tasks</Label>
+                      {validation.values.tasks.map((input, index) => (
+                        <>
+                          <Input
+                            key={index}
+                            name="tasks"
+                            type="text"
+                            placeholder="Enter Job Tasks"
+                            validate={{
+                              required: { value: true },
+                            }}
+                            onChange={event =>
+                              handleTaskInputChange(index, event)
+                            }
+                            onBlur={validation.handleBlur}
+                            value={input}
+                            invalid={input === "" ? true : false}
+                          />
+                          {input === "" ? (
+                            <FormFeedback type="invalid">
+                              {validation.errors.name}
+                            </FormFeedback>
+                          ) : null}
+                        </>
+                      ))}
                     </div>
-                    <div className="mb-3">
-                      <Label className="form-label">Job Notes</Label>
-                      <Input
-                        name="JobNotes"
-                        type="text"
-                        placeholder="Insert Job Notes"
-                        onChange={validation.handleChange}
-                        onBlur={validation.handleBlur}
-                        value={validation.values.JobNotes || ""}
-                        invalid={
-                          validation.touched.JobNotes &&
-                          validation.errors.JobNotes
-                            ? true
-                            : false
-                        }
-                      />
-                      {validation.touched.JobNotes &&
-                      validation.errors.JobNotes ? (
-                        <FormFeedback type="invalid">
-                          {validation.errors.JobNotes}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-                    <div className="mb-3">
-                      <Label className="form-label">Job WBS</Label>
-                      <Input
-                        name="JobWBS"
-                        type="select"
-                        className="form-select"
-                        onChange={validation.handleChange}
-                        onBlur={validation.handleBlur}
-                        value={validation.values.JobWBS || ""}
-                        invalid={
-                          validation.touched.JobWBS && validation.errors.JobWBS
-                            ? true
-                            : false
-                        }
-                      >
-                        <option>Job 1</option>
-                        <option>Job 2</option>
-                        {/* <option>Freelance</option>
-                                                <option>Internship</option> */}
-                      </Input>
-                      {validation.touched.JobWBS && validation.errors.JobWBS ? (
-                        <FormFeedback type="invalid">
-                          {validation.errors.JobWBS}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-                    {/* <div className="mb-3">
-                                            <Label className="form-label">Status</Label>
-                                            <Input
-                                                name="status"
-                                                type="select"
-                                                onChange={validation.handleChange}
-                                                onBlur={validation.handleBlur}
-                                                value={
-                                                    validation.values.status || ""
-                                                }
-                                                invalid={
-                                                    validation.touched.status && validation.errors.status ? true : false
-                                                }
-                                            >
-                                                <option>Active</option>
-                                                <option>New</option>
-                                                <option>Close</option>
-                                            </Input>
-                                            {validation.touched.status && validation.errors.status ? (
-                                                <FormFeedback status="invalid">{validation.errors.status}</FormFeedback>
-                                            ) : null}
-                                        </div> */}
                   </Col>
                 </Row>
                 <Row>
