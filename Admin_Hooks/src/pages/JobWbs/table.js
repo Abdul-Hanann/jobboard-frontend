@@ -48,9 +48,7 @@ const TableContainer = ({ data }) => {
     let currentList = data.filter(jobWbs => {
       return e.target.value === ""
         ? true
-        : jobWbs.projectName
-            .toLowerCase()
-            .includes(e.target.value.toLowerCase())
+        : jobWbs.name.toLowerCase().includes(e.target.value.toLowerCase())
     })
 
     setcurrentTableData(currentList)
