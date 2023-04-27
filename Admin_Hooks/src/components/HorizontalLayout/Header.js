@@ -19,7 +19,8 @@ import megamenuImg from "../../assets/images/megamenu-img.png";
 import logo from "../../assets/images/logo.svg";
 import logoLight from "../../assets/images/logo-light.png";
 import logoLightSvg from "../../assets/images/logo-light.svg";
-import logoDark from "../../assets/images/logo-dark.png";
+// import logoDark from "../../assets/images/logo-dark.png";
+import logoDark from "../../assets/images/sait-logo.png"
 
 // import images
 import github from "../../assets/images/brands/github.png";
@@ -71,10 +72,11 @@ const Header = props => {
             <div className="navbar-brand-box">
               <Link to="/" className="logo logo-dark">
                 <span className="logo-sm">
-                  <img src={logo} alt="" height="22" />
+                  {/* <img src={logo} alt="" height="22" /> */}
+                  <img src={logoDark} alt="" height="30" />
                 </span>
                 <span className="logo-lg">
-                  <img src={logoDark} alt="" height="19" />
+                  <img src={logoDark} alt="" height="70" />
                 </span>
               </Link>
 

@@ -1,59 +1,72 @@
-import PropTypes from "prop-types";
-import React from "react";
+import PropTypes from "prop-types"
+import React from "react"
+import { useState, useEffect } from "react"
 
-import { Row, Col, CardBody, Card, Alert, Container, Form, Input, FormFeedback, Label } from "reactstrap";
+import {
+  Row,
+  Col,
+  CardBody,
+  Card,
+  Alert,
+  Container,
+  Form,
+  Input,
+  FormFeedback,
+  Label,
+} from "reactstrap"
 
 //redux
-import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
-import withRouter from "components/Common/withRouter";
+import { useSelector, useDispatch } from "react-redux"
+import { Link } from "react-router-dom"
+import withRouter from "components/Common/withRouter"
 
 // Formik validation
-import * as Yup from "yup";
-import { useFormik } from "formik";
+import * as Yup from "yup"
+import { useFormik } from "formik"
 
 //Social Media Imports
-import { GoogleLogin } from "react-google-login";
+import { GoogleLogin } from "react-google-login"
 // import TwitterLogin from "react-twitter-auth"
-import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
+import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props"
 
 // actions
-import { loginUser, socialLogin } from "../../store/actions";
+import { loginUser, socialLogin } from "../../store/actions"
 
 // import images
-import profile from "assets/images/profile-img.png";
-import logo from "assets/images/logo.svg";
+import profile from "assets/images/profile-img.png"
+import logo from "assets/images/logo.svg"
 
 //Import config
-import { facebook, google } from "../../config";
+import { facebook, google } from "../../config"
 
 const Login = props => {
-
   //meta title
-  document.title = "Login | Skote - React Admin & Dashboard Template";
+  document.title = "Login | Skote - React Admin & Dashboard Template"
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
 
     initialValues: {
-      email: "admin@themesbrand.com" || '',
-      password: "123456" || '',
+      role: "",
+      email: "admin@themesbrand.com" || "",
+      password: "123456" || "",
     },
     validationSchema: Yup.object({
+      role: Yup.string().required("Please Select Your Role"),
       email: Yup.string().required("Please Enter Your Email"),
       password: Yup.string().required("Please Enter Your Password"),
     }),
-    onSubmit: (values) => {
-      dispatch(loginUser(values, props.router.navigate));
-    }
-  });
+    onSubmit: values => {
+      dispatch(loginUser(values, props.router.navigate))
+    },
+  })
 
   const { error } = useSelector(state => ({
     error: state.Login.error,
-  }));
+  }))
 
   const signIn = (res, type) => {
     if (type === "google" && res) {
@@ -62,31 +75,31 @@ const Login = props => {
         email: res.profileObj.email,
         token: res.tokenObj.access_token,
         idToken: res.tokenId,
-      };
-      dispatch(socialLogin(postData, props.router.navigate, type));
+      }
+      dispatch(socialLogin(postData, props.router.navigate, type))
     } else if (type === "facebook" && res) {
       const postData = {
         name: res.name,
         email: res.email,
         token: res.accessToken,
         idToken: res.tokenId,
-      };
-      dispatch(socialLogin(postData, props.router.navigate, type));
+      }
+      dispatch(socialLogin(postData, props.router.navigate, type))
     }
-  };
+  }
 
   //handleGoogleLoginResponse
   const googleResponse = response => {
-    signIn(response, "google");
-  };
+    signIn(response, "google")
+  }
 
   //handleTwitterLoginResponse
   // const twitterResponse = e => {}
 
   //handleFacebookLoginResponse
   const facebookResponse = response => {
-    signIn(response, "facebook");
-  };
+    signIn(response, "facebook")
+  }
 
   return (
     <React.Fragment>
@@ -118,7 +131,7 @@ const Login = props => {
                     <Link to="/" className="logo-light-element">
                       <div className="avatar-md profile-user-wid mb-4">
                         <span className="avatar-title rounded-circle bg-light">
-                        <img
+                          <img
                             src={logo}
                             alt=""
                             className="rounded-circle"
@@ -131,14 +144,43 @@ const Login = props => {
                   <div className="p-2">
                     <Form
                       className="form-horizontal"
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        validation.handleSubmit();
-                        return false;
+                      onSubmit={e => {
+                        e.preventDefault()
+                        validation.handleSubmit()
+                        return false
                       }}
                     >
                       {error ? <Alert color="danger">{error}</Alert> : null}
 
+                      <div className="mb-3">
+                        <Label className="form-label">Role</Label>
+                        <Input
+                          type="select"
+                          name="role"
+                          className="form-control"
+                          onChange={validation.handleChange}
+                          onBlur={validation.handleBlur}
+                          value={validation.values.role || ""}
+                          invalid={
+                            validation.touched.role && validation.errors.role
+                              ? true
+                              : false
+                          }
+                        >
+                          <option value="">Select role</option>
+                          <option value="ROLE_ADMIN">Admin</option>
+                          <option value="ROLE_JOB_CREATOR">Job Creator</option>
+                          <option value="ROLE_TECHNICIAN">Technician</option>
+                          <option value="ROLE_SCHEDULER">Scheduler</option>
+                        </Input>
+                        {validation.touched.role && validation.errors.role ? (
+                          <FormFeedback type="invalid">
+                            {validation.errors.role}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+
+                      {/* </FormGroup> */}
                       <div className="mb-3">
                         <Label className="form-label">Email</Label>
                         <Input
@@ -150,11 +192,15 @@ const Login = props => {
                           onBlur={validation.handleBlur}
                           value={validation.values.email || ""}
                           invalid={
-                            validation.touched.email && validation.errors.email ? true : false
+                            validation.touched.email && validation.errors.email
+                              ? true
+                              : false
                           }
                         />
                         {validation.touched.email && validation.errors.email ? (
-                          <FormFeedback type="invalid">{validation.errors.email}</FormFeedback>
+                          <FormFeedback type="invalid">
+                            {validation.errors.email}
+                          </FormFeedback>
                         ) : null}
                       </div>
 
@@ -168,11 +214,17 @@ const Login = props => {
                           onChange={validation.handleChange}
                           onBlur={validation.handleBlur}
                           invalid={
-                            validation.touched.password && validation.errors.password ? true : false
+                            validation.touched.password &&
+                            validation.errors.password
+                              ? true
+                              : false
                           }
                         />
-                        {validation.touched.password && validation.errors.password ? (
-                          <FormFeedback type="invalid">{validation.errors.password}</FormFeedback>
+                        {validation.touched.password &&
+                        validation.errors.password ? (
+                          <FormFeedback type="invalid">
+                            {validation.errors.password}
+                          </FormFeedback>
                         ) : null}
                       </div>
 
@@ -253,7 +305,7 @@ const Login = props => {
                                 </Link>
                               )}
                               onSuccess={googleResponse}
-                              onFailure={() => { }}
+                              onFailure={() => {}}
                             />
                           </li>
                         </ul>
@@ -287,11 +339,11 @@ const Login = props => {
         </Container>
       </div>
     </React.Fragment>
-  );
-};
+  )
+}
 
-export default withRouter(Login);
+export default withRouter(Login)
 
 Login.propTypes = {
   history: PropTypes.object,
-};
+}
