@@ -2,62 +2,57 @@
   Calendar
 ===================*/
 
-
-.fc td, .fc th{
+.fc td,
+.fc th {
   border: $table-border-width solid $table-border-color;
 }
 
-
-
 .fc {
   .fc-toolbar {
-      h2 {
-          font-size: 16px;
-          line-height: 30px;
-          text-transform: uppercase;
+    h2 {
+      font-size: 16px;
+      line-height: 30px;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 767.98px) {
+      .fc-left,
+      .fc-right,
+      .fc-center {
+        float: none;
+        display: block;
+        text-align: center;
+        clear: both;
+        margin: 10px 0;
       }
 
-      @media (max-width: 767.98px) {
-
-          .fc-left,
-          .fc-right,
-          .fc-center {
-              float: none;
-              display: block;
-              text-align: center;
-              clear: both;
-              margin: 10px 0;
-          }
-
-          >*>* {
-              float: none;
-          }
-
-          .fc-today-button {
-              display: none;
-          }
+      > * > * {
+        float: none;
       }
 
-      .btn {
-          text-transform: capitalize;
+      .fc-today-button {
+        display: none;
       }
+    }
 
+    .btn {
+      text-transform: capitalize;
+    }
   }
 }
 
 .fc {
   th.fc-widget-header {
-      background: $gray-300;
-      color: $gray-700;
-      line-height: 20px;
-      padding: 10px 0;
-      text-transform: uppercase;
-      font-weight: $font-weight-bold;
+    background: $gray-300;
+    color: $gray-700;
+    line-height: 20px;
+    padding: 10px 0;
+    text-transform: uppercase;
+    font-weight: $font-weight-bold;
   }
 }
 
 .fc-unthemed {
-
   .fc-content,
   .fc-divider,
   .fc-list-heading td,
@@ -68,11 +63,11 @@
   td,
   th,
   thead {
-      border-color: $gray-300;
+    border-color: $gray-300;
   }
 
   td.fc-today {
-      background: lighten($gray-200, 2%);
+    background: lighten($gray-200, 2%);
   }
 }
 
@@ -104,6 +99,16 @@
   text-align: center;
 }
 
+.categories {
+  border-radius: 2px;
+  border: none;
+  font-size: 0.8125rem;
+  margin: 5px 2px;
+  padding: 8px 10px;
+  text-align: left;
+  cursor: pointer;
+}
+
 .fc-event,
 .fc-event-dot {
   background-color: $primary;
@@ -115,26 +120,24 @@
 
 #external-events {
   .external-event {
-      text-align: left;
-      padding: 8px 16px;
+    text-align: left;
+    padding: 8px 16px;
   }
 }
-
 
 .fc-day-grid-event.fc-h-event.fc-event.fc-start.fc-end.bg-dark {
-  .fc-content{
-    color: $light;  
+  .fc-content {
+    color: $light;
   }
 }
 
-
 // RTL
-[dir="rtl"]{
+[dir="rtl"] {
   .fc-header-toolbar {
-      direction: ltr !important;
+    direction: ltr !important;
   }
 
-  .fc-toolbar>*>:not(:first-child) {
-      margin-left: .75em;
+  .fc-toolbar > * > :not(:first-child) {
+    margin-left: 0.75em;
   }
 }

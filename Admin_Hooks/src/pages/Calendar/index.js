@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import PropTypes from "prop-types"
 import { isEmpty } from "lodash"
 
@@ -53,7 +53,7 @@ const Calender = props => {
   const dispatch = useDispatch()
 
   const [event, setEvent] = useState({})
-
+  const [allEvents, setAllEvents] = useState([])
   // events validation
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -131,16 +131,16 @@ const Calender = props => {
   const [modal, setModal] = useState(false)
   const [deleteModal, setDeleteModal] = useState(false)
   const [modalcategory, setModalcategory] = useState(false)
-
+  const [checkedCategories, setCheckedCategories] = useState([])
   const [selectedDay, setSelectedDay] = useState(0)
   const [isEdit, setIsEdit] = useState(false)
 
   useEffect(() => {
     dispatch(onGetCategories())
     dispatch(onGetEvents())
-    new Draggable(document.getElementById("external-events"), {
-      itemSelector: ".external-event",
-    })
+    // new Draggable(document.getElementById("external-events"), {
+    //   itemSelector: ".external-event",
+    // })
   }, [dispatch])
 
   useEffect(() => {
@@ -268,6 +268,38 @@ const Calender = props => {
       dispatch(onAddNewEvent(modifiedData))
     }
   }
+  useEffect(() => {
+    if (events) {
+      setAllEvents(events)
+    }
+  }, [events])
+  const [selectedIds, setSelectedIds] = useState([])
+
+  const handleCheckboxClick = (event, category) => {
+    event.stopPropagation()
+    if (!checkedCategories.includes(category.id)) {
+      setCheckedCategories(prevIds => [...prevIds, category.id])
+      category.checked = true
+    } else {
+      setCheckedCategories(prevIds => prevIds.filter(id => id !== category.id))
+      category.checked = false
+    }
+  }
+
+  const filterJobs = () => {
+    let tempEvent = events
+    tempEvent = tempEvent.filter(event =>
+      checkedCategories.includes(event.status)
+    )
+    setAllEvents(tempEvent)
+    if (checkedCategories.length === 0) {
+      setAllEvents(events)
+    }
+  }
+  
+  useEffect(() => {
+    filterJobs()
+  }, [checkedCategories, events])
 
   return (
     <React.Fragment>
@@ -286,7 +318,7 @@ const Calender = props => {
                 <Col lg={3}>
                   <Card>
                     <CardBody>
-                      <div className="d-grid text-bolder">
+                      <div className="d-grid" style={{ fontWeight: "bolder" }}>
                         {/* <Button
                           color="primary"
                           className="font-16 btn-block"
@@ -300,20 +332,39 @@ const Calender = props => {
 
                       <div id="external-events" className="mt-2">
                         <br />
-                        <p className="text-muted">
-                          Drag and drop your event or click in the calendar
-                        </p>
+                        <p className="text-muted">Filter your jobs </p>
                         {categories &&
                           categories.map((category, i) => (
-                            <div
-                              className={`${category.type} external-event fc-event text-white`}
-                              key={"cat-" + category.id}
-                              draggable
-                              onDrag={event => onDrag(event, category)}
+                            <label
+                              key={i}
+                              className={`${category.type} categories text-white d-flex align-items-center`}
                             >
-                              <i className="mdi mdi-checkbox-blank-circle font-size-11 me-2" />
-                              {category.title}
-                            </div>
+                              <div
+                              // key={"cat-" + category.id}
+                              // onClick={() => {
+                              //   filterJob(category.id)
+                              // }}
+                              // draggable
+                              // onDrag={event => onDrag(event, category)}
+                              >
+                                <input
+                                  type="checkbox"
+                                  className="custom-checkbox"
+                                  id={`custom-checkbox-${category.index}`}
+                                  name={category.title}
+                                  value={category.checked}
+                                  checked={category.checked}
+                                  onClick={e =>
+                                    handleCheckboxClick(e, category)
+                                  }
+                                />
+                                <span
+                                  className={`${category.type} categories text-white`}
+                                >
+                                  {category.title}
+                                </span>
+                              </div>
+                            </label>
                           ))}
                       </div>
 
@@ -340,13 +391,13 @@ const Calender = props => {
                       center: "title",
                       right: "dayGridMonth,dayGridWeek,dayGridDay",
                     }}
-                    events={events}
-                    editable={true}
-                    droppable={true}
+                    events={allEvents}
+                    editable={false}
+                    droppable={false}
                     selectable={true}
-                    dateClick={handleDateClick}
+                    // dateClick={handleDateClick}
                     eventClick={handleEventClick}
-                    drop={onDrop}
+                    // drop={onDrop}
                   />
 
                   {/* New/Edit event modal */}
