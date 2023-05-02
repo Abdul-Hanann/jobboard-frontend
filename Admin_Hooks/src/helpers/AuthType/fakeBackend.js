@@ -34,8 +34,8 @@ import {
   novEarningData,
   octEarningData,
   productComments,
-  jobs,
-  jobApply,
+  jobsList,
+  // jobApply,
   marchWalletData,
   febWalletData,
   janWalletData,
@@ -45,6 +45,7 @@ import {
   productData,
   cryptoOrderData,
   mailDB,
+  // jobsList,
 } from "../../common/data"
 
 let users = [
@@ -801,11 +802,11 @@ const fakeBackend = () => {
   mock.onGet(url.GET_JOB_LIST_URL).reply(() => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        if (jobs) {
+        if (jobsList) {
           // Passing fake JSON data as response
-          resolve([200, jobs])
+          resolve([200, jobsList])
         } else {
-          reject([400, "Cannot get jobs"])
+          reject([400, "Cannot get jobs List"])
         }
       })
     })

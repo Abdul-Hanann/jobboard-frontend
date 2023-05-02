@@ -190,11 +190,11 @@ export const getInvoiceDetail = id =>
 
 // get jobs
 // export const getJobList = () => get("http://localhost:8080/jobs");
-export const getJobList = () => {
-  console.log("url.GET_JOB_LIST", url.GET_JOB_LIST_URL)
-  return getDep(url.GET_JOB_LIST_URL)
-}
-
+// export const getJobList = () => {
+//   console.log("url.GET_JOB_LIST", url.GET_JOB_LIST_URL)
+//   return getDep(url.GET_JOB_LIST_URL)
+// }
+export const getJobList = () => get(url.GET_JOB_LIST_URL)
 // get Apply Jobs
 export default () => get(url.GET_APPLY_JOB)
 

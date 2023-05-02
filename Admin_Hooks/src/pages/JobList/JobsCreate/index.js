@@ -1,4 +1,6 @@
 import React, { useState } from "react"
+import { useNavigate } from "react-router-dom"
+
 import {
   Container,
   Row,
@@ -104,6 +106,11 @@ const TasksCreate = () => {
   const [endDate, setendDate] = useState(new Date())
   const [inputFields, setinputFields] = useState(inpRow)
 
+  const navigate = useNavigate()
+
+  function handleClick() {
+    navigate("/joblist")
+  }
   const startDateChange = date => {
     setstartDate(date)
   }
@@ -128,178 +135,188 @@ const TasksCreate = () => {
       <div className="page-content">
         <Container fluid>
           {/* Render Breadcrumbs */}
-          <Breadcrumbs title="Tasks" breadcrumbItem="Create Task" />
+          <Breadcrumbs title="Jobs List" breadcrumbItem="Create job list" />
 
           <Row>
             <Col lg="12">
               <Card>
                 <CardBody>
-                  <CardTitle className="mb-4">Create New Job</CardTitle>
+                  <Row>
+                    <Col>
+                      <CardTitle className="mb-4">Create New Job</CardTitle>
+                    </Col>
+                    <Col
+                      lg="1"
+                      className="mx-1"
+                      style={{ padding: 0, margin: 0 }}
+                    >
+                      <div className="text-end">
+                        <button
+                          type="submit"
+                          className="btn btn-clear"
+                          style={{
+                            width: "100px",
+                            backgroundColor: "green",
+                            color: "white",
+                          }}
+                          onClick={handleClick}
+                        >
+                          Back
+                        </button>
+                      </div>
+                    </Col>
+
+                    <Col
+                      lg="1"
+                      className="mx-1"
+                      style={{
+                        paddingright: 10,
+                        marginRight: 30,
+                        marginLeft: 0,
+                      }}
+                    >
+                      <div className="text-end">
+                        <button
+                          type="submit"
+                          className="btn btn-clear"
+                          style={{
+                            width: "100px",
+                            backgroundColor: "green",
+                            color: "white",
+                          }}
+                        >
+                          Clear
+                        </button>
+                      </div>
+                    </Col>
+                  </Row>
+
                   <form className="outer-repeater">
                     <div data-repeater-list="outer-group" className="outer">
                       <div data-repeater-item className="outer">
-                        <Row>
-                          {/* <Col className="col-12"> */}
-                          <FormGroup className="mb-4" row>
-                            <Label
-                              htmlFor="jobName"
-                              className="col-form-label col-lg-2"
-                            >
-                              Job Name
-                            </Label>
-                            <Col lg="10">
-                              <Input
-                                id="jobName"
-                                name="jobName"
-                                type="text"
-                                className="form-control"
-                                placeholder="Enter Task Name..."
-                                validate={{
-                                  required: { value: true },
-                                }}
-                                onChange={validation.handleChange}
-                                onBlur={validation.handleBlur}
-                                value={validation.values.jobName || ""}
-                                invalid={
-                                  validation.touched.jobName &&
-                                  validation.errors.jobName
-                                    ? true
-                                    : false
-                                }
-                              />
-                              {validation.touched.jobName &&
-                              validation.errors.jobName ? (
-                                <FormFeedback type="invalid">
-                                  {validation.errors.jobName}
-                                </FormFeedback>
-                              ) : null}
-                            </Col>
-                          </FormGroup>
-                          <Row>
-                            <FormGroup className="mb-4" row>
-                              <Label className="col-form-label col-lg-2">
-                                Job Date
-                              </Label>
-                              <Col lg="10">
-                                <Row>
-                                  <Col
-                                    md={5}
-                                    className="pr-0"
-                                    style={{ paddingLeft: "15px" }}
-                                  >
-                                    <DatePicker
-                                      name="JobDate"
-                                      selected={validation.values.JobDate}
-                                      placeholderText="Insert Job Date"
-                                      onChange={date =>
-                                        validation.setFieldValue(
-                                          "JobDate",
-                                          date
-                                        )
-                                      }
-                                      onBlur={validation.handleBlur}
-                                      dateFormat="yyyy-MM-dd"
-                                      // showTimeInput
-                                      className={
-                                        validation.touched.JobDate &&
-                                        validation.errors.JobDate
-                                          ? "form-control is-invalid"
-                                          : "form-control"
-                                      }
-                                    />
-                                    {validation.touched.JobDate &&
-                                    validation.errors.JobDate ? (
-                                      <FormFeedback type="invalid">
-                                        {validation.errors.JobDate}
-                                      </FormFeedback>
-                                    ) : null}
-                                  </Col>
-
-                                  <Label className="col-form-label col-lg-2">
-                                    Job Date
-                                  </Label>
-                                  <Col
-                                    md={5}
-                                    className="pr-0"
-                                    // style={{ paddingLeft: "55px" }}
-                                  >
-                                    <DatePicker
-                                      name="JobDate"
-                                      selected={validation.values.JobDate}
-                                      placeholderText="Insert Job Date"
-                                      onChange={date =>
-                                        validation.setFieldValue(
-                                          "JobDate",
-                                          date
-                                        )
-                                      }
-                                      onBlur={validation.handleBlur}
-                                      dateFormat="yyyy-MM-dd"
-                                      // showTimeInput
-                                      className={
-                                        validation.touched.JobDate &&
-                                        validation.errors.JobDate
-                                          ? "form-control is-invalid"
-                                          : "form-control"
-                                      }
-                                    />
-                                    {validation.touched.JobDate &&
-                                    validation.errors.JobDate ? (
-                                      <FormFeedback type="invalid">
-                                        {validation.errors.JobDate}
-                                      </FormFeedback>
-                                    ) : null}
-                                  </Col>
-                                </Row>
-                              </Col>
-                            </FormGroup>
-                          </Row>
-
-                          {/* <div className="mb-3">
-                                            <Label className="form-label"> Job Date</Label>
-                                            <Input
-                                                name="JobDate"
-                                                type="datetime"
-                                                placeholder="Insert Job Date"
-                                                onChange={validation.handleChange}
-                                                onBlur={validation.handleBlur}
-                                                value={validation.values.JobDate || ""}
-                                                invalid={
-                                                    validation.touched.JobDate && validation.errors.JobDate ? true : false
-                                                }
-                                            />
-                                            {validation.touched.JobDate && validation.errors.JobDate ? (
-                                                <FormFeedback type="invalid">{validation.errors.JobDate}</FormFeedback>
-                                            ) : null}
-                                        </div> */}
-                          <div className="mb-3">
-                            <Label className="form-label">Job No Of Days</Label>
+                        {/* <Row> */}
+                        {/* <Col className="col-12"> */}
+                        <FormGroup className="mb-4" row>
+                          <Label
+                            htmlFor="jobName"
+                            className="col-form-label col-lg-2"
+                          >
+                            Job Name
+                          </Label>
+                          <Col lg="10">
                             <Input
-                              name="JobNoOfDays"
-                              placeholder="Insert Job No Of Days"
+                              id="jobName"
+                              name="jobName"
                               type="text"
+                              className="form-control"
+                              placeholder="Enter Task Name..."
+                              validate={{
+                                required: { value: true },
+                              }}
                               onChange={validation.handleChange}
                               onBlur={validation.handleBlur}
-                              value={validation.values.JobNoOfDays || ""}
+                              value={validation.values.jobName || ""}
                               invalid={
-                                validation.touched.JobNoOfDays &&
-                                validation.errors.JobNoOfDays
+                                validation.touched.jobName &&
+                                validation.errors.jobName
                                   ? true
                                   : false
                               }
                             />
-                            {validation.touched.JobNoOfDays &&
-                            validation.errors.JobNoOfDays ? (
+                            {validation.touched.jobName &&
+                            validation.errors.jobName ? (
                               <FormFeedback type="invalid">
-                                {validation.errors.JobNoOfDays}
+                                {validation.errors.jobName}
                               </FormFeedback>
                             ) : null}
+                          </Col>
+                        </FormGroup>
+                        <div className="inner-repeater mb-4">
+                          <div className="inner form-group mb-0 row">
+                            <Label className="col-form-label col-lg-2">
+                              Job Date
+                            </Label>
+                            <div
+                              className="inner col-lg-10 ml-md-auto"
+                              id="repeater"
+                            >
+                              {/* {inputFields.map((field, key) => (*/}
+                              <div
+                                // key={key}
+                                // id={"nested" + key}
+                                className="mb-3 row align-items-center"
+                              >
+                                <Col md="5">
+                                  <DatePicker
+                                    name="JobDate"
+                                    selected={validation.values.JobDate}
+                                    placeholderText="Insert Job Date"
+                                    onChange={date =>
+                                      validation.setFieldValue("JobDate", date)
+                                    }
+                                    onBlur={validation.handleBlur}
+                                    dateFormat="yyyy-MM-dd"
+                                    // showTimeInput
+                                    className={
+                                      validation.touched.JobDate &&
+                                      validation.errors.JobDate
+                                        ? "form-control is-invalid"
+                                        : "form-control"
+                                    }
+                                  />
+                                  {validation.touched.JobDate &&
+                                  validation.errors.JobDate ? (
+                                    <FormFeedback type="invalid">
+                                      {validation.errors.JobDate}
+                                    </FormFeedback>
+                                  ) : null}
+                                </Col>
+                                <Col md="2">
+                                  <Label>Job No of Days</Label>
+                                </Col>
+                                <Col md="5">
+                                  <div className="mt-4 mt-md-0">
+                                    <Input
+                                      name="JobNoOfDays"
+                                      placeholder="Insert Job No Of Days"
+                                      type="number"
+                                      onChange={validation.handleChange}
+                                      onBlur={validation.handleBlur}
+                                      value={
+                                        validation.values.JobNoOfDays || ""
+                                      }
+                                      invalid={
+                                        validation.touched.JobNoOfDays &&
+                                        validation.errors.JobNoOfDays
+                                          ? true
+                                          : false
+                                      }
+                                    />
+                                    {validation.touched.JobNoOfDays &&
+                                    validation.errors.JobNoOfDays ? (
+                                      <FormFeedback type="invalid">
+                                        {validation.errors.JobNoOfDays}
+                                      </FormFeedback>
+                                    ) : null}
+                                  </div>
+                                </Col>
+                              </div>
+                              {/* ))} */}
+                            </div>
                           </div>
-                          <div className="mb-3">
-                            <Label className="form-label">Job Site Id</Label>
+                        </div>
+
+                        <FormGroup className="mb-4" row>
+                          <Label
+                            htmlFor="taskname"
+                            className="col-form-label col-lg-2"
+                          >
+                            Job Site Id
+                          </Label>
+                          <Col lg="10">
                             <Input
                               name="JobSiteId"
-                              type="text"
+                              type="select"
                               placeholder="Insert Job Site Id"
                               onChange={validation.handleChange}
                               onBlur={validation.handleBlur}
@@ -310,20 +327,29 @@ const TasksCreate = () => {
                                   ? true
                                   : false
                               }
-                            />
+                            >
+                              <option>Select Site id</option>
+                              <option>site id 1</option>
+                              <option>site id 2</option>
+                            </Input>
                             {validation.touched.JobSiteId &&
                             validation.errors.JobSiteId ? (
                               <FormFeedback type="invalid">
                                 {validation.errors.JobSiteId}
                               </FormFeedback>
                             ) : null}
-                          </div>
-                          <div className="mb-3">
-                            <Label className="form-label">Job Notes</Label>
-                            <Input
-                              name="JobNotes"
-                              type="text"
-                              placeholder="Insert Job Notes"
+                          </Col>
+                        </FormGroup>
+                        <FormGroup className="mb-4" row>
+                          <Label className="col-form-label col-lg-2">
+                            Job Notes
+                          </Label>
+                          <Col lg="10">
+                            <Editor
+                              toolbarClassName="toolbarClassName"
+                              wrapperClassName="wrapperClassName"
+                              editorClassName="editorClassName"
+                              placeholder="Place Your Content Here..."
                               onChange={validation.handleChange}
                               onBlur={validation.handleBlur}
                               value={validation.values.JobNotes || ""}
@@ -340,9 +366,16 @@ const TasksCreate = () => {
                                 {validation.errors.JobNotes}
                               </FormFeedback>
                             ) : null}
-                          </div>
-                          <div className="mb-3">
-                            <Label className="form-label">Job WBS</Label>
+                          </Col>
+                        </FormGroup>
+                        <FormGroup className="mb-4" row>
+                          <Label
+                            htmlFor="taskname"
+                            className="col-form-label col-lg-2"
+                          >
+                            Job WBS
+                          </Label>
+                          <Col lg="10">
                             <Input
                               name="JobWBS"
                               type="select"
@@ -357,10 +390,9 @@ const TasksCreate = () => {
                                   : false
                               }
                             >
+                              <option>Select Job WBS</option>
                               <option>Job 1</option>
                               <option>Job 2</option>
-                              {/* <option>Freelance</option>
-                                                <option>Internship</option> */}
                             </Input>
                             {validation.touched.JobWBS &&
                             validation.errors.JobWBS ? (
@@ -368,166 +400,30 @@ const TasksCreate = () => {
                                 {validation.errors.JobWBS}
                               </FormFeedback>
                             ) : null}
-                          </div>
-                        </Row>
-                        <Row>
-                          <Col>
-                            <div className="text-end">
-                              <button
-                                type="submit"
-                                className="btn btn-success save-user"
-                              >
-                                Create job
-                              </button>
-                            </div>
                           </Col>
-                        </Row>
-                        {/* /////////////////////////////////// */}
-                        <FormGroup className="mb-4" row>
-                          <Label
-                            htmlFor="taskname"
-                            className="col-form-label col-lg-2"
-                          >
-                            Task Name
-                          </Label>
-                          <Col lg="10">
-                            <Input
-                              id="taskname"
-                              name="taskname"
-                              type="text"
-                              className="form-control"
-                              placeholder="Enter Task Name..."
-                            />
-                          </Col>
-                        </FormGroup>
-                        <FormGroup className="mb-4" row>
-                          <Label className="col-form-label col-lg-2">
-                            Task Description
-                          </Label>
-                          <Col lg="10">
-                            <Editor
-                              toolbarClassName="toolbarClassName"
-                              wrapperClassName="wrapperClassName"
-                              editorClassName="editorClassName"
-                              placeholder="Place Your Content Here..."
-                            />
-                          </Col>
-                        </FormGroup>
-
-                        <FormGroup className="mb-4" row>
-                          <Label className="col-form-label col-lg-2">
-                            Task Date
-                          </Label>
-                          <Col lg="10">
-                            <Row>
-                              <Col md={6} className="pr-0">
-                                <DatePicker
-                                  className="form-control"
-                                  selected={startDate}
-                                  onChange={startDateChange}
-                                />
-                              </Col>
-                              <Col md={6} className="pl-0">
-                                <DatePicker
-                                  className="form-control"
-                                  selected={endDate}
-                                  onChange={endDateChange}
-                                />
-                              </Col>
-                            </Row>
-                          </Col>
-                        </FormGroup>
-
-                        <div className="inner-repeater mb-4">
-                          <div className="inner form-group mb-0 row">
-                            <Label className="col-form-label col-lg-2">
-                              Add Team Member
-                            </Label>
-                            <div
-                              className="inner col-lg-10 ml-md-auto"
-                              id="repeater"
-                            >
-                              {inputFields.map((field, key) => (
-                                <div
-                                  key={key}
-                                  id={"nested" + key}
-                                  className="mb-3 row align-items-center"
-                                >
-                                  <Col md="6">
-                                    <input
-                                      type="text"
-                                      className="inner form-control"
-                                      defaultValue={field.name}
-                                      placeholder="Enter Name..."
-                                    />
-                                  </Col>
-                                  <Col md="4">
-                                    <div className="mt-4 mt-md-0">
-                                      <Input
-                                        type="file"
-                                        className="form-control"
-                                        defaultValue={field.file}
-                                      />
-                                    </div>
-                                  </Col>
-                                  <Col md="2">
-                                    <div className="mt-2 mt-md-0 d-grid">
-                                      <Button
-                                        color="primary"
-                                        className="inner"
-                                        onClick={() => {
-                                          handleRemoveFields(key)
-                                        }}
-                                        block
-                                      >
-                                        Delete
-                                      </Button>
-                                    </div>
-                                  </Col>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                          <Row className="justify-content-end">
-                            <Col lg="10">
-                              <Button
-                                color="success"
-                                className="inner"
-                                onClick={() => {
-                                  handleAddFields()
-                                }}
-                              >
-                                Add Number
-                              </Button>
-                            </Col>
-                          </Row>
-                        </div>
-                        <FormGroup className="mb-4" row>
-                          <label
-                            htmlFor="taskbudget"
-                            className="col-form-label col-lg-2"
-                          >
-                            Budget
-                          </label>
-                          <div className="col-lg-10">
-                            <Input
-                              id="taskbudget"
-                              name="taskbudget"
-                              type="text"
-                              placeholder="Enter Task Budget..."
-                              className="form-control"
-                            />
-                          </div>
                         </FormGroup>
                       </div>
                     </div>
                   </form>
-                  <Row className="justify-content-end">
-                    <Col lg="10">
-                      <Button type="submit" color="primary">
-                        Create Task
-                      </Button>
+                  <Row style={{ padding: 0, margin: 0 }}>
+                    {/* <Col lg="7"></Col> */}
+                    {/* <Col lg="2" className="mx-1" style={{ padding: 0 }}> */}
+                    <Col className="mx-1">
+                      <div className="text-end">
+                        <button
+                          type="submit"
+                          className="btn btn-success save-user"
+                          style={{
+                            width: "100px",
+                            backgroundColor: "green",
+                            color: "white",
+                          }}
+                        >
+                          Create job
+                        </button>
+                      </div>
                     </Col>
+                    {/* </Row> */}
                   </Row>
                 </CardBody>
               </Card>

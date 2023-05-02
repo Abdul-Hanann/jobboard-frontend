@@ -12,6 +12,7 @@ import Breadcrumbs from "components/Common/Breadcrumb"
 import DeleteModal from "components/Common/DeleteModal"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
+import ProjectsList from "./jobListView"
 
 import { map } from "lodash"
 
@@ -372,9 +373,10 @@ function JobList() {
                     </h5>
                     <div className="flex-shrink-0">
                       <Link
-                        to="/jobcreate"
+                        to="/joblist/jobcreate"
                         // onClick={() => setModal(true)}
                         className="btn btn-primary me-1"
+                        style={{ backgroundColor: "green" }}
                       >
                         Create New Job
                       </Link>
@@ -391,11 +393,14 @@ function JobList() {
                     </div>
                   </div>
                 </CardBody>
-                {/* ///////////////////////////////////////////////////////// */}
-                {/* <div>
-                  <ProjectsList />
-                </div> */}
-                {/* <CardBody>
+              </Card>
+            </Col>
+          </Row>
+          {/* ///////////////////////////////////////////////////////// */}
+          <div>
+            <ProjectsList />
+          </div>
+          {/* <CardBody>
                                     <TableContainer
                                         columns={columns}
                                         data={jobs}
@@ -406,9 +411,7 @@ function JobList() {
                                         customPageSize={1}
                                     />
                                 </CardBody> */}
-              </Card>
-            </Col>
-          </Row>
+
           <Modal isOpen={modal} toggle={toggle}>
             <ModalHeader toggle={toggle} tag="h4">
               {!!isEdit ? "Edit Job" : "Add Job"}

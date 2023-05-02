@@ -226,7 +226,7 @@ const schedulerRoutes = [
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
   { path: "/joblist", component: <JobList /> },
-  { path: "/jobcreate", component: <JobCreate /> },
+  { path: "/joblist/jobcreate", component: <JobCreate /> },
   { path: "/jobwbs", component: <JobWbs /> },
   { path: "/schedule", component: <Schedule /> },
   { path: "/addjob", component: <AddJob /> },

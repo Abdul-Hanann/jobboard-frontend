@@ -1,9 +1,16 @@
 // import React from "react"
-import { cryptoOrders, wallet, productData, cryptoOrderData, icoLandingTeam, blogs } from "./crypto";
-import { invoiceList } from "./invoices";
-import { projects, projectListData, OverviewTeamMember } from "./projects";
-import { tasks } from "./tasks";
-import {allmail, mailDB} from "./mails";
+import {
+  cryptoOrders,
+  wallet,
+  productData,
+  cryptoOrderData,
+  icoLandingTeam,
+  blogs,
+} from "./crypto"
+import { invoiceList } from "./invoices"
+import { projects, projectListData, OverviewTeamMember } from "./projects"
+import { tasks } from "./tasks"
+import { allmail, mailDB } from "./mails"
 import {
   cartData,
   comments,
@@ -14,13 +21,13 @@ import {
   recentProducts,
   shops,
   productComments,
-  productListvar
-} from "./ecommerce";
-import { chats, contacts, groups, messages } from "./chat";
-import { calenderDefaultCategories, events } from "./calender";
-import { users, userProfile } from "./contacts";
-import { yearData, monthData, weekData, latestTransaction } from "./dashboard";
-import { myfiles, recentfile } from "./file-manager";
+  productListvar,
+} from "./ecommerce"
+import { chats, contacts, groups, messages } from "./chat"
+import { calenderDefaultCategories, events } from "./calender"
+import { users, userProfile } from "./contacts"
+import { yearData, monthData, weekData, latestTransaction } from "./dashboard"
+import { myfiles, recentfile } from "./file-manager"
 
 import {
   janTopSellingData,
@@ -32,15 +39,20 @@ import {
   novEarningData,
   octEarningData,
   chatData,
-} from "./dashboard-saas";
+} from "./dashboard-saas"
 
-import { marchWalletData, febWalletData, janWalletData, decWalletData } from "./dashboard-crypto";
+import {
+  marchWalletData,
+  febWalletData,
+  janWalletData,
+  decWalletData,
+} from "./dashboard-crypto"
 
-import { jobVacancy, statistic_data } from "./dashboard-job";
+import { jobVacancy, statistic_data } from "./dashboard-job"
 
-import visitor from "./dashboard-blog";
+import visitor from "./dashboard-blog"
 
-import { jobs, jobListCandidate, jobApply } from "./job";
+import { jobsList } from "./job"
 
 export {
   productsData,
@@ -91,12 +103,12 @@ export {
   jobVacancy,
   productComments,
   productListvar,
-  jobs,
-  jobListCandidate,
-  jobApply,
+  jobsList,
+  // jobListCandidate,
+  // jobApply,
   myfiles,
   recentfile,
   visitor,
   statistic_data,
-  mailDB
-};
+  mailDB,
+}
