@@ -360,6 +360,12 @@ dd {
 }
 
 // Swich
+.custom-checkbox {
+  height: 14px;
+  width: 14px;
+  border-radius: 10px;
+  margin-top: 5px;
+}
 
 // custom-checkbox-outline
 .custom-checkbox-outline {
@@ -404,7 +410,9 @@ dd {
 // }
 
 .input-group
-  > :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
+  > :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(
+    .valid-feedback
+  ):not(.invalid-tooltip):not(.invalid-feedback) {
   margin-right: -1px;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
