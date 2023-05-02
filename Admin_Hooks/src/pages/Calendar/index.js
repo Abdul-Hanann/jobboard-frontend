@@ -29,7 +29,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb"
 
 //import Images
 import verification from "../../assets/images/verification-img.png"
-
+import { convertToLocal } from "../../helpers/dateUtility"
 import {
   addNewEvent as onAddNewEvent,
   deleteEvent as onDeleteEvent,
@@ -62,10 +62,14 @@ const Calender = props => {
     initialValues: {
       title: (event && event.title) || "",
       category: (event && event.category) || "bg-danger",
+      startDate: (event && event.start) || "",
+      endDate: (event && event.end) || "",
     },
     validationSchema: Yup.object({
       title: Yup.string().required("Please Enter Your Event Name"),
       category: Yup.string().required("Please Select Your Category"),
+      startDate: Yup.string().required("Please Enter Your Start Date"),
+      endDate: Yup.string().required("Please Enter Your End Date"),
     }),
     onSubmit: values => {
       if (isEdit) {
@@ -200,11 +204,13 @@ const Calender = props => {
    */
   const handleEventClick = arg => {
     const event = arg.event
+    console.log(event)
     setEvent({
       id: event.id,
       title: event.title,
       title_category: event.title_category,
-      start: event.start,
+      startDate: event.start,
+      endDate: event.end,
       className: event.classNames,
       category: event.classNames[0],
       event_category: event.classNames[0],
@@ -296,7 +302,7 @@ const Calender = props => {
       setAllEvents(events)
     }
   }
-  
+
   useEffect(() => {
     filterJobs()
   }, [checkedCategories, events])
@@ -420,7 +426,7 @@ const Calender = props => {
                         <Row>
                           <Col className="col-12">
                             <div className="mb-3">
-                              <Label className="form-label">Event Name</Label>
+                              <Label className="form-label">Job Name</Label>
                               <Input
                                 name="title"
                                 type="text"
@@ -428,6 +434,7 @@ const Calender = props => {
                                 onChange={validation.handleChange}
                                 onBlur={validation.handleBlur}
                                 value={validation.values.title || ""}
+                                disabled={true}
                                 invalid={
                                   validation.touched.title &&
                                   validation.errors.title
@@ -444,6 +451,58 @@ const Calender = props => {
                             </div>
                           </Col>
                           <Col className="col-12">
+                            <div className="mb-3">
+                              <Label className="form-label">Start date</Label>
+                              <Input
+                                name="startDate"
+                                type="text"
+                                value={event ? event.startDate : ""}
+                                onChange={validation.handleChange}
+                                onBlur={validation.handleBlur}
+                                disabled={true}
+                                // value={validation.values.startDate || ""}
+                                invalid={
+                                  validation.touched.startDate &&
+                                  validation.errors.startDate
+                                    ? true
+                                    : false
+                                }
+                              />
+                              {validation.touched.startDate &&
+                              validation.errors.startDate ? (
+                                <FormFeedback type="invalid">
+                                  {validation.errors.startDate}
+                                </FormFeedback>
+                              ) : null}
+                            </div>
+                          </Col>
+                          <Col className="col-12">
+                            <div className="mb-3">
+                              <Label className="form-label">End date</Label>
+                              <Input
+                                name="endDate"
+                                type="text"
+                                value={event ? event.endDate : ""}
+                                onChange={validation.handleChange}
+                                onBlur={validation.handleBlur}
+                                disabled={true}
+                                // value={validation.values.endDate || ""}
+                                invalid={
+                                  validation.touched.endDate &&
+                                  validation.errors.endDate
+                                    ? true
+                                    : false
+                                }
+                              />
+                              {validation.touched.endDate &&
+                              validation.errors.endDate ? (
+                                <FormFeedback type="invalid">
+                                  {validation.errors.endDate}
+                                </FormFeedback>
+                              ) : null}
+                            </div>
+                          </Col>
+                          {/* <Col className="col-12">
                             <div className="mb-3">
                               <Label className="form-label">Category</Label>
                               <Input
@@ -474,11 +533,11 @@ const Calender = props => {
                                 </FormFeedback>
                               ) : null}
                             </div>
-                          </Col>
+                          </Col> */}
                         </Row>
 
                         <Row className="mt-2">
-                          <Col className="col-6">
+                          {/* <Col className="col-6">
                             {!!isEdit && (
                               <button
                                 type="button"
@@ -487,9 +546,9 @@ const Calender = props => {
                               >
                                 Delete
                               </button>
-                            )}
-                          </Col>
-                          <Col className="col-6 text-end">
+                            )} 
+                          </Col>*/}
+                          <Col className="col-6 text-start">
                             <button
                               type="button"
                               className="btn btn-light me-2"
@@ -497,20 +556,20 @@ const Calender = props => {
                             >
                               Close
                             </button>
-                            <button
+                            {/* <button
                               type="submit"
                               className="btn btn-success"
                               id="btn-save-event"
                             >
                               Save
-                            </button>
+                            </button> */}
                           </Col>
                         </Row>
                       </Form>
                     </ModalBody>
                   </Modal>
 
-                  <Modal
+                  {/* <Modal
                     isOpen={modalcategory}
                     toggle={toggleCategory}
                     className={props.className}
@@ -617,7 +676,7 @@ const Calender = props => {
                         </Row>
                       </Form>
                     </ModalBody>
-                  </Modal>
+                  </Modal> */}
                 </Col>
               </Row>
             </Col>
