@@ -8,5 +8,5 @@ export const getCurrentDateTime = () => {
 }
 
 export const convertToLocal = dateTime => {
-  return moment().format(LOCAL_DATE_FORMAT)
+  return moment(dateTime).format(LOCAL_DATE_FORMAT)
 }

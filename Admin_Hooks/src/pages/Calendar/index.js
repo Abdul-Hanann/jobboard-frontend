@@ -26,6 +26,8 @@ import BootstrapTheme from "@fullcalendar/bootstrap"
 
 //Import Breadcrumb
 import Breadcrumbs from "../../components/Common/Breadcrumb"
+import Select from "react-select"
+import makeAnimated from "react-select/animated"
 
 //import Images
 import verification from "../../assets/images/verification-img.png"
@@ -46,6 +48,22 @@ import "@fullcalendar/bootstrap/main.css"
 //redux
 import { useSelector, useDispatch } from "react-redux"
 
+const AnimatedMulti = props => {
+  const { options, value, setValue } = props
+  const animatedComponents = makeAnimated()
+
+  return (
+    <Select
+      closeMenuOnSelect={false}
+      components={animatedComponents}
+      isMulti
+      onChange={val => setValue(val)}
+      value={value}
+      options={options}
+    />
+  )
+}
+
 const Calender = props => {
   //meta title
   document.title = "Calendar | Skote - React Admin & Dashboard Template"
@@ -54,6 +72,12 @@ const Calender = props => {
 
   const [event, setEvent] = useState({})
   const [allEvents, setAllEvents] = useState([])
+  const [filteredStartDate, setFilteredStartDate] = useState("")
+  const [filteredEndDate, setFilteredEndDate] = useState("")
+  const [filteredMiles, setFilteredMiles] = useState("")
+  const [filteredStatus, setFilteredStatus] = useState("")
+  const [filteredCompany, setFilteredCompany] = useState("")
+
   // events validation
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -131,7 +155,29 @@ const Calender = props => {
     events: state.calendar.events,
     categories: state.calendar.categories,
   }))
-
+  const companies = [
+    { value: "Company 1", label: "Company 1" },
+    { value: "Company 2", label: "Company 2" },
+    { value: "Company 3", label: "Company 3" },
+  ]
+  const jobStatus = [
+    { value: 1, label: "Completed" },
+    { value: 2, label: "Approved" },
+    { value: 3, label: "Pending Approval" },
+    { value: 4, label: "Cancelled" },
+  ]
+  const mileOptions = [
+    { value: "5", label: "5 miles" },
+    { value: "10", label: "10 miles" },
+    { value: "15", label: "15 miles" },
+    { value: "20", label: "20 miles" },
+    { value: "25", label: "25 miles" },
+    { value: "30", label: "30 miles" },
+    { value: "35", label: "35 miles" },
+    { value: "40", label: "40 miles" },
+    { value: "45", label: "45 miles" },
+    { value: "50", label: "50 miles" },
+  ]
   const [modal, setModal] = useState(false)
   const [deleteModal, setDeleteModal] = useState(false)
   const [modalcategory, setModalcategory] = useState(false)
@@ -307,6 +353,13 @@ const Calender = props => {
     filterJobs()
   }, [checkedCategories, events])
 
+  const clearAllFilters = () => {
+    setFilteredCompany("")
+    setFilteredStartDate("")
+    setFilteredEndDate("")
+    setFilteredMiles("")
+    setFilteredStatus("")
+  }
   return (
     <React.Fragment>
       <DeleteModal
@@ -337,9 +390,8 @@ const Calender = props => {
                       </div>
 
                       <div id="external-events" className="mt-2">
-                        <br />
-                        <p className="text-muted">Filter your jobs </p>
-                        {categories &&
+                        {/* <p className="text-muted">Filter your jobs </p> */}
+                        {/* {categories &&
                           categories.map((category, i) => (
                             <label
                               key={i}
@@ -371,16 +423,67 @@ const Calender = props => {
                                 </span>
                               </div>
                             </label>
-                          ))}
+                          ))} */}
+                        <div className="d-flex flex-row mb-1 justify-content-between align-items-center">
+                          <p className="text-muted mt-3">Filter by status </p>
+                          <Button
+                            className="h-25 bg-primary"
+                            onClick={clearAllFilters}
+                          >
+                            Clear all
+                          </Button>
+                        </div>
+                        <AnimatedMulti
+                          options={jobStatus}
+                          value={filteredStatus}
+                          setValue={setFilteredStatus}
+                        />
+
+                        <p className="text-muted mt-3">Filter by company </p>
+                        <AnimatedMulti
+                          options={companies}
+                          value={filteredCompany}
+                          setValue={setFilteredCompany}
+                        />
+
+                        <p className="text-muted mt-3">Filter by date </p>
+                        <p className="text-muted mt-1 mb-0">Start date </p>
+                        <Input
+                          type="date"
+                          className="filter-datepicker"
+                          value={filteredStartDate}
+                          onChange={event =>
+                            setFilteredStartDate(event.target.value)
+                          }
+                        />
+                        <p className="text-muted mt-1 mb-0">End date</p>
+                        <Input
+                          type="date"
+                          className="filter-datepicker"
+                          value={filteredEndDate}
+                          onChange={event =>
+                            setFilteredEndDate(event.target.value)
+                          }
+                        />
+                        <p className="text-muted mt-3">Filter by location</p>
+
+                        <Select
+                          className="basic-single"
+                          classNamePrefix="select"
+                          name="color"
+                          value={filteredMiles}
+                          onChange={value => setFilteredMiles(value)}
+                          options={mileOptions}
+                        />
                       </div>
 
-                      <Row className="justify-content-center mt-5">
+                      {/* <Row className="justify-content-center mt-5">
                         <img
                           src={verification}
                           alt=""
                           className="img-fluid d-block"
                         />
-                      </Row>
+                      </Row> */}
                     </CardBody>
                   </Card>
                 </Col>
@@ -456,7 +559,9 @@ const Calender = props => {
                               <Input
                                 name="startDate"
                                 type="text"
-                                value={event ? event.startDate : ""}
+                                value={
+                                  event ? convertToLocal(event.startDate) : ""
+                                }
                                 onChange={validation.handleChange}
                                 onBlur={validation.handleBlur}
                                 disabled={true}
@@ -482,7 +587,9 @@ const Calender = props => {
                               <Input
                                 name="endDate"
                                 type="text"
-                                value={event ? event.endDate : ""}
+                                value={
+                                  event ? convertToLocal(event.endDate) : ""
+                                }
                                 onChange={validation.handleChange}
                                 onBlur={validation.handleBlur}
                                 disabled={true}
