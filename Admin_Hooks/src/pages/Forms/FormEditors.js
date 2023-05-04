@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 
 import {
   Form,
@@ -8,22 +8,22 @@ import {
   Row,
   CardTitle,
   Container,
-} from "reactstrap";
+} from "reactstrap"
 
 // Form Editor
-import { Editor } from "react-draft-wysiwyg";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { Editor } from "react-draft-wysiwyg"
+import { EditorState } from "draft-js"
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css"
 
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { CKEditor } from "@ckeditor/ckeditor5-react"
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic"
 
 //Import Breadcrumb
-import Breadcrumbs from "../../components/Common/Breadcrumb";
+import Breadcrumbs from "../../components/Common/Breadcrumb"
 
 const FormEditors = () => {
-
-   //meta title
-   document.title = "Form Editors | Skote - React Admin & Dashboard Template"
+  //meta title
+  document.title = "Form Editors | Skote - React Admin & Dashboard Template"
 
   return (
     <React.Fragment>
@@ -69,10 +69,10 @@ const FormEditors = () => {
                       data="<p>Hello from CKEditor 5!</p>"
                       onReady={editor => {
                         // You can store the "editor" and use when it is needed.
-                        console.log('Editor is ready to use!', editor);
+                        console.log("Editor is ready to use!", editor)
                       }}
                       onChange={(event, editor) => {
-                        const data = editor.getData();
+                        const data = editor.getData()
                       }}
                     />
                   </Form>
@@ -83,7 +83,7 @@ const FormEditors = () => {
         </Container>
       </div>
     </React.Fragment>
-  );
-};
+  )
+}
 
-export default FormEditors;
+export default FormEditors
