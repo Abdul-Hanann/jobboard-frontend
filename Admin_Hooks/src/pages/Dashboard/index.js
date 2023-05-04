@@ -1,5 +1,5 @@
-import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types"
+import React, { useEffect, useState } from "react"
 import {
   Container,
   Row,
@@ -13,59 +13,59 @@ import {
   ModalBody,
   ModalFooter,
   Table,
-} from "reactstrap";
-import { Link } from "react-router-dom";
+} from "reactstrap"
+import { Link } from "react-router-dom"
 
-import classNames from "classnames";
+import classNames from "classnames"
 
 //import Charts
-import StackedColumnChart from "./StackedColumnChart";
+import StackedColumnChart from "./StackedColumnChart"
 
 //import action
-import { getChartsData as onGetChartsData } from "../../store/actions";
+import { getChartsData as onGetChartsData } from "../../store/actions"
 
-import modalimage1 from "../../assets/images/product/img-7.png";
-import modalimage2 from "../../assets/images/product/img-4.png";
+import modalimage1 from "../../assets/images/product/img-7.png"
+import modalimage2 from "../../assets/images/product/img-4.png"
 
 // Pages Components
-import WelcomeComp from "./WelcomeComp";
-import MonthlyEarning from "./MonthlyEarning";
-import SocialSource from "./SocialSource";
-import ActivityComp from "./ActivityComp";
-import TopCities from "./TopCities";
-import LatestTranaction from "./LatestTranaction";
+import WelcomeComp from "./WelcomeComp"
+import MonthlyEarning from "./MonthlyEarning"
+import SocialSource from "./SocialSource"
+import ActivityComp from "./ActivityComp"
+import TopCities from "./TopCities"
+import LatestTranaction from "./LatestTranaction"
 
 //Import Breadcrumb
-import Breadcrumbs from "../../components/Common/Breadcrumb";
+import Breadcrumbs from "../../components/Common/Breadcrumb"
 
 //i18n
-import { withTranslation } from "react-i18next";
+import { withTranslation } from "react-i18next"
 
 //redux
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux"
 
 const Dashboard = props => {
-  const [modal, setmodal] = useState(false);
-  const [subscribemodal, setSubscribemodal] = useState(false);
+  const [modal, setmodal] = useState(false)
+  const [subscribemodal, setSubscribemodal] = useState(false)
 
   const { chartsData } = useSelector(state => ({
-    chartsData: state.Dashboard.chartsData
-  }));
+    chartsData: state.Dashboard.chartsData,
+  }))
 
   const reports = [
-    { title: "Orders", iconClass: "bx-copy-alt", description: "1,235" },
-    { title: "Revenue", iconClass: "bx-archive-in", description: "$35, 723" },
+    { title: "Tech Schedulers", iconClass: "bx-copy-alt", description: "123" },
+    { title: "User Admins", iconClass: "bx-archive-in", description: "35" },
     {
-      title: "Average Price",
+      title: "Job lists",
       iconClass: "bx-purchase-tag-alt",
-      description: "$16.2",
+      description: "1000",
     },
     {
-      title: "Average Price",
+      title: "Technicians",
       iconClass: "bx-purchase-tag-alt",
-      description: "$16.2",
+      description: "200",
     },
-  ];
+  ]
 
   // useEffect(() => {
   //   setTimeout(() => {
@@ -73,25 +73,25 @@ const Dashboard = props => {
   //   }, 2000);
   // }, []);
 
-  const [periodData, setPeriodData] = useState([]);
-  const [periodType, setPeriodType] = useState("yearly");
+  const [periodData, setPeriodData] = useState([])
+  const [periodType, setPeriodType] = useState("yearly")
 
   useEffect(() => {
-    setPeriodData(chartsData);
-  }, [chartsData]);
+    setPeriodData(chartsData)
+  }, [chartsData])
 
   const onChangeChartPeriod = pType => {
-    setPeriodType(pType);
-    dispatch(onGetChartsData(pType));
-  };
+    setPeriodType(pType)
+    dispatch(onGetChartsData(pType))
+  }
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(onGetChartsData("yearly"));
-  }, [dispatch]);
+    dispatch(onGetChartsData("yearly"))
+  }, [dispatch])
 
   //meta title
-  document.title = "Dashboard | SAIT Job Board";
+  document.title = "Dashboard | SAIT Job Board"
 
   return (
     <React.Fragment>
@@ -105,36 +105,35 @@ const Dashboard = props => {
 
           <Row>
             <Col xl="10">
-            <WelcomeComp />
+              <WelcomeComp />
             </Col>
             <Col>
-                 {reports.map((report, key) => (
-                  <Col key={"_col_" + key}>
-                    <Card className="mini-stats-wid" 
+              {reports.map((report, key) => (
+                <Col key={"_col_" + key}>
+                  <Card
+                    className="mini-stats-wid"
                     // style={{paddingTop: "29px", paddingBottom: "29px"}}
-                    >
-                      <CardBody>
-                        <div className="d-flex">
-                          <div className="flex-grow-1">
-                            <p className="text-muted fw-medium">
-                              {report.title}
-                            </p>
-                            <h4 className="mb-0">{report.description}</h4>
-                          </div>
-                          <div className="avatar-sm rounded-circle bg-primary align-self-center mini-stat-icon">
-                            <span className="avatar-title rounded-circle bg-primary">
-                              <i
-                                className={
-                                  "bx " + report.iconClass + " font-size-24"
-                                }
-                              ></i>
-                            </span>
-                          </div>
+                  >
+                    <CardBody>
+                      <div className="d-flex">
+                        <div className="flex-grow-1">
+                          <p className="text-muted fw-medium">{report.title}</p>
+                          <h4 className="mb-0">{report.description}</h4>
                         </div>
-                      </CardBody>
-                    </Card>
-                  </Col>
-                ))}
+                        <div className="avatar-sm rounded-circle bg-primary align-self-center mini-stat-icon">
+                          <span className="avatar-title rounded-circle bg-primary">
+                            <i
+                              className={
+                                "bx " + report.iconClass + " font-size-24"
+                              }
+                            ></i>
+                          </span>
+                        </div>
+                      </div>
+                    </CardBody>
+                  </Card>
+                </Col>
+              ))}
             </Col>
             {/* <Col xl="4">
               <WelcomeComp />
@@ -225,9 +224,9 @@ const Dashboard = props => {
                     </div>
                   </div>
                   {/* <div className="clearfix"></div> */}
-                  {/* <StackedColumnChart periodData={periodData} dataColors='["--bs-primary", "--bs-warning", "--bs-success"]' />
+              {/* <StackedColumnChart periodData={periodData} dataColors='["--bs-primary", "--bs-warning", "--bs-success"]' />
                 </CardBody>
-              </Card> */} 
+              </Card> */}
             </Col>
           </Row>
 
@@ -244,11 +243,11 @@ const Dashboard = props => {
             </Col>
           </Row> */}
 
-          <Row>
+          {/* <Row>
             <Col lg="12">
               <LatestTranaction />
             </Col>
-          </Row>
+          </Row> */}
         </Container>
       </div>
 
@@ -406,16 +405,16 @@ const Dashboard = props => {
               Close
             </Button>
           </ModalFooter> */}
-        {/* </div>
+      {/* </div>
       </Modal> */}
     </React.Fragment>
-  );
-};
+  )
+}
 
 Dashboard.propTypes = {
   t: PropTypes.any,
   chartsData: PropTypes.any,
   onGetChartsData: PropTypes.func,
-};
+}
 
-export default withTranslation()(Dashboard);
+export default withTranslation()(Dashboard)

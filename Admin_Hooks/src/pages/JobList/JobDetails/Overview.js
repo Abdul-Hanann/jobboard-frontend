@@ -349,30 +349,29 @@ const Overview = ({ jobList }) => {
                     </td>
                     <td>
                       <h5 className="text-truncate font-size-14 m-0">
-                        <Link to="#" className="text-dark">
-                          Day 1
-                        </Link>
+                        {/* <Link to="/" className="text-dark"> */}
+                        Day 1{/* </Link> */}
                       </h5>
                     </td>
                     <td>
                       <div className="avatar-group">
                         <div className="avatar-group-item">
-                          <Link to="#" className="d-inline-block">
-                            <img
-                              src={avatar4}
-                              alt=""
-                              className="rounded-circle avatar-xs"
-                            />
-                          </Link>
+                          {/* <Link to="/" className="d-inline-block"> */}
+                          <img
+                            src={avatar4}
+                            alt=""
+                            className="rounded-circle avatar-xs"
+                          />
+                          {/* </Link> */}
                         </div>
                         <div className="avatar-group-item">
-                          <Link to="#" className="d-inline-block">
-                            <img
-                              src={avatar5}
-                              alt=""
-                              className="rounded-circle avatar-xs"
-                            />
-                          </Link>
+                          {/* <Link to="/" className="d-inline-block"> */}
+                          <img
+                            src={avatar5}
+                            alt=""
+                            className="rounded-circle avatar-xs"
+                          />
+                          {/* </Link> */}
                         </div>
                       </div>
                     </td>
@@ -401,39 +400,38 @@ const Overview = ({ jobList }) => {
                     </td>
                     <td>
                       <h5 className="text-truncate font-size-14 m-0">
-                        <Link to="#" className="text-dark">
-                          Day 2
-                        </Link>
+                        {/* <Link to="#" className="text-dark"> */}
+                        Day 2{/* </Link> */}
                       </h5>
                     </td>
                     <td>
                       <div className="avatar-group">
                         <div className="avatar-group-item">
-                          <Link to="#" className="d-inline-block">
-                            <img
-                              src={avatar1}
-                              alt=""
-                              className="rounded-circle avatar-xs"
-                            />
-                          </Link>
+                          {/* <Link to="#" className="d-inline-block"> */}
+                          <img
+                            src={avatar1}
+                            alt=""
+                            className="rounded-circle avatar-xs"
+                          />
+                          {/* </Link> */}
                         </div>
                         <div className="avatar-group-item">
-                          <Link to="#" className="d-inline-block">
-                            <img
-                              src={avatar2}
-                              alt=""
-                              className="rounded-circle avatar-xs"
-                            />
-                          </Link>
+                          {/* <Link to="#" className="d-inline-block"> */}
+                          <img
+                            src={avatar2}
+                            alt=""
+                            className="rounded-circle avatar-xs"
+                          />
+                          {/* </Link> */}
                         </div>
                         <div className="avatar-group-item">
-                          <Link to="#" className="d-inline-block">
-                            <div className="avatar-xs">
-                              <span className="avatar-title rounded-circle bg-success text-white font-size-16">
-                                A
-                              </span>
-                            </div>
-                          </Link>
+                          {/* <Link to="#" className="d-inline-block"> */}
+                          <div className="avatar-xs">
+                            <span className="avatar-title rounded-circle bg-success text-white font-size-16">
+                              A
+                            </span>
+                          </div>
+                          {/* </Link> */}
                         </div>
                         <div className="avatar-group-item">
                           <Link to="#" className="d-inline-block">
@@ -471,39 +469,38 @@ const Overview = ({ jobList }) => {
                     </td>
                     <td>
                       <h5 className="text-truncate font-size-14 m-0">
-                        <Link to="#" className="text-dark">
-                          Day 3
-                        </Link>
+                        {/* <Link to="#" className="text-dark"> */}
+                        Day 3{/* </Link> */}
                       </h5>
                     </td>
                     <td>
                       <div className="avatar-group">
                         <div className="avatar-group-item">
-                          <Link to="#" className="d-inline-block">
-                            <img
-                              src={avatar3}
-                              alt=""
-                              className="rounded-circle avatar-xs"
-                            />
-                          </Link>
+                          {/* <Link to="#" className="d-inline-block"> */}
+                          <img
+                            src={avatar3}
+                            alt=""
+                            className="rounded-circle avatar-xs"
+                          />
+                          {/* </Link> */}
                         </div>
                         <div className="avatar-group-item">
-                          <Link to="#" className="d-inline-block">
-                            <div className="avatar-xs">
-                              <span className="avatar-title rounded-circle bg-warning text-white font-size-16">
-                                R
-                              </span>
-                            </div>
-                          </Link>
+                          {/* <Link to="#" className="d-inline-block"> */}
+                          <div className="avatar-xs">
+                            <span className="avatar-title rounded-circle bg-warning text-white font-size-16">
+                              R
+                            </span>
+                          </div>
+                          {/* </Link> */}
                         </div>
                         <div className="avatar-group-item">
-                          <Link to="#" className="d-inline-block">
-                            <img
-                              src={avatar5}
-                              alt=""
-                              className="rounded-circle avatar-xs"
-                            />
-                          </Link>
+                          {/* <Link to="#" className="d-inline-block"> */}
+                          <img
+                            src={avatar5}
+                            alt=""
+                            className="rounded-circle avatar-xs"
+                          />
+                          {/* </Link> */}
                         </div>
                       </div>
                     </td>

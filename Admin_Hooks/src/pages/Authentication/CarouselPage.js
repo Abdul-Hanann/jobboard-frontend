@@ -29,13 +29,10 @@ const CarouselPage = () => {
                           <div>
                             <div className="item">
                               <div className="pb-5 pt-3">
-                                <p className="font-size-16 mb-4">
-                                  &quot;Fantastic theme with a ton of options.
-                                  If you just want the HTML to integrate with
-                                  your project, then this is the package. You
-                                  can find the files in the &apos;dist&lsquo;
-                                  folder...no need to install git and all the
-                                  other stuff the documentation talks about.
+                                <p className="font-size-18 mb-4">
+                                  &quot;Affordable IT Services Without the
+                                  Overhead <br />
+                                  We are your company’s managed IT department
                                   &ldquo;
                                 </p>
 
@@ -44,7 +41,7 @@ const CarouselPage = () => {
                                     Abs1981
                                   </h4>
                                   <p className="font-size-14 mb-0">
-                                    - Skote User
+                                    - Tekrowe Digial
                                   </p>
                                 </div>
                               </div>
