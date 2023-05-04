@@ -1,4 +1,4 @@
-// 
+//
 // authentication.scss
 //
 
@@ -8,6 +8,20 @@
     position: absolute;
     top: 15px;
     right: 25px;
+}
+
+.home-btn {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+}
+
+.hero-img {
+    flex: 1;
+    background-image: url('../../../images/main-hero.png.webp');
+    background-size: cover;
+    background-position: center center;
+    min-height: 600px;
 }
 
 // auth 2
@@ -38,14 +52,18 @@
 
 // authentication full page
 
+.body-bg {
+    background-color: rgba($main-background-color, 1);
+}
+
 .auth-full-bg{
-    background-color: rgba($primary, 0.25);
+    background-color: rgba($main-background-color, 1);
     display: flex;
 
     @media (min-width: 1200px){
         height: 100vh;
     }
-    
+
 
     &::before{
         content: "";

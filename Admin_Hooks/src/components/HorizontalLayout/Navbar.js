@@ -109,21 +109,21 @@ const Navbar = props => {
               id="topnav-menu-content"
             >
               <ul className="navbar-nav">
-                {(userType === userTypes.ROLE_ADMIN ||
-                  userType === userTypes.ROLE_SITE_ADMIN ||
-                  userType === userTypes.ROLE_JOB_CREATOR ||
-                  userType === userTypes.ROLE_SCHEDULER ||
-                  userType === userTypes.ROLE_TECHNICIAN) && (
-                  <li className="nav-item dropdown">
-                    <Link
-                      className="nav-link dropdown-toggle arrow-none"
-                      to="/dashboard"
-                    >
-                      <i className="bx bx-home-circle me-2"></i>
-                      {props.t("Dashboard")}
-                    </Link>
-                  </li>
-                )}
+                {/*{(userType === userTypes.ROLE_ADMIN ||*/}
+                {/*  userType === userTypes.ROLE_SITE_ADMIN ||*/}
+                {/*  userType === userTypes.ROLE_JOB_CREATOR ||*/}
+                {/*  userType === userTypes.ROLE_SCHEDULER ||*/}
+                {/*  userType === userTypes.ROLE_TECHNICIAN) && (*/}
+                {/*  <li className="nav-item dropdown">*/}
+                {/*    <Link*/}
+                {/*      className="nav-link dropdown-toggle arrow-none"*/}
+                {/*      to="/dashboard"*/}
+                {/*    >*/}
+                {/*      <i className="bx bx-home-circle me-2"></i>*/}
+                {/*      {props.t("Dashboard")}*/}
+                {/*    </Link>*/}
+                {/*  </li>*/}
+                {/*)}*/}
                 {(userType === userTypes.ROLE_ADMIN ||
                   userType === userTypes.ROLE_SITE_ADMIN ||
                   userType === userTypes.ROLE_SCHEDULER ||

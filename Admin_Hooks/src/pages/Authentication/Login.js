@@ -39,6 +39,7 @@ import saitlogo from "assets/images/sait-logo.png"
 
 //Import config
 import { facebook, google } from "../../config"
+import LandingPage from "./LandingPage";
 
 const Login = props => {
   const [passwordShow, setPasswordShow] = useState(false)
@@ -53,7 +54,7 @@ const Login = props => {
 
     initialValues: {
       role: "",
-      email: "admin@themesbrand.com" || "",
+      email: "admin@saitservices.com" || "",
       password: "123456" || "",
     },
     validationSchema: Yup.object({
@@ -110,7 +111,7 @@ const Login = props => {
       <div>
         <Container fluid className="p-0">
           <Row className="g-0">
-            <CarouselPage />
+            <LandingPage />
 
             <Col xl={3}>
               <div className="auth-full-page-content p-md-5 p-4">
@@ -268,65 +269,7 @@ const Login = props => {
                             </button>
                           </div>
 
-                          <div className="mt-4 text-center">
-                            <h5 className="font-size-14 mb-3">Sign in with</h5>
 
-                            <ul className="list-inline">
-                              <li className="list-inline-item">
-                                <FacebookLogin
-                                  appId={facebook.APP_ID}
-                                  autoLoad={false}
-                                  callback={facebookResponse}
-                                  render={renderProps => (
-                                    <Link
-                                      to="#"
-                                      className="social-list-item bg-primary text-white border-primary"
-                                      onClick={renderProps.onClick}
-                                    >
-                                      <i className="mdi mdi-facebook" />
-                                    </Link>
-                                  )}
-                                />
-                              </li>
-                              {/*<li className="list-inline-item">*/}
-                              {/*  <TwitterLogin*/}
-                              {/*    loginUrl={*/}
-                              {/*      "http://localhost:4000/api/v1/auth/twitter"*/}
-                              {/*    }*/}
-                              {/*    onSuccess={this.twitterResponse}*/}
-                              {/*    onFailure={this.onFailure}*/}
-                              {/*    requestTokenUrl={*/}
-                              {/*      "http://localhost:4000/api/v1/auth/twitter/revers"*/}
-                              {/*    }*/}
-                              {/*    showIcon={false}*/}
-                              {/*    tag={"div"}*/}
-                              {/*  >*/}
-                              {/*    <a*/}
-                              {/*      href=""*/}
-                              {/*      className="social-list-item bg-info text-white border-info"*/}
-                              {/*    >*/}
-                              {/*      <i className="mdi mdi-twitter"/>*/}
-                              {/*    </a>*/}
-                              {/*  </TwitterLogin>*/}
-                              {/*</li>*/}
-                              <li className="list-inline-item">
-                                <GoogleLogin
-                                  clientId={google.CLIENT_ID}
-                                  render={renderProps => (
-                                    <Link
-                                      to="#"
-                                      className="social-list-item bg-danger text-white border-danger"
-                                      onClick={renderProps.onClick}
-                                    >
-                                      <i className="mdi mdi-google" />
-                                    </Link>
-                                  )}
-                                  onSuccess={googleResponse}
-                                  onFailure={() => {}}
-                                />
-                              </li>
-                            </ul>
-                          </div>
 
                           {/* <div className="mt-4 text-center">
                             <Link to="/forgot-password" className="text-muted">
@@ -335,21 +278,9 @@ const Login = props => {
                             </Link>
                           </div> */}
                           <div className="mt-5 text-center">
-                            <p>
-                              Don&#39;t have an account ?{" "}
-                              <Link
-                                to="/register"
-                                className="fw-medium text-primary"
-                              >
-                                {" "}
-                                Signup now{" "}
-                              </Link>{" "}
-                            </p>
+
                             <p>
                               © {new Date().getFullYear()} SA IT Services.
-                              Crafted with{" "}
-                              <i className="mdi mdi-heart text-danger" /> by
-                              Tekrowe Digital
                             </p>
                           </div>
                         </Form>

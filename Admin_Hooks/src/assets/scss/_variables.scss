@@ -54,7 +54,7 @@ $rightbar-width:  280px;
 $display-none: none;
 $display-block: block;
 
-// Brand 
+// Brand
 $navbar-brand-box-width: 250px;
 
 // Boxed layout width
@@ -111,7 +111,7 @@ $grays: (
 // fusv-enable
 
 // scss-docs-start color-variables
-$blue:    #556ee6;
+$blue:    #003768;
 $indigo:  #564ab1;
 $purple:  #6f42c1;
 $pink:    #e83e8c;
@@ -143,6 +143,7 @@ $colors: (
 // scss-docs-end colors-map
 
 // scss-docs-start theme-color-variables
+$main-background-color:       #e0ecf0;
 $primary:       $blue;
 $secondary:     $gray-600;
 $success:       $green;
