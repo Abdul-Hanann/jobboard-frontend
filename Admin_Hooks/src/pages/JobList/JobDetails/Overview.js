@@ -9,6 +9,16 @@ import Select from "@material-ui/core/Select"
 import { FormControl, InputLabel, MenuItem } from "@material-ui/core"
 import { useFormik } from "formik"
 import { userTypes } from "pages/Authentication/userTypes"
+
+//Import Images
+import avatar4 from "../../../assets/images/users/avatar-4.jpg"
+import avatar5 from "../../../assets/images/users/avatar-5.jpg"
+import avatar1 from "../../../assets/images/users/avatar-1.jpg"
+import avatar2 from "../../../assets/images/users/avatar-2.jpg"
+import avatar6 from "../../../assets/images/users/avatar-6.jpg"
+import avatar3 from "../../../assets/images/users/avatar-3.jpg"
+// import avatar7 from "../../../assets"
+
 import {
   Col,
   Row,
@@ -317,6 +327,199 @@ const Overview = ({ jobList }) => {
                 </tbody>
               </table>
             </div>
+
+            {/* <CardBody> */}
+            <h4 className="card-title mb-2">Assignees</h4>
+            <div className="table-responsive">
+              <table className="table table-nowrap align-middle mb-0">
+                <tbody>
+                  <tr>
+                    <td style={{ width: "40px" }}>
+                      {/* <div className="form-check font-size-16">
+                          {/* <input
+                            className="form-check-input"
+                            type="checkbox"
+                            id="upcomingtaskCheck01"
+                          />
+                          <label
+                            className="form-check-label"
+                            htmlFor="upcomingtaskCheck01"
+                          ></label> */}
+                      {/* </div> */}
+                    </td>
+                    <td>
+                      <h5 className="text-truncate font-size-14 m-0">
+                        <Link to="#" className="text-dark">
+                          Day 1
+                        </Link>
+                      </h5>
+                    </td>
+                    <td>
+                      <div className="avatar-group">
+                        <div className="avatar-group-item">
+                          <Link to="#" className="d-inline-block">
+                            <img
+                              src={avatar4}
+                              alt=""
+                              className="rounded-circle avatar-xs"
+                            />
+                          </Link>
+                        </div>
+                        <div className="avatar-group-item">
+                          <Link to="#" className="d-inline-block">
+                            <img
+                              src={avatar5}
+                              alt=""
+                              className="rounded-circle avatar-xs"
+                            />
+                          </Link>
+                        </div>
+                      </div>
+                    </td>
+                    {/* <td>
+                        <div className="text-center">
+                          <span className="badge rounded-pill badge-soft-secondary font-size-11">
+                            Waiting
+                          </span>
+                        </div>
+                      </td> */}
+                  </tr>
+                  <tr>
+                    <td>
+                      {/* <div className="form-check font-size-16">
+                          {/* <input
+                            className="form-check-input"
+                            type="checkbox"
+                            id="upcomingtaskCheck02"
+                            defaultChecked
+                          />
+                          <label
+                            className="form-check-label"
+                            htmlFor="upcomingtaskCheck02"
+                          ></label> */}
+                      {/* </div> */}
+                    </td>
+                    <td>
+                      <h5 className="text-truncate font-size-14 m-0">
+                        <Link to="#" className="text-dark">
+                          Day 2
+                        </Link>
+                      </h5>
+                    </td>
+                    <td>
+                      <div className="avatar-group">
+                        <div className="avatar-group-item">
+                          <Link to="#" className="d-inline-block">
+                            <img
+                              src={avatar1}
+                              alt=""
+                              className="rounded-circle avatar-xs"
+                            />
+                          </Link>
+                        </div>
+                        <div className="avatar-group-item">
+                          <Link to="#" className="d-inline-block">
+                            <img
+                              src={avatar2}
+                              alt=""
+                              className="rounded-circle avatar-xs"
+                            />
+                          </Link>
+                        </div>
+                        <div className="avatar-group-item">
+                          <Link to="#" className="d-inline-block">
+                            <div className="avatar-xs">
+                              <span className="avatar-title rounded-circle bg-success text-white font-size-16">
+                                A
+                              </span>
+                            </div>
+                          </Link>
+                        </div>
+                        <div className="avatar-group-item">
+                          <Link to="#" className="d-inline-block">
+                            <img
+                              src={avatar6}
+                              alt=""
+                              className="rounded-circle avatar-xs"
+                            />
+                          </Link>
+                        </div>
+                      </div>
+                    </td>
+                    {/* <td>
+                        <div className="text-center">
+                          <span className="badge rounded-pill badge-soft-primary font-size-11">
+                            Approved
+                          </span>
+                        </div>
+                      </td> */}
+                  </tr>
+
+                  <tr>
+                    <td>
+                      {/* <div className="form-check font-size-16">
+                          {/* <input
+                            className="form-check-input"
+                            type="checkbox"
+                            id="upcomingtaskCheck03"
+                          />
+                          <label
+                            className="form-check-label"
+                            htmlFor="upcomingtaskCheck03"
+                          ></label> */}
+                      {/* </div> */}
+                    </td>
+                    <td>
+                      <h5 className="text-truncate font-size-14 m-0">
+                        <Link to="#" className="text-dark">
+                          Day 3
+                        </Link>
+                      </h5>
+                    </td>
+                    <td>
+                      <div className="avatar-group">
+                        <div className="avatar-group-item">
+                          <Link to="#" className="d-inline-block">
+                            <img
+                              src={avatar3}
+                              alt=""
+                              className="rounded-circle avatar-xs"
+                            />
+                          </Link>
+                        </div>
+                        <div className="avatar-group-item">
+                          <Link to="#" className="d-inline-block">
+                            <div className="avatar-xs">
+                              <span className="avatar-title rounded-circle bg-warning text-white font-size-16">
+                                R
+                              </span>
+                            </div>
+                          </Link>
+                        </div>
+                        <div className="avatar-group-item">
+                          <Link to="#" className="d-inline-block">
+                            <img
+                              src={avatar5}
+                              alt=""
+                              className="rounded-circle avatar-xs"
+                            />
+                          </Link>
+                        </div>
+                      </div>
+                    </td>
+                    {/* <td>
+                        <div className="text-center">
+                          <span className="badge rounded-pill badge-soft-secondary font-size-11">
+                            Waiting
+                          </span>
+                        </div>
+                      </td> */}
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            {/* </CardBody> */}
+
             {userType === userTypes.ROLE_TECHNICIAN && (
               <div className="hstack gap-2">
                 <button className="btn btn-soft-success w-100">
