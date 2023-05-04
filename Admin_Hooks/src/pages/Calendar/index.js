@@ -26,10 +26,12 @@ import BootstrapTheme from "@fullcalendar/bootstrap"
 
 //Import Breadcrumb
 import Breadcrumbs from "../../components/Common/Breadcrumb"
+import Select from "react-select"
+import makeAnimated from "react-select/animated"
 
 //import Images
 import verification from "../../assets/images/verification-img.png"
-
+import { convertToLocal } from "../../helpers/dateUtility"
 import {
   addNewEvent as onAddNewEvent,
   deleteEvent as onDeleteEvent,
@@ -46,6 +48,22 @@ import "@fullcalendar/bootstrap/main.css"
 //redux
 import { useSelector, useDispatch } from "react-redux"
 
+const AnimatedMulti = props => {
+  const { options, value, setValue } = props
+  const animatedComponents = makeAnimated()
+
+  return (
+    <Select
+      closeMenuOnSelect={false}
+      components={animatedComponents}
+      isMulti
+      onChange={val => setValue(val)}
+      value={value}
+      options={options}
+    />
+  )
+}
+
 const Calender = props => {
   //meta title
   document.title = "Calendar | Skote - React Admin & Dashboard Template"
@@ -54,6 +72,12 @@ const Calender = props => {
 
   const [event, setEvent] = useState({})
   const [allEvents, setAllEvents] = useState([])
+  const [filteredStartDate, setFilteredStartDate] = useState("")
+  const [filteredEndDate, setFilteredEndDate] = useState("")
+  const [filteredMiles, setFilteredMiles] = useState("")
+  const [filteredStatus, setFilteredStatus] = useState("")
+  const [filteredCompany, setFilteredCompany] = useState("")
+
   // events validation
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -62,10 +86,14 @@ const Calender = props => {
     initialValues: {
       title: (event && event.title) || "",
       category: (event && event.category) || "bg-danger",
+      startDate: (event && event.start) || "",
+      endDate: (event && event.end) || "",
     },
     validationSchema: Yup.object({
       title: Yup.string().required("Please Enter Your Event Name"),
       category: Yup.string().required("Please Select Your Category"),
+      startDate: Yup.string().required("Please Enter Your Start Date"),
+      endDate: Yup.string().required("Please Enter Your End Date"),
     }),
     onSubmit: values => {
       if (isEdit) {
@@ -127,7 +155,29 @@ const Calender = props => {
     events: state.calendar.events,
     categories: state.calendar.categories,
   }))
-
+  const companies = [
+    { value: "Company 1", label: "Company 1" },
+    { value: "Company 2", label: "Company 2" },
+    { value: "Company 3", label: "Company 3" },
+  ]
+  const jobStatus = [
+    { value: 1, label: "Completed" },
+    { value: 2, label: "Approved" },
+    { value: 3, label: "Pending Approval" },
+    { value: 4, label: "Cancelled" },
+  ]
+  const mileOptions = [
+    { value: "5", label: "5 miles" },
+    { value: "10", label: "10 miles" },
+    { value: "15", label: "15 miles" },
+    { value: "20", label: "20 miles" },
+    { value: "25", label: "25 miles" },
+    { value: "30", label: "30 miles" },
+    { value: "35", label: "35 miles" },
+    { value: "40", label: "40 miles" },
+    { value: "45", label: "45 miles" },
+    { value: "50", label: "50 miles" },
+  ]
   const [modal, setModal] = useState(false)
   const [deleteModal, setDeleteModal] = useState(false)
   const [modalcategory, setModalcategory] = useState(false)
@@ -200,11 +250,13 @@ const Calender = props => {
    */
   const handleEventClick = arg => {
     const event = arg.event
+    console.log(event)
     setEvent({
       id: event.id,
       title: event.title,
       title_category: event.title_category,
-      start: event.start,
+      startDate: event.start,
+      endDate: event.end,
       className: event.classNames,
       category: event.classNames[0],
       event_category: event.classNames[0],
@@ -296,11 +348,18 @@ const Calender = props => {
       setAllEvents(events)
     }
   }
-  
+
   useEffect(() => {
     filterJobs()
   }, [checkedCategories, events])
 
+  const clearAllFilters = () => {
+    setFilteredCompany("")
+    setFilteredStartDate("")
+    setFilteredEndDate("")
+    setFilteredMiles("")
+    setFilteredStatus("")
+  }
   return (
     <React.Fragment>
       <DeleteModal
@@ -331,9 +390,8 @@ const Calender = props => {
                       </div>
 
                       <div id="external-events" className="mt-2">
-                        <br />
-                        <p className="text-muted">Filter your jobs </p>
-                        {categories &&
+                        {/* <p className="text-muted">Filter your jobs </p> */}
+                        {/* {categories &&
                           categories.map((category, i) => (
                             <label
                               key={i}
@@ -365,16 +423,67 @@ const Calender = props => {
                                 </span>
                               </div>
                             </label>
-                          ))}
+                          ))} */}
+                        <div className="d-flex flex-row mb-1 justify-content-between align-items-center">
+                          <p className="text-muted mt-3">Filter by status </p>
+                          <Button
+                            className="h-25 bg-primary"
+                            onClick={clearAllFilters}
+                          >
+                            Clear all
+                          </Button>
+                        </div>
+                        <AnimatedMulti
+                          options={jobStatus}
+                          value={filteredStatus}
+                          setValue={setFilteredStatus}
+                        />
+
+                        <p className="text-muted mt-3">Filter by company </p>
+                        <AnimatedMulti
+                          options={companies}
+                          value={filteredCompany}
+                          setValue={setFilteredCompany}
+                        />
+
+                        <p className="text-muted mt-3">Filter by date </p>
+                        <p className="text-muted mt-1 mb-0">Start date </p>
+                        <Input
+                          type="date"
+                          className="filter-datepicker"
+                          value={filteredStartDate}
+                          onChange={event =>
+                            setFilteredStartDate(event.target.value)
+                          }
+                        />
+                        <p className="text-muted mt-1 mb-0">End date</p>
+                        <Input
+                          type="date"
+                          className="filter-datepicker"
+                          value={filteredEndDate}
+                          onChange={event =>
+                            setFilteredEndDate(event.target.value)
+                          }
+                        />
+                        <p className="text-muted mt-3">Filter by location</p>
+
+                        <Select
+                          className="basic-single"
+                          classNamePrefix="select"
+                          name="color"
+                          value={filteredMiles}
+                          onChange={value => setFilteredMiles(value)}
+                          options={mileOptions}
+                        />
                       </div>
 
-                      <Row className="justify-content-center mt-5">
+                      {/* <Row className="justify-content-center mt-5">
                         <img
                           src={verification}
                           alt=""
                           className="img-fluid d-block"
                         />
-                      </Row>
+                      </Row> */}
                     </CardBody>
                   </Card>
                 </Col>
@@ -420,7 +529,7 @@ const Calender = props => {
                         <Row>
                           <Col className="col-12">
                             <div className="mb-3">
-                              <Label className="form-label">Event Name</Label>
+                              <Label className="form-label">Job Name</Label>
                               <Input
                                 name="title"
                                 type="text"
@@ -428,6 +537,7 @@ const Calender = props => {
                                 onChange={validation.handleChange}
                                 onBlur={validation.handleBlur}
                                 value={validation.values.title || ""}
+                                disabled={true}
                                 invalid={
                                   validation.touched.title &&
                                   validation.errors.title
@@ -444,6 +554,62 @@ const Calender = props => {
                             </div>
                           </Col>
                           <Col className="col-12">
+                            <div className="mb-3">
+                              <Label className="form-label">Start date</Label>
+                              <Input
+                                name="startDate"
+                                type="text"
+                                value={
+                                  event ? convertToLocal(event.startDate) : ""
+                                }
+                                onChange={validation.handleChange}
+                                onBlur={validation.handleBlur}
+                                disabled={true}
+                                // value={validation.values.startDate || ""}
+                                invalid={
+                                  validation.touched.startDate &&
+                                  validation.errors.startDate
+                                    ? true
+                                    : false
+                                }
+                              />
+                              {validation.touched.startDate &&
+                              validation.errors.startDate ? (
+                                <FormFeedback type="invalid">
+                                  {validation.errors.startDate}
+                                </FormFeedback>
+                              ) : null}
+                            </div>
+                          </Col>
+                          <Col className="col-12">
+                            <div className="mb-3">
+                              <Label className="form-label">End date</Label>
+                              <Input
+                                name="endDate"
+                                type="text"
+                                value={
+                                  event ? convertToLocal(event.endDate) : ""
+                                }
+                                onChange={validation.handleChange}
+                                onBlur={validation.handleBlur}
+                                disabled={true}
+                                // value={validation.values.endDate || ""}
+                                invalid={
+                                  validation.touched.endDate &&
+                                  validation.errors.endDate
+                                    ? true
+                                    : false
+                                }
+                              />
+                              {validation.touched.endDate &&
+                              validation.errors.endDate ? (
+                                <FormFeedback type="invalid">
+                                  {validation.errors.endDate}
+                                </FormFeedback>
+                              ) : null}
+                            </div>
+                          </Col>
+                          {/* <Col className="col-12">
                             <div className="mb-3">
                               <Label className="form-label">Category</Label>
                               <Input
@@ -474,11 +640,11 @@ const Calender = props => {
                                 </FormFeedback>
                               ) : null}
                             </div>
-                          </Col>
+                          </Col> */}
                         </Row>
 
                         <Row className="mt-2">
-                          <Col className="col-6">
+                          {/* <Col className="col-6">
                             {!!isEdit && (
                               <button
                                 type="button"
@@ -487,9 +653,9 @@ const Calender = props => {
                               >
                                 Delete
                               </button>
-                            )}
-                          </Col>
-                          <Col className="col-6 text-end">
+                            )} 
+                          </Col>*/}
+                          <Col className="col-6 text-start">
                             <button
                               type="button"
                               className="btn btn-light me-2"
@@ -497,20 +663,20 @@ const Calender = props => {
                             >
                               Close
                             </button>
-                            <button
+                            {/* <button
                               type="submit"
                               className="btn btn-success"
                               id="btn-save-event"
                             >
                               Save
-                            </button>
+                            </button> */}
                           </Col>
                         </Row>
                       </Form>
                     </ModalBody>
                   </Modal>
 
-                  <Modal
+                  {/* <Modal
                     isOpen={modalcategory}
                     toggle={toggleCategory}
                     className={props.className}
@@ -617,7 +783,7 @@ const Calender = props => {
                         </Row>
                       </Form>
                     </ModalBody>
-                  </Modal>
+                  </Modal> */}
                 </Col>
               </Row>
             </Col>

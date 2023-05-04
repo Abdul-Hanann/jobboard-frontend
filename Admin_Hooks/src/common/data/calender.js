@@ -3,9 +3,10 @@ const events = [
     id: 1,
     title: "Electrician Job",
     start: new Date().setDate(new Date().getDate() + 1),
-    end: new Date(),
+    end: new Date().setDate(new Date().getDate() + 1),
     className: "bg-success text-white",
     status: 1,
+    company: "Company 1",
   },
   {
     id: 2,
@@ -14,6 +15,7 @@ const events = [
     end: new Date(),
     className: "bg-success text-white",
     status: 1,
+    company: "Company 3",
   },
   {
     id: 3,
@@ -22,6 +24,7 @@ const events = [
     end: new Date().setDate(new Date().getDate() + 19),
     className: "bg-warning text-white",
     status: 3,
+    company: "Company 1",
   },
   {
     id: 4,
@@ -30,6 +33,7 @@ const events = [
     end: new Date(),
     className: "bg-info text-white",
     status: 2,
+    company: "Company 3",
   },
   {
     id: 5,
@@ -38,6 +42,7 @@ const events = [
     end: new Date().setDate(new Date().getDate() - 3),
     className: "bg-info text-white",
     status: 2,
+    company: "Company 1",
   },
   {
     id: 6,
@@ -46,6 +51,7 @@ const events = [
     end: new Date(),
     className: "bg-danger text-white",
     status: 4,
+    company: "Company 1",
   },
   {
     id: 7,
@@ -54,6 +60,7 @@ const events = [
     end: new Date(),
     className: "bg-info text-white",
     status: 2,
+    company: "Company 2",
   },
   {
     id: 8,
@@ -62,6 +69,7 @@ const events = [
     end: new Date().setDate(new Date().getDate() - 3),
     className: "bg-warning text-white",
     status: 3,
+    company: "Company 1",
   },
 ]
 
