@@ -19,12 +19,12 @@ const TableContainer = ({ data }) => {
   const [paginationItems, setpaginationItems] = useState(1)
   const [selectedPaginationItem, setselectedPaginationItem] = useState(1)
   const [currentTableData, setcurrentTableData] = useState([])
-  const count = data?.length
+  const count = data ? data.length: 0
   const [value, setValue] = useState("")
 
   useEffect(() => {
     if (data) {
-      setpaginationItems(Math.ceil(data?.length / showEntries))
+      setpaginationItems(Math.ceil(data.length / showEntries))
     }
   }, [data, showEntries])
 
