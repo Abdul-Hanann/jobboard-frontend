@@ -1,11 +1,15 @@
 import React from "react"
-import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { Card, CardBody, Col } from "reactstrap"
 
 //import images
 import wechat from "../../../assets/images/companies/wechat.svg"
 
 const DetailsSection = ({ jobList }) => {
+  const navigate = useNavigate()
+  const handleBackClick = () => {
+    navigate("/joblist")
+  }
   console.log("job list in details selection:", jobList)
   return (
     <React.Fragment>
@@ -27,6 +31,18 @@ const DetailsSection = ({ jobList }) => {
                   </li>
                 </ul>
               </div>
+              <button
+                // type="submit"
+                className="btn btn-clear h-75 d-flex justify-content-center align-items-center"
+                style={{
+                  width: "100px",
+                  backgroundColor: "green",
+                  color: "white",
+                }}
+                onClick={handleBackClick}
+              >
+                Back
+              </button>
             </div>
           </CardBody>
           <CardBody>
