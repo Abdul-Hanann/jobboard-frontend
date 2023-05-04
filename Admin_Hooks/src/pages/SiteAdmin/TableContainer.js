@@ -126,7 +126,49 @@ const TableContainer = ({
     useExpanded,
     usePagination
   )
-  console.log("getTableBodyProps:", data)
+  console.log("data:", data)
+  const [dataField, setDataField] = useState(data)
+  const [searchInput, setSearchInput] = useState("")
+  const [filterOption, setFilterOption] = useState("")
+
+  const handleSearch = (searchInput, filterOption) => {
+    console.log("filtered data:", filterOption)
+    const filteredData = dataField.filter(rowdata => {
+      console.log("rowdata: ", rowdata.siteId)
+      if (filterOption === "siteId") {
+        return rowdata.siteId.toLowerCase().includes(searchInput.toLowerCase())
+      } else if (filterOption === "building") {
+        return rowdata.building
+          .toLowerCase()
+          .includes(searchInput.toLowerCase())
+      } else if (filterOption === "state") {
+        return rowdata.state.toLowerCase().includes(searchInput.toLowerCase())
+      } else if (filterOption === "city") {
+        return rowdata.city.toLowerCase().includes(searchInput.toLowerCase())
+      } else if (filterOption === "timeZone") {
+        return rowdata.timeZone
+          .toLowerCase()
+          .includes(searchInput.toLowerCase())
+      } else {
+        return (
+          rowdata.siteId.toLowerCase().includes(searchInput.toLowerCase()) ||
+          rowdata.building.toLowerCase().includes(searchInput.toLowerCase()) ||
+          rowdata.state.toLowerCase().includes(searchInput.toLowerCase()) ||
+          rowdata.city.toLowerCase().includes(searchInput.toLowerCase()) ||
+          rowdata.zipCode.toLowerCase().includes(searchInput.toLowerCase()) ||
+          rowdata.timeZone.toLowerCase().includes(searchInput.toLowerCase())
+        )
+      }
+    })
+    console.log("filteredData:", filteredData)
+    setDataField(filteredData)
+  }
+  const handleRefresh = () => {
+    setSearchInput("")
+    setFilterOption("")
+    setDataField(data)
+  }
+
   const [showEntries, setshowEntries] = useState(10)
   const [paginationItems, setpaginationItems] = useState(1)
   const [selectedPaginationItem, setselectedPaginationItem] = useState(1)
@@ -168,25 +210,66 @@ const TableContainer = ({
     gotoPage(page)
   }
 
-  const handleSearch = e => {
-    setValue(e.target.value)
-    // if (e.target.value === "") {
-    //   setshowEntries(25)
-    // }
-    let currentList = data.filter(jobWbs => {
-      return e.target.value === ""
-        ? true
-        : jobWbs.projectName
-            .toLowerCase()
-            .includes(e.target.value.toLowerCase())
-    })
+  // const handleSearch = e => {
+  //   setValue(e.target.value)
+  //   // if (e.target.value === "") {
+  //   //   setshowEntries(25)
+  //   // }
+  //   let currentList = data.filter(jobWbs => {
+  //     return e.target.value === ""
+  //       ? true
+  //       : jobWbs.projectName
+  //           .toLowerCase()
+  //           .includes(e.target.value.toLowerCase())
+  //   })
 
-    setcurrentTableData(currentList)
-  }
+  //   setcurrentTableData(currentList)
+  // }
   return (
     <Fragment>
       <Row className="mb-2">
-        <Col md={customPageSizeOptions ? 2 : 1}>
+        <div className="d-flex mb-0">
+          <input
+            id="search"
+            name="search"
+            type="text"
+            className="form-control me-2"
+            placeholder="Search"
+            value={searchInput}
+            onChange={e => setSearchInput(e.target.value)}
+          />
+          <select
+            id="filter"
+            name="filter"
+            className="form-select"
+            value={filterOption}
+            onChange={e => setFilterOption(e.target.value)}
+          >
+            <option value="">Filter</option>
+            <option value="siteId">Site Id</option>
+            <option value="building">Building</option>
+            <option value="state">State</option>
+            <option value="city">City</option>
+            {/* <option value="zipCode">Zip Code</option> */}
+            <option value="timeZone">Time Zone</option>
+          </select>
+          <button
+            className="btn btn-primary mdi mdi-filter ms-2"
+            style={{ backgroundColor: "green" }}
+            onClick={() => handleSearch(searchInput, filterOption)}
+          >
+            {/* Search */}
+          </button>
+          <button
+            className="btn btn-primary mdi mdi-refresh ms-2"
+            style={{ backgroundColor: "green" }}
+            onClick={() => handleRefresh()}
+          >
+            {/* Refresh */}
+          </button>
+        </div>
+
+        {/* <Col md={customPageSizeOptions ? 2 : 1}>
           <select
             className="form-select"
             value={pageSize}
@@ -206,7 +289,7 @@ const TableContainer = ({
             setGlobalFilter={setGlobalFilter}
             isJobListGlobalFilter={isJobListGlobalFilter}
           />
-        )}
+        )} */}
         {/* {isAddOptions && (
           <Col sm="7">
             <div className="text-sm-end">
@@ -255,7 +338,12 @@ const TableContainer = ({
       </Row>
 
       <div className="table-responsive react-table">
-        <Table bordered hover {...getTableProps()} className={className}>
+        <Table
+          bordered
+          hover
+          // {...getTableProps()}
+          className={className}
+        >
           <thead
             style={{
               fontSize: 16,
@@ -279,8 +367,10 @@ const TableContainer = ({
             </tr>
           </thead>
 
-          <tbody {...getTableBodyProps()}>
-            {map(data, (rowdata, index) => (
+          <tbody
+          // {...getTableBodyProps()}
+          >
+            {map(dataField, (rowdata, index) => (
               <tr key={index}>
                 <td>
                   <h5 className="text-truncate font-size-14">
@@ -297,9 +387,6 @@ const TableContainer = ({
                 <td>
                   <p> {rowdata.addressLine1}</p>
                 </td>
-                {/* <td>
-                          <p> {jobList.JobNotes}</p>
-                        </td> */}
                 <td>
                   <p> {rowdata.addressLine2}</p>
                 </td>
@@ -329,12 +416,7 @@ const TableContainer = ({
                         <i className="mdi mdi-view-dashboard font-size-16 text-success me-1" />{" "}
                         View
                       </DropdownItem>
-                      <DropdownItem
-                        // href="/siteadmin/edit"
-                        // to={`/siteadmin/edit/${rowdata: rowdata, isedit: true}`}
-                        // onClick={() => handleEditClick(rowdata)}
-                        onClick={() => handleEditClick(rowdata)}
-                      >
+                      <DropdownItem onClick={() => handleEditClick(rowdata)}>
                         <i className="mdi mdi-pencil font-size-16 text-success me-1" />{" "}
                         Edit
                       </DropdownItem>
@@ -358,6 +440,7 @@ const TableContainer = ({
         <Col className="col-md-auto">
           <div className="d-flex gap-1">
             <Button
+              style={{ backgroundColor: "green" }}
               // style={{ backgroundColor: "#003768" }}
               color="primary"
               onClick={() => gotoPage(0)}
@@ -367,6 +450,7 @@ const TableContainer = ({
             </Button>
             <Button
               color="primary"
+              style={{ backgroundColor: "green" }}
               onClick={previousPage}
               disabled={!canPreviousPage}
             >
@@ -393,11 +477,17 @@ const TableContainer = ({
 
         <Col className="col-md-auto">
           <div className="d-flex gap-1">
-            <Button color="primary" onClick={nextPage} disabled={!canNextPage}>
+            <Button
+              color="primary"
+              style={{ backgroundColor: "green" }}
+              onClick={nextPage}
+              disabled={!canNextPage}
+            >
               {">"}
             </Button>
             <Button
               color="primary"
+              style={{ backgroundColor: "green" }}
               onClick={() => gotoPage(pageCount - 1)}
               disabled={!canNextPage}
             >

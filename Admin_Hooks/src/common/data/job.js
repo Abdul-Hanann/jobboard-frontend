@@ -393,7 +393,7 @@ const jobsList = [
     id: 5,
     no: 5,
     JobName: "Magento Developer",
-    jobDate: "02 June 2021",
+    jobDate: "03 June 2021",
     JobNoOfDays: "3",
     JobSiteId: "site id 2",
     JobNotes: "good job",

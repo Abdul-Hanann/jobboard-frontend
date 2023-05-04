@@ -364,7 +364,10 @@ function JobList() {
         <div className="container-fluid">
           <Breadcrumbs title="Jobs" breadcrumbItem="Jobs Lists" />
           <Row>
-            <Col lg="12">
+            <Col
+              lg="12"
+              // style={{ marginBottom: "-20px" }}
+            >
               <Card>
                 <CardBody className="border-bottom">
                   <div className="d-flex align-items-center">
@@ -392,14 +395,15 @@ function JobList() {
                                             </UncontrolledDropdown> */}
                     </div>
                   </div>
+                  <div>
+                    <JobsList />
+                  </div>
                 </CardBody>
               </Card>
             </Col>
           </Row>
           {/* ///////////////////////////////////////////////////////// */}
-          <div>
-            <JobsList />
-          </div>
+
           {/* <CardBody>
                                     <TableContainer
                                         columns={columns}

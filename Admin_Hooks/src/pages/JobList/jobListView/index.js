@@ -143,6 +143,9 @@ const JobsList = () => {
   // })
 
   console.log("jobs List:", jobsList)
+  const [dataField, setDataField] = useState(jobsList)
+  const [searchInput, setSearchInput] = useState("")
+  const [filterOption, setFilterOption] = useState("")
   const [modal, setModal] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
   const [projectList, setProjectList] = useState([])
@@ -215,7 +218,40 @@ const JobsList = () => {
     const date1 = moment(new Date(date)).format("DD MMM Y")
     return date1
   }
-
+  const handleSearch = (searchInput, filterOption) => {
+    // console.log("filtered data:", filterOption)
+    const filteredData = dataField.filter(rowdata => {
+      if (filterOption === "JobName") {
+        return rowdata.JobName.toLowerCase().includes(searchInput.toLowerCase())
+      } else if (filterOption === "JobSiteId") {
+        return rowdata.JobSiteId.toLowerCase().includes(
+          searchInput.toLowerCase()
+        )
+      } else if (filterOption === "jobDate") {
+        const date = new Date(rowdata.jobDate)
+        const searchDate = new Date(searchInput)
+        return date.getTime() === searchDate.getTime()
+        // return rowdata.jobDate.toLowerCase().includes(searchInput)
+      } else if (filterOption === "JobNoOfDays") {
+        return rowdata.JobNoOfDays.toLowerCase().includes(
+          searchInput.toLowerCase()
+        )
+      } else {
+        return (
+          rowdata.JobName.toLowerCase().includes(searchInput.toLowerCase()) ||
+          rowdata.JobSiteId.toLowerCase().includes(searchInput.toLowerCase()) ||
+          rowdata.jobDate.toLowerCase().includes(searchInput.toLowerCase()) ||
+          rowdata.JobNoOfDays.toLowerCase().includes(searchInput.toLowerCase())
+        )
+      }
+    })
+    setDataField(filteredData)
+  }
+  const handleRefresh = () => {
+    setSearchInput("")
+    setFilterOption("")
+    setDataField(jobsList)
+  }
   return (
     <React.Fragment>
       <DeleteModal
@@ -230,6 +266,44 @@ const JobsList = () => {
         {/* <Breadcrumbs title="Projects" breadcrumbItem="Projects List" /> */}
 
         <Row>
+          <div className="d-flex mb-0">
+            <input
+              id="search"
+              name="search"
+              type="text"
+              className="form-control me-2"
+              placeholder="Search"
+              value={searchInput}
+              onChange={e => setSearchInput(e.target.value)}
+            />
+            <select
+              id="filter"
+              name="filter"
+              className="form-select"
+              value={filterOption}
+              onChange={e => setFilterOption(e.target.value)}
+            >
+              <option value="">Filter</option>
+              <option value="JobName">Job Name</option>
+              <option value="JobSiteId">Job Site Id</option>
+              <option value="jobDate">job Date</option>
+              <option value="JobNoOfDays">Job No Of Days</option>
+            </select>
+            <button
+              className="btn btn-primary mdi mdi-filter ms-2"
+              style={{ backgroundColor: "green" }}
+              onClick={() => handleSearch(searchInput, filterOption)}
+            >
+              {/* Search */}
+            </button>
+            <button
+              className="btn btn-primary mdi mdi-refresh ms-2"
+              style={{ backgroundColor: "green" }}
+              onClick={() => handleRefresh()}
+            >
+              {/* Refresh */}
+            </button>
+          </div>
           <Col lg="12">
             <div>
               <div className="table-responsive">
@@ -259,7 +333,7 @@ const JobsList = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {map(jobsList, (jobList, index) => (
+                    {map(dataField, (jobList, index) => (
                       // console.log("project data: ", project),
                       <tr key={index}>
                         {/* console.log("job List data: ",jobList) */}

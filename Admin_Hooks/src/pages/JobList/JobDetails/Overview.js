@@ -1,16 +1,295 @@
-import React from "react"
+import React, { useState } from "react"
 import { Link } from "react-router-dom"
-import { Card, CardBody, Col } from "reactstrap"
 
+import * as Yup from "yup"
+// import Select from "react-select"
+import TextField from "@material-ui/core/TextField"
+import Autocomplete from "@material-ui/lab/Autocomplete"
+import Select from "@material-ui/core/Select"
+import { FormControl, InputLabel, MenuItem } from "@material-ui/core"
+import { useFormik } from "formik"
 import { userTypes } from "pages/Authentication/userTypes"
-
+import {
+  Col,
+  Row,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  Form,
+  Input,
+  FormFeedback,
+  Label,
+  Card,
+  CardBody,
+} from "reactstrap"
 //import images
 import adobephotoshop from "../../../assets/images/companies/adobe-photoshop.svg"
 
 const Overview = ({ jobList }) => {
   const userType = localStorage.getItem("userType")
+  const [modal, setModal] = useState(false)
+  const [dataField, setDataField] = useState(null)
+  const toggle = () => {
+    if (modal) {
+      setModal(false)
+      setDataField(null)
+    } else {
+      setModal(true)
+      setDataField(jobList)
+    }
+  }
+  // const options = [
+  //   "Technician1",
+  //   "Technician2",
+  //   "Technician3",
+  //   "Technician4",
+  // ]
+  const options = [
+    { value: "Technician1", label: "Technician1" },
+    { value: "Technician2", label: "Technician2" },
+    { value: "Technician3", label: "Technician3" },
+    { value: "Technician4", label: "Technician4" },
+  ]
+
+  // validation
+  const validation = useFormik({
+    // enableReinitialize : use this flag when initial values needs to be changed
+    enableReinitialize: true,
+
+    initialValues: {
+      jobId: (dataField && dataField.id) || "",
+      JobName: (dataField && dataField.JobName) || "",
+      technician: "",
+    },
+    validationSchema: Yup.object({
+      // jobId: Yup.string().matches(
+      //     /[0-9\.\-\s+\/()]+/,
+      //     "Please Enter Valid Job Id"
+      // ).required("Please Enter Your Job Id"),
+      jobId: Yup.string().required("Please Enter Your Job Id"),
+      JobName: Yup.string().required("Please Enter Your Job Name"),
+      technician: Yup.string().required("Please Select technician Name"),
+    }),
+    onSubmit: values => {
+      console.log("okay")
+      console.log("values:", values)
+      if (isEdit) {
+        const updateJobList = {
+          id: jobList ? jobList.id : 0,
+          // JobNo: values.JobNo,
+          JobName: values.JobName,
+          jobDate: dateObject,
+          JobNoOfDays: values.JobNoOfDays,
+          JobSiteId: values.JobSiteId,
+          JobNotes: values.JobNotes,
+          JobWBS: values.JobWBS,
+        }
+        // update Job
+        dispatch(onUpdateJobList(updateJobList))
+        validation.resetForm()
+      } else {
+        const newJobList = {
+          id: Math.floor(Math.random() * (30 - 20)) + 20,
+          // JobNo: values["JobNo"],
+          JobName: values["JobName"],
+          jobDate: values["jobDate"],
+          JobNoOfDays: values["JobNoOfDays"],
+          JobSiteId: values["JobSiteId"],
+          JobNotes: values["JobNotes"],
+          JobWBS: values["JobWBS"],
+        }
+        // save new Job
+        console.log("okay")
+        dispatch(onAddNewJobList(newJobList))
+        validation.resetForm()
+      }
+      toggle()
+    },
+  })
+
+  const handleClick = jobList => {
+    setDataField({
+      id: jobList ? jobList.id : 0,
+      JobName: jobList.JobName,
+      JobNoOfDays: jobList.JobNoOfDays,
+      JobSiteId: jobList.JobSiteId,
+      JobNotes: jobList.JobNotes,
+      JobWBS: jobList.JobWBS,
+    })
+    toggle()
+  }
+  const inpRow = [{ technician: "" }]
+  const [inputFields, setinputFields] = useState(inpRow)
+
+  // Function for Create Input Fields
+  function handleAddFields() {
+    const newItem = { technician: "" }
+    setinputFields([...inputFields, newItem])
+  }
+
+  // Function for Remove Input Fields
+  // function handleRemoveFields(idx) {
+  //   document.getElementById("nested" + idx).style.display = "none"
+  // }
+  const handleRemoveFields = key => {
+    const newInputFields = [...inputFields]
+    newInputFields.splice(key, 1)
+    setinputFields(newInputFields)
+  }
+
   return (
     <React.Fragment>
+      <Modal isOpen={modal} toggle={toggle}>
+        <ModalHeader toggle={toggle} tag="h4">
+          {/* {!!isEdit ? "Edit Job" : "Add Job"} */}
+          Assign Technician
+        </ModalHeader>
+        <ModalBody>
+          <Form
+            onSubmit={e => {
+              e.preventDefault()
+              validation.handleSubmit()
+              return false
+            }}
+          >
+            <Row>
+              <Col className="col-12">
+                <div className="mb-3">
+                  <Label className="form-label"> Job Id</Label>
+                  <Input
+                    name="jobId"
+                    type="text"
+                    placeholder="Insert Job Id"
+                    validate={{
+                      required: { value: true },
+                    }}
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.jobId || ""}
+                    invalid={
+                      validation.touched.jobId && validation.errors.jobId
+                        ? true
+                        : false
+                    }
+                    readOnly={true}
+                  />
+                  {validation.touched.jobId && validation.errors.jobId ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.jobId}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label"> Job Name</Label>
+                  <Input
+                    name="JobName"
+                    type="text"
+                    placeholder="Insert Job Name"
+                    validate={{
+                      required: { value: true },
+                    }}
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.JobName || ""}
+                    invalid={
+                      validation.touched.JobName && validation.errors.JobName
+                        ? true
+                        : false
+                    }
+                    readOnly={true}
+                  />
+                  {validation.touched.JobName && validation.errors.JobName ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.JobName}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">Technician</Label>
+                  <div className="inner col-lg-10 ml-md-auto" id="repeater">
+                    {inputFields.map((field, key) => (
+                      <div
+                        key={key}
+                        id={"nested" + key}
+                        className="mb-3 row align-items-center"
+                      >
+                        <Col md="11">
+                          <FormControl variant="outlined" fullWidth>
+                            <InputLabel htmlFor={"technician-" + key}>
+                              Select technician
+                            </InputLabel>
+                            <Select
+                              labelId={"technician-" + key}
+                              id={"technician-" + key}
+                              value={field.technician}
+                              onChange={event => {
+                                const newValue = event.target.value
+                                const newFields = [...inputFields]
+                                newFields[key].technician = newValue
+                                setinputFields(newFields)
+                              }}
+                              label="Select technician"
+                            >
+                              <MenuItem value="">Select technician</MenuItem>
+                              {options.map(option => (
+                                <MenuItem
+                                  key={option.value}
+                                  value={option.value}
+                                >
+                                  {option.label}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </Col>
+                        <Col md="1">
+                          <div className="mt-2 mt-md-0 d-grid">
+                            <button
+                              // color="primary"
+                              className="btn btn-soft-danger mdi mdi-account-remove"
+                              onClick={() => {
+                                handleRemoveFields(key)
+                              }}
+                              // block
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        </Col>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <button
+                    // type="button"
+                    className="btn btn-soft-success mdi mdi-account-plus mt-0"
+                    onClick={() => {
+                      handleAddFields()
+                    }}
+                  >
+                    {inputFields.length === 0
+                      ? "Add technician"
+                      : " Add another technician"}
+                  </button>
+                </div>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <div className="text-end">
+                  <button
+                    // type="submit"
+                    className="btn btn-success save-user"
+                  >
+                    Assign
+                  </button>
+                </div>
+              </Col>
+            </Row>
+          </Form>
+        </ModalBody>
+      </Modal>
       <Col xl={3}>
         <Card>
           <CardBody>
@@ -35,46 +314,30 @@ const Overview = ({ jobList }) => {
                     <th scope="row">Job Site Id</th>
                     <td>{jobList.JobSiteId}</td>
                   </tr>
-                  {/* <tr>
-                    <th scope="row">Experience:</th>
-                    <td>0-2 Years</td>
-                  </tr> */}
-                  {/* <tr>
-                    <th scope="row">Vacancy</th>
-                    <td>12</td>
-                  </tr> */}
-                  {/* <tr>
-                    <th scope="row">Job Type</th>
-                    <td>
-                      <span className="badge badge-soft-success">
-                        Full Time
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Status</th>
-                    <td>
-                      <span className="badge badge-soft-info">New</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Posted Date</th>
-                    <td>25 June, 2022</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Close Date</th>
-                    <td>13 April, 2022</td>
-                  </tr> */}
                 </tbody>
               </table>
             </div>
             {userType === userTypes.ROLE_TECHNICIAN && (
               <div className="hstack gap-2">
-                <button className="btn btn-soft-primary w-100">
+                <button className="btn btn-soft-success w-100">
                   Apply Now
                 </button>
-                <button className="btn btn-soft-danger w-100">
+                {/* <button className="btn btn-soft-danger w-100">
                   Contact Us
+                </button> */}
+              </div>
+            )}
+            {userType === userTypes.ROLE_ADMIN && (
+              <div className="hstack gap-2">
+                <button
+                  // style={{ backgroundColor: "green", color: "white" }}
+                  onClick={() => {
+                    handleClick(jobList)
+                  }}
+                  // className="btn btn-soft-primary w-100"
+                  className="btn btn-soft-success w-100"
+                >
+                  Assign Technician
                 </button>
               </div>
             )}

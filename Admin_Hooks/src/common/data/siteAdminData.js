@@ -1,6 +1,6 @@
 const siteData = [
   {
-    siteId: "SK2540",
+    siteId: "SK2545",
     building: "building 1",
     addressLine1: "Address Line 1 1",
     addressLine2: "Address Line 1 2",
@@ -26,8 +26,8 @@ const siteData = [
     addressLine2: "Address Line 3 2 ",
     city: "California",
     state: "0-2 Years",
-    zipCode: 46000,
-    timeZone: "Isb",
+    zipCode: 46003,
+    timeZone: "Rwp",
   },
   {
     siteId: "SK2540",
