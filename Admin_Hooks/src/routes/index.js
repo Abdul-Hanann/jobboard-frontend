@@ -120,10 +120,12 @@ import BlogDetails from "../pages/Blog/BlogDetails"
 
 //Job
 import JobGrid from "../pages/JobPages/JobGrid/index"
-import JobDetails from "../pages/JobPages/JobDetails"
+// import JobDetails from "../pages/JobPages/JobDetails"
 import JobCategories from "../pages/JobPages/JobCategories"
 import JobList from "../pages/JobList"
 import JobCreate from "../pages/JobList/JobsCreate"
+import JobDetails from "pages/JobList/JobDetails"
+// import jobListView from "pages/JobList/jobListView"
 import AddJob from "../pages/AddJob"
 import ApplyJobs from "../pages/JobPages/ApplyJobs/index"
 import CandidateList from "../pages/JobPages/CandidateList"
@@ -181,6 +183,7 @@ import ContactsList from "../pages/Contacts/ContactList/contacts-list"
 import ContactsProfile from "../pages/Contacts/ContactsProfile/contacts-profile"
 import JobWbs from "pages/JobWbs"
 import SiteAdmin from "../pages/SiteAdmin/index"
+import SiteAdminCreate from "../pages/SiteAdmin/SiteAdminCreate"
 import Schedule from "pages/Schedule"
 const adminRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
@@ -227,10 +230,14 @@ const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
   { path: "/joblist", component: <JobList /> },
   { path: "/joblist/jobcreate", component: <JobCreate /> },
+  { path: "/joblist/editJob", component: <JobCreate /> },
+  { path: "/joblist/jobDetails", component: <JobDetails /> },
   { path: "/jobwbs", component: <JobWbs /> },
   { path: "/schedule", component: <Schedule /> },
   { path: "/addjob", component: <AddJob /> },
   { path: "/siteadmin", component: <SiteAdmin /> },
+  { path: "/siteadmin/create", component: <SiteAdminCreate /> },
+  { path: "/siteadmin/edit", component: <SiteAdminCreate /> },
   { path: "/useradmin", component: <UserAdmin /> },
   { path: "/dashboard-saas", component: <DashboardSaas /> },
   { path: "/dashboard-crypto", component: <DashboardCrypto /> },

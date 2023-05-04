@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react"
 import { Collapse } from "reactstrap"
 import { Link } from "react-router-dom"
 import withRouter from "components/Common/withRouter"
-import { userTypes } from "../../pages/Authentication/userTypes"
+import { userTypes } from "pages/Authentication/userTypes"
 
 //i18n
 import { withTranslation } from "react-i18next"

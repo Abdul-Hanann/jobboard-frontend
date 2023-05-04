@@ -1,33 +1,39 @@
-import React from 'react';
-import { Badge } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import React from "react"
+import { Badge } from "reactstrap"
+import { Link } from "react-router-dom"
 
 // const JobNo = (cell) => {
 //     return <Link to="#" className="text-body fw-bold">{cell.value ? cell.value : ''}</Link>
 // };
 
-const JobName = (cell) => {
-    return cell.value ? cell.value : "";
-};
+const SiteId = cell => {
+  return cell.value ? cell.value : ""
+}
 
-const JobDate = (cell) => {
-    return cell.value ? cell.value : "";
-};
+const Building = cell => {
+  return cell.value ? cell.value : ""
+}
 
-const JobNoOfDays = (cell) => {
-    return cell.value ? cell.value : "";
-};
+const AddressLine1 = cell => {
+  return cell.value ? cell.value : ""
+}
 
-const JobSiteId = (cell) => {
-    return cell.value ? cell.value : "";
-};
+const AddressLine2 = cell => {
+  return cell.value ? cell.value : ""
+}
 
-const JobNotes = (cell) => {
-    return cell.value ? cell.value : "";
-};
-const JobWBS = (cell) => {
-    return cell.value ? cell.value : "";
-};
+const City = cell => {
+  return cell.value ? cell.value : ""
+}
+const State = cell => {
+  return cell.value ? cell.value : ""
+}
+const Zipcode = cell => {
+  return cell.value ? cell.value : ""
+}
+const TimeZone = cell => {
+  return cell.value ? cell.value : ""
+}
 
 // const Type = (cell) => {
 //     switch (cell.value) {
@@ -39,7 +45,7 @@ const JobWBS = (cell) => {
 //             return <Badge className="badge-soft-info">Freelance</Badge>
 //         case "Internship":
 //             return <Badge className="badge-soft-warning">Internship</Badge>
-//     };   
+//     };
 // };
 
 // const PostedDate = (cell) => {
@@ -61,5 +67,13 @@ const JobWBS = (cell) => {
 //     }
 // };
 
-
-export {JobName, JobDate, JobNoOfDays, JobSiteId, JobNotes, JobWBS };
+export {
+  SiteId,
+  Building,
+  AddressLine1,
+  AddressLine2,
+  City,
+  State,
+  Zipcode,
+  TimeZone,
+}

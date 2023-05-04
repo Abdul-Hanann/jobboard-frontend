@@ -2,10 +2,10 @@ import React, { useEffect, useMemo, useState } from "react"
 import { Link } from "react-router-dom"
 import { isEmpty } from "lodash"
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css"
-import TableContainer from "components/Common/TableContainer"
+import TableContainer from "./TableContainer"
 import * as Yup from "yup"
 import { useFormik } from "formik"
-// import { jobs } from "common/data";
+import { siteData } from "common/data/siteAdminData"
 
 //import components
 import Breadcrumbs from "components/Common/Breadcrumb"
@@ -21,12 +21,14 @@ import {
 } from "store/actions"
 
 import {
-  JobName,
-  JobDate,
-  JobNoOfDays,
-  JobSiteId,
-  JobNotes,
-  JobWBS,
+  SiteId,
+  Building,
+  AddressLine1,
+  AddressLine2,
+  City,
+  State,
+  Zipcode,
+  TimeZone,
 } from "./JobListCol"
 
 //redux
@@ -129,9 +131,9 @@ function SiteAdmin() {
     },
   })
 
-  useEffect(() => {
-    dispatch(fetchJobList())
-  }, [])
+  // useEffect(() => {
+  //   dispatch(fetchJobList())
+  // }, [])
 
   // useEffect(() => {
   //   setJobsList(jobs)
@@ -179,7 +181,7 @@ function SiteAdmin() {
     setJob(job)
     setDeleteModal(true)
   }
-
+  console.log("site data:", siteData)
   const handleDeletejob = () => {
     if (job && job.id) {
       dispatch(onDeleteJobList(job.id))
@@ -189,141 +191,148 @@ function SiteAdmin() {
   // const handleJobClicks = () => {
   //   setJobsList("")
   //   setIsEdit(false)
-  //   toggle()
+  //   // toggle()
   // }
 
-  // const columns = useMemo(
-  //   () => [
-  //     // {
-  //     //     Header: 'No',
-  //     //     accessor: 'jobId',
-  //     //     filterable: true,
-  //     //     Cell: (cellProps) => {
-  //     //         return <JobNo {...cellProps} />;
-  //     //     }
-  //     // },
-  //     {
-  //       Header: "Job Name",
-  //       accessor: "JobName",
-  //       filterable: true,
-  //       Cell: cellProps => {
-  //         return <JobName {...cellProps} />
-  //       },
-  //     },
-  //     {
-  //       Header: "Job Date",
-  //       accessor: "JobDate",
-  //       filterable: true,
-  //       Cell: cellProps => {
-  //         return <JobDate {...cellProps} />
-  //       },
-  //     },
-  //     {
-  //       Header: "Job No Of Days",
-  //       accessor: "JobNoOfDays",
-  //       filterable: true,
-  //       Cell: cellProps => {
-  //         return <JobNoOfDays {...cellProps} />
-  //       },
-  //     },
-  //     {
-  //       Header: "Job Site Id",
-  //       accessor: "JobSiteId",
-  //       filterable: true,
-  //       Cell: cellProps => {
-  //         return <JobSiteId {...cellProps} />
-  //       },
-  //     },
-  //     {
-  //       Header: "Job Notes",
-  //       accessor: "JobNotes",
-  //       Cell: cellProps => {
-  //         return <JobNotes {...cellProps} />
-  //       },
-  //     },
-  //     {
-  //       Header: "Job WBS",
-  //       accessor: "JobWBS",
-  //       Cell: cellProps => {
-  //         return <JobWBS {...cellProps} />
-  //       },
-  //     },
-  //     // {
-  //     //     Header: 'Posted Date',
-  //     //     accessor: 'postedDate',
-  //     //     Cell: (cellProps) => {
-  //     //         return <PostedDate {...cellProps} />;
-  //     //     }
-  //     // },
-  //     // {
-  //     //     Header: 'Last Date',
-  //     //     accessor: 'lastDate',
-  //     //     Cell: (cellProps) => {
-  //     //         return <LastDate {...cellProps} />;
-  //     //     }
-  //     // },
-  //     // {
-  //     //     Header: 'Status',
-  //     //     accessor: 'status',
-  //     //     disableFilters: true,
-  //     //     Cell: (cellProps) => {
-  //     //         return <Status {...cellProps} />;
-  //     //     }
-  //     // },
-  //     {
-  //       Header: "Action",
-  //       accessor: "action",
-  //       disableFilters: true,
-  //       Cell: cellProps => {
-  //         return (
-  //           <ul className="list-unstyled hstack gap-1 mb-0">
-  //             <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-  //               <Link to="/job-details" className="btn btn-sm btn-soft-primary">
-  //                 <i className="mdi mdi-eye-outline" id="viewtooltip"></i>
-  //               </Link>
-  //             </li>
-  //             <UncontrolledTooltip placement="top" target="viewtooltip">
-  //               View
-  //             </UncontrolledTooltip>
+  const columns = useMemo(
+    () => [
+      // {
+      //     Header: 'No',
+      //     accessor: 'jobId',
+      //     filterable: true,
+      //     Cell: (cellProps) => {
+      //         return <JobNo {...cellProps} />;
+      //     }
+      // },
+      {
+        Header: "Site Id",
+        accessor: "SiteId",
+        filterable: true,
+        Cell: cellProps => {
+          return <SiteId {...cellProps} />
+        },
+      },
+      {
+        Header: "Building",
+        accessor: "Building",
+        filterable: true,
+        Cell: cellProps => {
+          return <Building {...cellProps} />
+        },
+      },
+      {
+        Header: "Address Line 1",
+        accessor: "AddressLine1",
+        filterable: true,
+        Cell: cellProps => {
+          return <AddressLine1 {...cellProps} />
+        },
+      },
+      {
+        Header: "Address Line 2",
+        accessor: "AddressLine2",
+        filterable: true,
+        Cell: cellProps => {
+          return <AddressLine2 {...cellProps} />
+        },
+      },
+      {
+        Header: "City",
+        accessor: "City",
+        Cell: cellProps => {
+          return <City {...cellProps} />
+        },
+      },
+      {
+        Header: "State",
+        accessor: "State",
+        Cell: cellProps => {
+          return <State {...cellProps} />
+        },
+      },
+      {
+        Header: "Zip Code",
+        accessor: "Zipcode",
+        Cell: cellProps => {
+          return <Zipcode {...cellProps} />
+        },
+      },
+      {
+        Header: "Time Zone",
+        accessor: "TimeZone",
+        Cell: cellProps => {
+          return <TimeZone {...cellProps} />
+        },
+      },
+      // {
+      //     Header: 'Time Zone',
+      //     accessor: 'TimeZone',
+      //     Cell: (cellProps) => {
+      //         return <TimeZone {...cellProps} />;
+      //     }
+      // },
+      // {
+      //     Header: 'Status',
+      //     accessor: 'status',
+      //     disableFilters: true,
+      //     Cell: (cellProps) => {
+      //         return <Status {...cellProps} />;
+      //     }
+      // },
+      {
+        Header: "Action",
+        accessor: "action",
+        disableFilters: true,
+        Cell: cellProps => {
+          return (
+            <ul className="list-unstyled hstack gap-1 mb-0">
+              <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
+                <Link to="/job-details" className="btn btn-sm btn-soft-primary">
+                  <i className="mdi mdi-eye-outline" id="viewtooltip"></i>
+                </Link>
+              </li>
+              <UncontrolledTooltip placement="top" target="viewtooltip">
+                View
+              </UncontrolledTooltip>
 
-  //             <li>
-  //               <Link
-  //                 to="#"
-  //                 className="btn btn-sm btn-soft-info"
-  //                 onClick={() => {
-  //                   const jobData = cellProps.row.original
-  //                   handleJobClick(jobData)
-  //                 }}
-  //               >
-  //                 <i className="mdi mdi-pencil-outline" id="edittooltip" />
-  //                 <UncontrolledTooltip placement="top" target="edittooltip">
-  //                   Edit
-  //                 </UncontrolledTooltip>
-  //               </Link>
-  //             </li>
+              <li>
+                <Link
+                  to="#"
+                  className="btn btn-sm btn-soft-info"
+                  onClick={() => {
+                    const jobData = cellProps.row.original
+                    handleJobClick(jobData)
+                  }}
+                >
+                  <i className="mdi mdi-pencil-outline" id="edittooltip" />
+                  <UncontrolledTooltip placement="top" target="edittooltip">
+                    Edit
+                  </UncontrolledTooltip>
+                </Link>
+              </li>
 
-  //             <li>
-  //               <Link
-  //                 to="#"
-  //                 className="btn btn-sm btn-soft-danger"
-  //                 onClick={() => {
-  //                   const jobData = cellProps.row.original
-  //                   onClickDelete(jobData)
-  //                 }}
-  //               >
-  //                 <i className="mdi mdi-delete-outline" id="deletetooltip" />
-  //                 <UncontrolledTooltip placement="top" target="deletetooltip">
-  //                   Delete
-  //                 </UncontrolledTooltip>
-  //               </Link>
-  //             </li>
-  //           </ul>
-  //         )
-  //       },
-  //     },
-  //   ],
-  //   []
-  // )
+              <li>
+                <Link
+                  to="#"
+                  className="btn btn-sm btn-soft-danger"
+                  onClick={() => {
+                    const jobData = cellProps.row.original
+                    onClickDelete(jobData)
+                  }}
+                >
+                  <i className="mdi mdi-delete-outline" id="deletetooltip" />
+                  <UncontrolledTooltip placement="top" target="deletetooltip">
+                    Delete
+                  </UncontrolledTooltip>
+                </Link>
+              </li>
+            </ul>
+          )
+        },
+      },
+    ],
+    []
+  )
 
   return (
     <React.Fragment>
@@ -345,9 +354,10 @@ function SiteAdmin() {
                     </h5>
                     <div className="flex-shrink-0">
                       <Link
-                        to="#!"
-                        onClick={() => setModal(true)}
+                        to="/siteadmin/create"
+                        // onClick={() => setModal(true)}
                         className="btn btn-primary me-1"
+                        style={{ backgroundColor: "green" }}
                       >
                         Add Site Admin
                       </Link>
@@ -364,17 +374,17 @@ function SiteAdmin() {
                     </div>
                   </div>
                 </CardBody>
-                {/* <CardBody>
-                                    <TableContainer
-                                        columns={columns}
-                                        data={jobs}
-                                        isGlobalFilter={true}
-                                        isAddOptions={false}
-                                        handleJobClicks={handleJobClicks}
-                                        isJobListGlobalFilter={true}
-                                        customPageSize={1}
-                                    />
-                                </CardBody> */}
+                <CardBody>
+                  <TableContainer
+                    columns={columns}
+                    data={siteData}
+                    isGlobalFilter={true}
+                    isAddOptions={false}
+                    // handleJobClicks={handleJobClicks}
+                    isJobListGlobalFilter={true}
+                    customPageSize={1}
+                  />
+                </CardBody>
               </Card>
             </Col>
           </Row>
@@ -624,4 +634,3 @@ function SiteAdmin() {
 }
 
 export default SiteAdmin
-

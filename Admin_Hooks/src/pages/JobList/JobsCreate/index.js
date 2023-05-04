@@ -1,6 +1,7 @@
-import React, { useState } from "react"
-import { useNavigate } from "react-router-dom"
-
+import React, { useState, useEffect } from "react"
+import { useNavigate, useLocation } from "react-router-dom"
+import { parseISO } from "date-fns"
+import { parse, format } from "date-fns"
 import {
   Container,
   Row,
@@ -29,8 +30,35 @@ import "react-datepicker/dist/react-datepicker.css"
 import Breadcrumbs from "../../../components/Common/Breadcrumb"
 
 const TasksCreate = () => {
-  //meta title
-  document.title = "Create Task | Skote - React Admin & Dashboard Template"
+  const { state } = useLocation()
+  const [data, setData] = useState(null)
+  const [isEdit, setIsEdit] = useState(false)
+  // const [dateString, setDateString] = useState(false)
+  // const dateObject = parseISO(dateString)
+  const [selectedDate, setSelectedDate] = useState(null)
+  useEffect(() => {
+    if (state && state.jobList) {
+      setData(state.jobList)
+    }
+    if (state && state.canEdit) {
+      setIsEdit(state.canEdit)
+    }
+  }, [state])
+  useEffect(() => {
+    if (data && data.jobDate) {
+      const parsedDate = parse(data.jobDate, "dd MMMM yyyy", new Date())
+      setSelectedDate(parsedDate)
+    }
+  }, [data])
+  const handleDateChange = date => {
+    setSelectedDate(date)
+  }
+  console.log("isEdit:", isEdit)
+  console.log("jobList:", data)
+  console.log("selectedDate:", selectedDate)
+  document.title = isEdit
+    ? "Edit job List | SAIT Job Board"
+    : "Create job List  | SAIT Job Board"
 
   // validation
   const validation = useFormik({
@@ -39,12 +67,12 @@ const TasksCreate = () => {
 
     initialValues: {
       // JobNo: (job && job.JobNo) || '',
-      JobName: "",
-      JobDate: "",
-      JobNoOfDays: "",
-      JobSiteId: "",
-      JobNotes: "",
-      JobWBS: "",
+      JobName: (data && data.JobName) || "",
+      jobDate: (data && data.jobDate) || "",
+      JobNoOfDays: (data && data.JobNoOfDays) || "",
+      JobSiteId: (data && data.JobSiteId) || "",
+      JobNotes: (data && data.JobNotes) || "",
+      JobWBS: (data && data.JobWBS) || "",
     },
     validationSchema: Yup.object({
       // JobNo: Yup.string().matches(
@@ -52,7 +80,7 @@ const TasksCreate = () => {
       //     "Please Enter Valid Job Id"
       // ).required("Please Enter Your Job Id"),
       JobName: Yup.string().required("Please Enter Your Job Name"),
-      JobDate: Yup.string().required("Please Enter Your Job Date"),
+      jobDate: Yup.string().required("Please Enter Your Job Date"),
       JobNoOfDays: Yup.string().required("Please Enter Your Job No of Days"),
       JobSiteId: Yup.string().required("Please Enter Your Job Site ID"),
       JobNotes: Yup.string().required("Please Enter Your Job Notes"),
@@ -63,17 +91,14 @@ const TasksCreate = () => {
       console.log("values:", values)
       if (isEdit) {
         const updateJobList = {
-          id: job ? job.id : 0,
+          id: data ? data.id : 0,
           // JobNo: values.JobNo,
           JobName: values.JobName,
-          JobDate: values.JobDate,
+          jobDate: dateObject,
           JobNoOfDays: values.JobNoOfDays,
           JobSiteId: values.JobSiteId,
           JobNotes: values.JobNotes,
           JobWBS: values.JobWBS,
-          // postedDate: "02 June 2021",
-          // lastDate: "25 June 2021",
-          // status: values.status,
         }
         // update Job
         dispatch(onUpdateJobList(updateJobList))
@@ -83,14 +108,11 @@ const TasksCreate = () => {
           id: Math.floor(Math.random() * (30 - 20)) + 20,
           // JobNo: values["JobNo"],
           JobName: values["JobName"],
-          JobDate: values["JobDate"],
+          jobDate: values["jobDate"],
           JobNoOfDays: values["JobNoOfDays"],
           JobSiteId: values["JobSiteId"],
           JobNotes: values["JobNotes"],
           JobWBS: values["JobWBS"],
-          // postedDate: "02 June 2021",
-          // lastDate: "25 June 2021",
-          // status: values["status"],
         }
         // save new Job
         console.log("okay")
@@ -143,7 +165,10 @@ const TasksCreate = () => {
                 <CardBody>
                   <Row>
                     <Col>
-                      <CardTitle className="mb-4">Create New Job</CardTitle>
+                      <CardTitle className="mb-4">
+                        {isEdit ? "Edit Job" : "Create New Job"}
+                        Create New Job
+                      </CardTitle>
                     </Col>
                     <Col
                       lg="1"
@@ -152,7 +177,7 @@ const TasksCreate = () => {
                     >
                       <div className="text-end">
                         <button
-                          type="submit"
+                          // type="submit"
                           className="btn btn-clear"
                           style={{
                             width: "100px",
@@ -177,7 +202,7 @@ const TasksCreate = () => {
                     >
                       <div className="text-end">
                         <button
-                          type="submit"
+                          // type="submit"
                           className="btn btn-clear"
                           style={{
                             width: "100px",
@@ -205,28 +230,28 @@ const TasksCreate = () => {
                           </Label>
                           <Col lg="10">
                             <Input
-                              id="jobName"
-                              name="jobName"
+                              id="JobName"
+                              name="JobName"
                               type="text"
                               className="form-control"
-                              placeholder="Enter Task Name..."
+                              placeholder="Enter Job Name..."
                               validate={{
                                 required: { value: true },
                               }}
                               onChange={validation.handleChange}
                               onBlur={validation.handleBlur}
-                              value={validation.values.jobName || ""}
+                              value={validation.values.JobName || ""}
                               invalid={
-                                validation.touched.jobName &&
-                                validation.errors.jobName
+                                validation.touched.JobName &&
+                                validation.errors.JobName
                                   ? true
                                   : false
                               }
                             />
-                            {validation.touched.jobName &&
-                            validation.errors.jobName ? (
+                            {validation.touched.JobName &&
+                            validation.errors.JobName ? (
                               <FormFeedback type="invalid">
-                                {validation.errors.jobName}
+                                {validation.errors.JobName}
                               </FormFeedback>
                             ) : null}
                           </Col>
@@ -248,26 +273,35 @@ const TasksCreate = () => {
                               >
                                 <Col md="5">
                                   <DatePicker
-                                    name="JobDate"
-                                    selected={validation.values.JobDate}
+                                    id="jobDate"
+                                    name="jobDate"
+                                    // selected={validation.values.jobDate}
+                                    selected={selectedDate}
                                     placeholderText="Insert Job Date"
+                                    // value={validation.values.jobDate || ""}
+                                    // onChange={jobDate =>
+                                    //   validation.setFieldValue(
+                                    //     "JobDate",
+                                    //     jobDate
+                                    //   )
+                                    // }
                                     onChange={date =>
-                                      validation.setFieldValue("JobDate", date)
+                                      handleDateChange("date", date)
                                     }
                                     onBlur={validation.handleBlur}
-                                    dateFormat="yyyy-MM-dd"
+                                    // dateFormat="yyyy-MM-dd"
                                     // showTimeInput
                                     className={
-                                      validation.touched.JobDate &&
-                                      validation.errors.JobDate
+                                      validation.touched.jobDate &&
+                                      validation.errors.jobDate
                                         ? "form-control is-invalid"
                                         : "form-control"
                                     }
                                   />
-                                  {validation.touched.JobDate &&
-                                  validation.errors.JobDate ? (
+                                  {validation.touched.jobDate &&
+                                  validation.errors.jobDate ? (
                                     <FormFeedback type="invalid">
-                                      {validation.errors.JobDate}
+                                      {validation.errors.jobDate}
                                     </FormFeedback>
                                   ) : null}
                                 </Col>
@@ -317,6 +351,7 @@ const TasksCreate = () => {
                             <Input
                               name="JobSiteId"
                               type="select"
+                              className="form-select"
                               placeholder="Insert Job Site Id"
                               onChange={validation.handleChange}
                               onBlur={validation.handleBlur}
@@ -345,7 +380,9 @@ const TasksCreate = () => {
                             Job Notes
                           </Label>
                           <Col lg="10">
-                            <Editor
+                            {/* <Editor
+                              id="JobNotes"
+                              name="JobNotes"
                               toolbarClassName="toolbarClassName"
                               wrapperClassName="wrapperClassName"
                               editorClassName="editorClassName"
@@ -359,6 +396,32 @@ const TasksCreate = () => {
                                   ? true
                                   : false
                               }
+                            />
+                            {validation.touched.JobNotes &&
+                            validation.errors.JobNotes ? (
+                              <FormFeedback type="invalid">
+                                {validation.errors.JobNotes}
+                              </FormFeedback>
+                            ) : null} */}
+                            <Input
+                              id="JobNotes"
+                              name="JobNotes"
+                              type="textarea"
+                              className="form-control"
+                              placeholder="Enter Job Notes..."
+                              validate={{
+                                required: { value: true },
+                              }}
+                              onChange={validation.handleChange}
+                              onBlur={validation.handleBlur}
+                              value={validation.values.JobNotes || ""}
+                              invalid={
+                                validation.touched.JobNotes &&
+                                validation.errors.JobNotes
+                                  ? true
+                                  : false
+                              }
+                              style={{ height: "200px" }}
                             />
                             {validation.touched.JobNotes &&
                             validation.errors.JobNotes ? (
@@ -419,7 +482,7 @@ const TasksCreate = () => {
                             color: "white",
                           }}
                         >
-                          Create job
+                          {!!isEdit ? "Edit" : "Create"}
                         </button>
                       </div>
                     </Col>

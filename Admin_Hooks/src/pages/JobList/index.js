@@ -12,7 +12,7 @@ import Breadcrumbs from "components/Common/Breadcrumb"
 import DeleteModal from "components/Common/DeleteModal"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
-import ProjectsList from "./jobListView"
+import JobsList from "./jobListView"
 
 import { map } from "lodash"
 
@@ -398,7 +398,7 @@ function JobList() {
           </Row>
           {/* ///////////////////////////////////////////////////////// */}
           <div>
-            <ProjectsList />
+            <JobsList />
           </div>
           {/* <CardBody>
                                     <TableContainer

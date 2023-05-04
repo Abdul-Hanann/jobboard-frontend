@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 // import { Link, withRouter } from "react-router-dom";
 import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import withRouter from "components/Common/withRouter"
 import { isEmpty, map } from "lodash"
 import * as moment from "moment"
@@ -67,7 +68,7 @@ const ProjectStatus = ({ status }) => {
   }
 }
 
-const ProjectsList = () => {
+const JobsList = () => {
   //meta title
   document.title = "Job List | SA IT Services"
 
@@ -155,23 +156,16 @@ const ProjectsList = () => {
     }
   }
 
-  const handleProjectClick = arg => {
-    const project = arg
+  const navigate = useNavigate()
+  const handleViewClick = jobList => {
+    console.log("job list before:", jobList)
+    navigate("/joblist/jobDetails", { state: { jobList } })
+  }
 
-    setProject({
-      id: project.id,
-      img: project.img,
-      name: project.name,
-      description: project.description,
-      status: project.status,
-      color: project.color,
-      dueDate: project.dueDate,
-      team: project.team,
+  const handleEditClick = jobList => {
+    navigate("/joblist/editJob", {
+      state: { jobList: jobList, canEdit: true },
     })
-
-    setIsEdit(true)
-
-    toggle()
   }
 
   //delete order
@@ -244,16 +238,23 @@ const ProjectsList = () => {
                   style={{ textAlign: "center" }}
                 >
                   <thead>
-                    <tr>
+                    <tr
+                      style={{
+                        fontSize: 14,
+                        backgroundColor: "#003768",
+                        color: "white",
+                        // textAlign: "center",
+                      }}
+                    >
                       <th scope="col" style={{ width: "100px" }}>
-                        Id
+                        Logo
                       </th>
                       <th scope="col">Job Name</th>
                       <th scope="col">Job Date</th>
                       <th scope="col">Job No Of Days</th>
                       <th scope="col">Job Site Id</th>
-                      <th scope="col">Job Notes</th>
-                      <th scope="col">Job WBS</th>
+                      {/* <th scope="col">Job Notes</th>
+                      <th scope="col">Job WBS</th> */}
                       <th scope="col">Action</th>
                     </tr>
                   </thead>
@@ -263,7 +264,8 @@ const ProjectsList = () => {
                       <tr key={index}>
                         {/* console.log("job List data: ",jobList) */}
                         <td>
-                          {jobList.id}
+                          {/* {jobList.id} */}
+                          <img src={img} alt="" className="avatar-sm" />
                           {/* <img src={img} alt="" className="avatar-sm" /> */}
                         </td>
                         <td>
@@ -272,7 +274,7 @@ const ProjectsList = () => {
                               to={`/projects-overview/${project.id}`}
                               className="text-dark"
                             > */}
-                            <img src={img} alt="" className="avatar-sm" />
+                            {/* <img src={img} alt="" className="avatar-sm" /> */}
                             {jobList.JobName}
                             {/* </Link> */}
                           </h5>
@@ -284,84 +286,16 @@ const ProjectsList = () => {
                         <td>
                           <p> {jobList.JobNoOfDays}</p>
                         </td>
-                        <td>
+                        {/* <td>
                           <p> {jobList.JobNotes}</p>
-                        </td>
+                        </td> */}
                         <td>
                           <p> {jobList.JobSiteId}</p>
                         </td>
                         <td>
-                          <p> {jobList.JobWBS}</p>
-                        </td>
-                        {/* <td> {handleValidDate(project.dueDate)}</td>
-                        <td>
-                          <ProjectStatus status={project.status} /> */}
-                        {/* <Badge className={"bg-" + project.color}>
-                              {project.status}
-                    </Badge>*/}
-                        {/* </td> */}
-                        {/* <td>
-                          <div className="avatar-group">
-                            {map(project.team, (member, index) =>
-                              !member.img || member.img !== "Null" ? (
-                                <div className="avatar-group-item" key={index}>
-                                  <Link
-                                    to="#"
-                                    className="team-member d-inline-block"
-                                    id="member1"
-                                  >
-                                    <img
-                                      src={images[member.img]}
-                                      className="rounded-circle avatar-xs"
-                                      alt=""
-                                    />
-                                    <UncontrolledTooltip
-                                      placement="top"
-                                      target="member1"
-                                    >
-                                      {member.name}
-                                    </UncontrolledTooltip>
-                                  </Link>
-                                </div>
-                              ) : (
-                                <div
-                                  className="avatar-group-item"
-                                  key={"_team_" + index}
-                                >
-                                  <Link
-                                    to="#"
-                                    className="d-inline-block"
-                                    id={"member" + member.id}
-                                  >
-                                    <div className="avatar-xs">
-                                      <span
-                                        className={
-                                          "avatar-title rounded-circle bg-soft bg-" +
-                                          member.color +
-                                          " text-" +
-                                          member.color +
-                                          " font-size-16"
-                                        }
-                                      >
-                                        {member.name.charAt(0)}
-                                      </span>
-                                      <UncontrolledTooltip
-                                        placement="top"
-                                        target={"member" + member.id}
-                                      >
-                                        {member.name}
-                                      </UncontrolledTooltip>
-                                    </div>
-                                  </Link>
-                                </div>
-                              )
-                            )}
-                          </div>
-                        </td> */}
-                        <td>
                           <UncontrolledDropdown>
                             <DropdownToggle
-                              href="#"
+                              // href="#"
                               className="card-drop"
                               tag="a"
                             >
@@ -369,15 +303,21 @@ const ProjectsList = () => {
                             </DropdownToggle>
                             <DropdownMenu className="dropdown-menu-end">
                               <DropdownItem
+                                onClick={() => handleViewClick(jobList)}
+                              >
+                                <i className="mdi mdi-view-dashboard font-size-16 text-success me-1" />{" "}
+                                View
+                              </DropdownItem>
+                              <DropdownItem
                                 href="#"
-                                onClick={() => handleProjectClick(project)}
+                                onClick={() => handleEditClick(jobList)}
                               >
                                 <i className="mdi mdi-pencil font-size-16 text-success me-1" />{" "}
                                 Edit
                               </DropdownItem>
                               <DropdownItem
                                 href="#"
-                                onClick={() => onClickDelete(project)}
+                                onClick={() => onClickDelete(jobList)}
                               >
                                 <i className="mdi mdi-trash-can font-size-16 text-danger me-1" />{" "}
                                 Delete
@@ -572,4 +512,4 @@ const ProjectsList = () => {
   )
 }
 
-export default withRouter(ProjectsList)
+export default withRouter(JobsList)
