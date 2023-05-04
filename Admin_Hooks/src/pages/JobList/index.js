@@ -374,7 +374,7 @@ function JobList() {
                     <h5 className="mb-0 card-title flex-grow-1">
                       Create New Job
                     </h5>
-                    <div className="flex-shrink-0">
+                    <div className="flex-shrink-0 mb-2">
                       <Link
                         to="/joblist/jobcreate"
                         // onClick={() => setModal(true)}

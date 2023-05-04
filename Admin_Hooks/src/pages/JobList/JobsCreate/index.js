@@ -167,52 +167,36 @@ const TasksCreate = () => {
                     <Col>
                       <CardTitle className="mb-4">
                         {isEdit ? "Edit Job" : "Create New Job"}
-                        Create New Job
                       </CardTitle>
                     </Col>
                     <Col
-                      lg="1"
-                      className="mx-1"
+                      className="mx-1 d-flex justify-content-end"
                       style={{ padding: 0, margin: 0 }}
                     >
-                      <div className="text-end">
-                        <button
-                          // type="submit"
-                          className="btn btn-clear"
-                          style={{
-                            width: "100px",
-                            backgroundColor: "green",
-                            color: "white",
-                          }}
-                          onClick={handleClick}
-                        >
-                          Back
-                        </button>
-                      </div>
-                    </Col>
-
-                    <Col
-                      lg="1"
-                      className="mx-1"
-                      style={{
-                        paddingright: 10,
-                        marginRight: 30,
-                        marginLeft: 0,
-                      }}
-                    >
-                      <div className="text-end">
-                        <button
-                          // type="submit"
-                          className="btn btn-clear"
-                          style={{
-                            width: "100px",
-                            backgroundColor: "green",
-                            color: "white",
-                          }}
-                        >
-                          Clear
-                        </button>
-                      </div>
+                      <button
+                        // type="submit"
+                        className="btn btn-clear h-75 d-flex justify-content-center align-items-center"
+                        style={{
+                          width: "100px",
+                          backgroundColor: "green",
+                          color: "white",
+                        }}
+                        onClick={handleClick}
+                      >
+                        Back
+                      </button>
+                      <button
+                        // type="submit"
+                        className="btn btn-clear ms-4 h-75 d-flex justify-content-center align-items-center"
+                        style={{
+                          width: "100px",
+                          backgroundColor: "green",
+                          color: "white",
+                        }}
+                        // onClick={handleClearClick}
+                      >
+                        Clear
+                      </button>
                     </Col>
                   </Row>
 

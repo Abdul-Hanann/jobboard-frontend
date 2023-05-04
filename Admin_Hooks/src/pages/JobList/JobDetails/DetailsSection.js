@@ -137,7 +137,41 @@ const DetailsSection = ({ jobList }) => {
               <div className="flex-grow-1 ms-3">
                 <h4>Job WBS</h4>
                 {/* <h5 className="fw-semibold">{jobList.JobWBS}</h5> */}
-                <h5 className="text-muted">{jobList.JobWBS}</h5>
+                {/* <h5 className="text-muted">{jobList.JobWBS}</h5> */}
+                <h5>Carpentar</h5>
+                <ul>
+                  <li>
+                    Inspect the plumbing system to identify any faults or
+                    issues.
+                  </li>
+                  <li>
+                    Create a plan for repairing or upgrading the plumbing
+                    system.
+                  </li>
+                  <li>Shut off the water supply to the affected area.</li>
+                  <li>
+                    Replace any faulty or damaged pipes or fixtures. 5. Install
+                    any new pipes or fixtures needed to upgrade the system.
+                  </li>
+                  <li>
+                    Test the plumbing system to ensure it is functioning
+                    properly.
+                  </li>
+                  <li>
+                    Test the plumbing system to ensure it is functioning
+                    properly.
+                  </li>
+                  <li>
+                    Turn the water supply back on and ensure all plumbing
+                    fixtures are working correctly.
+                  </li>
+                  <li>Clean up any debris or materials used during the job.</li>
+                  <li>
+                    Review the work with the client and ensure their
+                    satisfaction. Document the work performed and any necessary
+                    follow-up actions.
+                  </li>
+                </ul>
                 {/* <ul className="list-unstyled hstack gap-2 mb-0">
                   <li>
                     <i className="bx bx-building-house"></i>{" "}
