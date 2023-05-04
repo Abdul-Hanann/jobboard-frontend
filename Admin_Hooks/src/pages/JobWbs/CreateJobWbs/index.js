@@ -77,11 +77,12 @@ const TasksCreate = () => {
       document.getElementById("nameError").style.display = "none"
     }
     if (
-      editorState === "" ||
-      editorState?.blocks.length === 0 ||
-      (editorState?.blocks.length === 1
-        ? editorState?.blocks[0].text === ""
-        : false)
+      editorState === ""
+      //  ||
+      // editorState?.blocks.length === 0 ||
+      // (editorState?.blocks.length === 1
+      //   ? editorState?.blocks[0].text === ""
+      //   : false)
     ) {
       document.getElementById("taskEditorError").style.display = "block"
       valid = false
