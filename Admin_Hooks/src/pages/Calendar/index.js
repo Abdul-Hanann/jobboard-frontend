@@ -75,6 +75,7 @@ const Calender = props => {
   const [filteredStartDate, setFilteredStartDate] = useState("")
   const [filteredEndDate, setFilteredEndDate] = useState("")
   const [filteredMiles, setFilteredMiles] = useState("")
+  const [filteredZipcode, setFilteredZipcode] = useState("")
   const [filteredStatus, setFilteredStatus] = useState("")
   const [filteredCompany, setFilteredCompany] = useState("")
 
@@ -358,6 +359,7 @@ const Calender = props => {
     setFilteredStartDate("")
     setFilteredEndDate("")
     setFilteredMiles("")
+    setFilteredZipcode("")
     setFilteredStatus("")
   }
   return (
@@ -466,14 +468,21 @@ const Calender = props => {
                           }
                         />
                         <p className="text-muted mt-3">Filter by location</p>
-
                         <Select
                           className="basic-single"
                           classNamePrefix="select"
                           name="color"
+                          placeholder="Select distance..."
                           value={filteredMiles}
                           onChange={value => setFilteredMiles(value)}
                           options={mileOptions}
+                        />
+                        <Input
+                          type="text"
+                          className="mt-1"
+                          placeholder="Enter zipcode"
+                          value={filteredZipcode}
+                          onChange={value => setFilteredZipcode(value)}
                         />
                       </div>
 

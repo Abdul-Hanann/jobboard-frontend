@@ -57,6 +57,7 @@ const TasksCreate = () => {
       Building: (data && data.building) || "",
       AddressLine1: (data && data.addressLine1) || "",
       AddressLine2: (data && data.addressLine2) || "",
+      Company: (data && data.company) || "",
       City: (data && data.city) || "",
       State: (data && data.state) || "",
       Zipcode: (data && data.zipCode) || "",
@@ -71,6 +72,7 @@ const TasksCreate = () => {
       Building: Yup.string().required("Please Enter Your Building Name"),
       AddressLine1: Yup.string().required("Please Enter Your Address Line 1"),
       AddressLine2: Yup.string().required("Please Enter Your Address Line 2"),
+      Company: Yup.string().required("Please Select Your Company"),
       City: Yup.string().required("Please Enter Your Job City"),
       State: Yup.string().required("Please Enter Your Job State"),
       Zipcode: Yup.string().required("Please Enter Your Zip Code"),
@@ -86,6 +88,7 @@ const TasksCreate = () => {
           Building: values.Building,
           AddressLine1: values.AddressLine1,
           AddressLine2: values.AddressLine2,
+          Company: values.Company,
           City: values.City,
           State: values.State,
           Zipcode: values.Zipcode,
@@ -101,6 +104,7 @@ const TasksCreate = () => {
           Building: values["Building"],
           AddressLine1: values["AddressLine1"],
           AddressLine2: values["AddressLine2"],
+          Company: values["Company"],
           City: values["City"],
           State: values["State"],
           Zipcode: values["Zipcode"],
@@ -119,6 +123,11 @@ const TasksCreate = () => {
   const [startDate, setstartDate] = useState(new Date())
   const [endDate, setendDate] = useState(new Date())
   const [inputFields, setinputFields] = useState(inpRow)
+  const companies = [
+    { value: "Company 12", label: "Company 1" },
+    { value: "Company 2", label: "Company 2" },
+    { value: "Company 3", label: "Company 3" },
+  ]
 
   const navigate = useNavigate()
 
@@ -162,48 +171,23 @@ const TasksCreate = () => {
                       </CardTitle>
                     </Col>
                     <Col
-                      lg="1"
-                      className="mx-1"
+                      className="mx-1 d-flex justify-content-end"
                       style={{ padding: 0, margin: 0 }}
                     >
-                      <div className="text-end">
-                        <button
-                          // type="submit"
-                          className="btn btn-clear"
-                          style={{
-                            width: "100px",
-                            backgroundColor: "green",
-                            color: "white",
-                          }}
-                          onClick={handleBackClick}
-                        >
-                          Back
-                        </button>
-                      </div>
-                    </Col>
-
-                    <Col
-                      lg="1"
-                      className="mx-1"
-                      style={{
-                        paddingright: 10,
-                        marginRight: 30,
-                        marginLeft: 0,
-                      }}
-                    >
-                      <div className="text-end">
-                        <button
-                          // type="submit"
-                          className="btn btn-clear"
-                          style={{
-                            width: "100px",
-                            backgroundColor: "green",
-                            color: "white",
-                          }}
-                        >
-                          Clear
-                        </button>
-                      </div>
+                      <button
+                        // type="submit"
+                        className="btn btn-dark w-xl h-75 d-flex justify-content-center align-items-center"
+                        onClick={handleBackClick}
+                      >
+                        Back
+                      </button>
+                      <button
+                        // type="submit"
+                        className="btn btn-danger w-xl ms-4 h-75  d-flex justify-content-center align-items-center"
+                        // onClick={handleClearClick}
+                      >
+                        Clear
+                      </button>
                     </Col>
                   </Row>
 
@@ -348,6 +332,49 @@ const TasksCreate = () => {
                             validation.errors.Building ? (
                               <FormFeedback type="invalid">
                                 {validation.errors.AddressLine2}
+                              </FormFeedback>
+                            ) : null}
+                          </Col>
+                        </FormGroup>
+                        <FormGroup className="mb-4" row>
+                          <Label
+                            htmlFor="SiteId"
+                            className="col-form-label col-lg-2"
+                          >
+                            Company{" "}
+                          </Label>
+                          <Col lg="10">
+                            {console.log(validation.values.Company)}
+                            <Input
+                              name="Company"
+                              type="select"
+                              className="form-select"
+                              placeholder="Select Company"
+                              onChange={validation.handleChange}
+                              onBlur={validation.handleBlur}
+                              value={validation.values.Company || ""}
+                              invalid={
+                                validation.touched.Company &&
+                                validation.errors.Company
+                                  ? true
+                                  : false
+                              }
+                            >
+                              <option value="" disabled selected>
+                                Select Company
+                              </option>
+                              {companies.map((comp, index) => {
+                                return (
+                                  <option key={index} value={comp.value}>
+                                    {comp.label}
+                                  </option>
+                                )
+                              })}
+                            </Input>
+                            {validation.touched.Company &&
+                            validation.errors.Company ? (
+                              <FormFeedback type="invalid">
+                                {validation.errors.Company}
                               </FormFeedback>
                             ) : null}
                           </Col>
@@ -528,14 +555,9 @@ const TasksCreate = () => {
                       <div className="text-end">
                         <button
                           type="submit"
-                          className="btn btn-success save-user"
-                          style={{
-                            width: "100px",
-                            backgroundColor: "green",
-                            color: "white",
-                          }}
+                          className="btn btn-success save-user w-25"
                         >
-                          {!!isEdit ? "Edit" : "Create"}
+                          {!!isEdit ? "Update" : "Create"}
                         </button>
                       </div>
                     </Col>

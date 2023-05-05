@@ -360,6 +360,7 @@ const TableContainer = ({
               <th scope="col">Address Line 1</th>
               <th scope="col">Address Line 2</th>
               <th scope="col">City</th>
+              <th scope="col">Company</th>
               <th scope="col">State</th>
               <th scope="col">Zip Code</th>
               <th scope="col">Time Zone</th>
@@ -394,6 +395,9 @@ const TableContainer = ({
                   <p> {rowdata.city}</p>
                 </td>
                 <td>
+                  <p> {rowdata.company}</p>
+                </td>
+                <td>
                   <p> {rowdata.state}</p>
                 </td>
                 <td>
@@ -412,10 +416,10 @@ const TableContainer = ({
                       <i className="mdi mdi-dots-horizontal font-size-18" />
                     </DropdownToggle>
                     <DropdownMenu className="dropdown-menu-end">
-                      <DropdownItem onClick={() => handleViewClick(jobList)}>
+                      {/* <DropdownItem onClick={() => handleViewClick()}>
                         <i className="mdi mdi-view-dashboard font-size-16 text-success me-1" />{" "}
                         View
-                      </DropdownItem>
+                      </DropdownItem> */}
                       <DropdownItem onClick={() => handleEditClick(rowdata)}>
                         <i className="mdi mdi-pencil font-size-16 text-success me-1" />{" "}
                         Edit
