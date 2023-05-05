@@ -1449,18 +1449,55 @@ export const data = [
 export const jobWbsData = [
   {
     id: 1,
-    name: "Plumber",
-    tasks: "1. Inspect the plumbing system to identify any faults or issues.\n2. Create a plan for repairing or upgrading the plumbing system.\n3. Shut off the water supply to the affected area.\n4. Replace any faulty or damaged pipes or fixtures.\n5. Install any new pipes or fixtures needed to upgrade the system.\n6. Test the plumbing system to ensure it is functioning properly.\n7. Turn the water supply back on and ensure all plumbing fixtures are working correctly.\n8. Clean up any debris or materials used during the job.\n9. Document the work performed and any necessary follow-up actions.\n10. Review the work with the client and ensure their satisfaction.\n11. Provide any necessary advice or recommendations for future maintenance or upgrades."
+    name: "Fix the sink",
+    tasks: [
+      "Turn off the water supply",
+      "Remove the drain stopper",
+      "Clean the drain",
+      "Replace the drain stopper",
+      "Turn on the water supply",
+      "Check for leaks",
+    ],
   },
   {
     id: 2,
-    name: "Carpenter",
-    tasks: "1. Review the project plans and specifications.\n2. Gather the necessary materials and tools.\n3. Measure and mark the materials according to the plans.\n4. Cut the materials to the appropriate size and shape.\n5. Assemble the materials using nails, screws, or other fasteners.\n6. Sand or smooth the surfaces as needed.\n7. Apply any necessary finishes or coatings.\n8. Install the finished product in the desired location.\n9. Clean up any debris or materials used during the job.\n10. Document the work performed and any necessary follow-up actions.\n11. Review the work with the client and ensure their satisfaction."
+    name: "Install ceiling fan",
+    tasks: [
+      "Turn off the power supply",
+      "Assemble the fan",
+      "Mount the fan bracket",
+      "Connect the wires",
+      "Attach the fan blades",
+      "Turn on the power supply",
+      "Test the fan",
+    ],
   },
   {
     id: 3,
-    name: "Electrician",
-    tasks: "1. Inspect the electrical system to identify any faults or issues.\n2. Create a plan for repairing or upgrading the electrical system.\n3. Turn off the power to the affected area.\n4. Replace any faulty or damaged wiring or components.\n5. Install any new wiring or components needed to upgrade the system.\n6. Test the electrical system to ensure it is functioning properly.\n7. Turn the power back on and ensure all electrical fixtures are working correctly.\n8. Clean up any debris or materials used during the job.\n9. Document the work performed and any necessary follow-up actions.\n10. Review the work with the client and ensure their satisfaction.\n11. Provide any necessary advice or recommendations for future maintenance or upgrades."
+    name: "Replace light fixture",
+    tasks: [
+      "Turn off the power supply",
+      "Remove the old fixture",
+      "Disconnect the wires",
+      "Install the new fixture",
+      "Connect the wires",
+      "Turn on the power supply",
+      "Test the light",
+    ],
   },
-  // Add more jobs here if needed
-];
+  {
+    id: 4,
+    name: "Repair drywall",
+    tasks: [
+      "Clean the area",
+      "Cut out the damaged section",
+      "Cut a new section of drywall",
+      "Fit the new section",
+      "Attach the new section",
+      "Tape the joints",
+      "Apply joint compound",
+      "Sand the area",
+      "Paint the area",
+    ],
+  },
+]

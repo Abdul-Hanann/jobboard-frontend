@@ -35,18 +35,25 @@ const TasksCreate = () => {
   const [isEdit, setIsEdit] = useState(false)
   const [editorState, setEditorState] = useState("")
   const [name, setName] = useState("")
-  const inpRow = [{ name: "", file: "" }]
+  const inpRow = []
+  const [inputFields, setinputFields] = useState(inpRow)
 
   function handleAddFields() {
-    const item1 = { name: "", file: "" }
+    const item1 = []
     setinputFields([...inputFields, item1])
   }
-
-  function handleRemoveFields(idx) {
-    document.getElementById("nested" + idx).style.display = "none"
+  function handleInputChange(e, index) {
+    const { value } = e.target
+    const fields = [...inputFields]
+    fields[index] = value
+    setinputFields(fields)
   }
-
-  const [inputFields, setinputFields] = useState(inpRow)
+  function handleRemoveFields(idx) {
+    const fields = [...inputFields]
+    fields.splice(idx, 1)
+    setinputFields(fields)
+    // document.getElementById("nested" + idx).style.display = "none"
+  }
 
   useEffect(() => {
     if (state && state.data) {
@@ -61,6 +68,7 @@ const TasksCreate = () => {
   useEffect(() => {
     if (data) {
       setEditorState(data.tasks)
+      setinputFields(data.tasks)
       setName(data.name)
     }
   }, [data])
@@ -77,6 +85,7 @@ const TasksCreate = () => {
 
   function handleClearClick() {
     setEditorState("")
+    setinputFields([])
     setName("")
   }
 
@@ -89,17 +98,18 @@ const TasksCreate = () => {
       document.getElementById("nameError").style.display = "none"
     }
     if (
-      editorState === ""
+      inputFields.length === 0
+      // editorState === ""
       //  ||
       // editorState?.blocks.length === 0 ||
       // (editorState?.blocks.length === 1
       //   ? editorState?.blocks[0].text === ""
       //   : false)
     ) {
-      document.getElementById("taskEditorError").style.display = "block"
+      document.getElementById("taskError").style.display = "block"
       valid = false
     } else {
-      document.getElementById("taskEditorError").style.display = "none"
+      document.getElementById("taskError").style.display = "none"
     }
     return valid
   }
@@ -193,7 +203,8 @@ const TasksCreate = () => {
                             </Label>
                             <div
                               className="inner col-lg-10 ml-md-auto"
-                              id="repeater">
+                              id="repeater"
+                            >
                               {inputFields.map((field, key) => (
                                 <div
                                   key={key}
@@ -204,7 +215,8 @@ const TasksCreate = () => {
                                     <input
                                       type="text"
                                       className="inner form-control"
-                                      defaultValue={field.name}
+                                      value={field}
+                                      onChange={e => handleInputChange(e, key)}
                                       placeholder="Enter Name..."
                                     />
                                   </Col>
@@ -229,22 +241,21 @@ const TasksCreate = () => {
                                   <Button
                                     color="primary"
                                     className="inner"
-                                    onClick={() => {
-                                      handleAddFields()
-                                    }}
+                                    onClick={handleAddFields}
                                   >
                                     Add
                                   </Button>
                                 </div>
+                                <FormFeedback
+                                  id="taskError"
+                                  style={{ display: "none" }}
+                                  type="invalid"
+                                >
+                                  Please Enter Your Wbs Tasks
+                                </FormFeedback>
                               </Col>
-
                             </div>
                           </div>
-
-
-
-
-
                         </div>
                       </div>
                     </div>

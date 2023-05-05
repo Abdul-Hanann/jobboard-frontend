@@ -189,6 +189,9 @@ const TableContainer = ({
   const handleViewClick = jobWbs => {
     navigate("/jobWbs/view", { state: { data: jobWbs } })
   }
+  const handleDeleteClick = () => {
+    //TODO
+  }
   const handleRefresh = () => {
     setSearchInput("")
     setFilterOption("")
@@ -247,7 +250,7 @@ const TableContainer = ({
                     overflow: "hidden",
                   }}
                 >
-                  {rowdata.tasks}
+                  {rowdata.tasks.join(", ")}
                   {/* {JSON.parse(rowdata?.tasks)?.blocks[0].text} */}
                 </td>
                 <td>
@@ -275,7 +278,7 @@ const TableContainer = ({
                       </DropdownItem>
                       <DropdownItem
                         href="#"
-                        onClick={() => onClickDelete(rowdata)}
+                        onClick={() => handleDeleteClick()}
                       >
                         <i className="mdi mdi-trash-can font-size-16 text-danger me-1" />{" "}
                         Delete
