@@ -22,7 +22,37 @@
     background-size: cover;
     background-position: center center;
     min-height: 600px;
+   
 }
+.landing-Page-text-1 {
+    color: #205072;
+    font-family: "Montserrat", sans-serif !important;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 40px;
+    line-height: 55px;
+  }
+
+.landing-Page-para-1 {
+    color: #205072;
+    font-family: "Montserrat", sans-serif !important;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 30px;
+    // margin-top: 15px;
+    margin-bottom: 5px;
+  }
+
+.landing-Page-para-2 {
+    color: #205072;
+    font-family: "Montserrat", sans-serif !important;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 30px;
+  }
+  
 
 // auth 2
 
@@ -88,7 +118,24 @@
         min-height: 100vh;
     }
 }
-
+@media only screen and (min-width: 304px) and (max-width: 1199px) {
+    .heroCol {
+        margin-top: 0px !important;
+        display: none !important;
+    }
+    .landing-page-row-2 {
+        margin-top: 0px !important;
+        display: none !important;
+    }
+    .landingPageImageCol {
+        margin-top: 0px !important;
+        display: none !important;
+      }
+      .landingPageImage {
+        display: none !important;
+        margin-top: 0px !important;
+      }
+}
 .auth-review-carousel{
     &.owl-theme {
         .owl-dots {

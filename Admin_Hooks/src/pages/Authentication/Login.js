@@ -39,7 +39,7 @@ import saitlogo from "assets/images/sait-logo.png"
 
 //Import config
 import { facebook, google } from "../../config"
-import LandingPage from "./LandingPage";
+import LandingPage from "./LandingPage"
 
 const Login = props => {
   const [passwordShow, setPasswordShow] = useState(false)
@@ -114,8 +114,12 @@ const Login = props => {
             <LandingPage />
 
             <Col xl={3}>
-              <div className="auth-full-page-content p-md-5 p-4">
+              <div
+                className="auth-full-page-content"
+                style={{ paddingTop: 48, paddingLeft: 48, paddingRight: 48 }}
+              >
                 <div className="w-100">
+                  {/* <div className="d-flex flex-column h-100"> */}
                   <div className="d-flex flex-column h-100">
                     <div className="mb-0 md-5">
                       {/* <Link to="/dashboard" className="d-block auth-logo"> */}
@@ -127,7 +131,7 @@ const Login = props => {
                       />
                       {/* </Link> */}
                     </div>
-                    <div className="my-auto">
+                    <div className="my-auto m-0" style={{ margin: 0 }}>
                       <div>
                         <h5 className="text-primary">Welcome Back !</h5>
                         <p className="text-muted">
@@ -269,8 +273,6 @@ const Login = props => {
                             </button>
                           </div>
 
-
-
                           {/* <div className="mt-4 text-center">
                             <Link to="/forgot-password" className="text-muted">
                               <i className="mdi mdi-lock me-1" />
@@ -278,10 +280,7 @@ const Login = props => {
                             </Link>
                           </div> */}
                           <div className="mt-5 text-center">
-
-                            <p>
-                              © {new Date().getFullYear()} SA IT Services.
-                            </p>
+                            <p>© {new Date().getFullYear()} SA IT Services.</p>
                           </div>
                         </Form>
                       </div>
