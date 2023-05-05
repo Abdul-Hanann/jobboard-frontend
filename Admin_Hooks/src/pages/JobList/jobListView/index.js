@@ -409,7 +409,6 @@ const JobsList = () => {
                     value={filteredStartDate}
                     onChange={event => setFilteredStartDate(event.target.value)}
                   />
-                  <p className="text-muted mt-3 mb-0">End date</p>
                   <p className="text-muted mt-3">Filter by Job Site Id</p>
                   <Select
                     className="basic-single"

@@ -156,28 +156,26 @@ const TableContainer = ({
 
   const [filteredStartDate, setFilteredStartDate] = useState("")
   const [filteredEndDate, setFilteredEndDate] = useState("")
-  const [filteredJobSiteId, setFilteredJobSiteId] = useState("")
+  const [filteredCity, setFilteredCity] = useState("")
   const [filteredZipcode, setFilteredZipcode] = useState("")
-  const [filteredJobName, setFilteredJobName] = useState("")
-  const [filteredJobNoOfDays, setFilteredJobNoOfDays] = useState("")
+  const [filteredSiteId, setFilteredSiteId] = useState("")
+  const [filteredBuilding, setFilteredBuilding] = useState("")
 
-  const JobName = [
-    { value: "SoftwareEngineer", label: "Software Engineer" },
-    { value: "DjngoDeveloper", label: "Djngo Developer" },
-    { value: "PythonDeveloper", label: "Python Developer" },
-    { value: "MERNDeveloper", label: "MERN Developer" },
-    { value: "MagentoDeveloper", label: "Magento Developer" },
+  const SiteId = [
+    { value: "SK2540", label: "SK2540" },
+    { value: "SK2541", label: "SK2541" },
+    { value: "SK2542", label: "SK2542" },
   ]
-  const JobNoOfDays = [
-    { value: 1, label: "1 Days" },
-    { value: 2, label: "2 Days" },
-    { value: 3, label: "3 Days" },
-    { value: 4, label: "4 Days" },
+  const Building = [
+    { value: "Building1", label: "Building 1" },
+    { value: "Building2", label: "Building 2" },
+    { value: "Building3", label: "Building 3" },
+    { value: "Building4", label: "Building 4" },
   ]
-  const JobSiteId = [
-    { value: "siteid1", label: "Site id 1" },
-    { value: "Siteid2", label: "Site id 2" },
-    { value: "Siteid3", label: "1Site id 3" },
+  const City = [
+    { value: "California", label: "California" },
+    { value: "NewYork", label: "NewYork" },
+    { value: "Sydney", label: "Sydney" },
   ]
 
   const toggle = () => {
@@ -191,9 +189,7 @@ const TableContainer = ({
   }
 
   const handleSearch = (searchInput, filterOption) => {
-    console.log("filtered data:", filterOption)
     const filteredData = dataField.filter(rowdata => {
-      console.log("rowdata: ", rowdata.siteId)
       if (filterOption === "siteId") {
         return rowdata.siteId.toLowerCase().includes(searchInput.toLowerCase())
       } else if (filterOption === "building") {
@@ -313,38 +309,29 @@ const TableContainer = ({
             <Row>
               <Col lg="12">
                 <div id="external-events" className="mt-2">
-                  <p className="text-muted mt-3">Filter by Job Name </p>
+                  <p className="text-muted mt-3">Filter by Site Id </p>
 
                   <AnimatedMulti
-                    options={JobName}
-                    value={filteredJobName}
-                    setValue={setFilteredJobName}
+                    options={SiteId}
+                    value={filteredSiteId}
+                    setValue={setFilteredSiteId}
                   />
-                  <p className="text-muted mt-3">Filter by Job Days </p>
+                  <p className="text-muted mt-3">Filter by Building </p>
 
                   <AnimatedMulti
-                    options={JobNoOfDays}
-                    value={filteredJobNoOfDays}
-                    setValue={setFilteredJobNoOfDays}
+                    options={Building}
+                    value={filteredBuilding}
+                    setValue={setFilteredBuilding}
                   />
-
-                  <p className="text-muted mt-3 mb-0">Job date </p>
-                  <Input
-                    type="date"
-                    className="filter-datepicker"
-                    value={filteredStartDate}
-                    onChange={event => setFilteredStartDate(event.target.value)}
-                  />
-                  <p className="text-muted mt-3 mb-0">End date</p>
-                  <p className="text-muted mt-3">Filter by Job Site Id</p>
+                  <p className="text-muted mt-3">Filter by City</p>
                   <Select
                     className="basic-single"
                     classNamePrefix="select"
                     name="color"
                     placeholder="Select distance..."
-                    value={filteredJobSiteId}
-                    onChange={value => setFilteredJobSiteId(value)}
-                    options={JobSiteId}
+                    value={filteredCity}
+                    onChange={value => setFilteredCity(value)}
+                    options={City}
                   />
                 </div>
               </Col>
@@ -354,7 +341,7 @@ const TableContainer = ({
                     // type="submit"
                     className="btn btn-success save-user"
                   >
-                    Assign
+                    Filter
                   </button>
                 </div>
               </Col>
@@ -533,7 +520,7 @@ const TableContainer = ({
           <tbody
           // {...getTableBodyProps()}
           >
-            {map(dataField, (rowdata, index) => (
+            {map(data, (rowdata, index) => (
               <tr key={index}>
                 <td>
                   <h5 className="text-truncate font-size-14">
