@@ -15,6 +15,9 @@ import {
   Col,
   Button,
   Input,
+  Modal,
+  ModalHeader,
+  ModalBody,
   CardBody,
   DropdownItem,
   UncontrolledDropdown,
@@ -22,12 +25,31 @@ import {
   DropdownMenu,
 } from "reactstrap"
 
+import Select from "react-select"
+import makeAnimated from "react-select/animated"
+
 import { isEmpty, map } from "lodash"
 // import { Filter, DefaultColumnFilter } from "./filters"
 import { Filter, DefaultColumnFilter } from "components/Common/filters"
 // import JobListGlobalFilter from "../../components/Common/GlobalSearchFilter"
 import JobListGlobalFilter from "components/Common/GlobalSearchFilter"
 import { useNavigate } from "react-router-dom"
+
+const AnimatedMulti = props => {
+  const { options, value, setValue } = props
+  const animatedComponents = makeAnimated()
+
+  return (
+    <Select
+      closeMenuOnSelect={false}
+      components={animatedComponents}
+      isMulti
+      onChange={val => setValue(val)}
+      value={value}
+      options={options}
+    />
+  )
+}
 
 // Define a default UI for filtering
 function GlobalFilter({
@@ -130,6 +152,43 @@ const TableContainer = ({
   const [dataField, setDataField] = useState(data)
   const [searchInput, setSearchInput] = useState("")
   const [filterOption, setFilterOption] = useState("")
+  const [modal, setModal] = useState(false)
+
+  const [filteredStartDate, setFilteredStartDate] = useState("")
+  const [filteredEndDate, setFilteredEndDate] = useState("")
+  const [filteredJobSiteId, setFilteredJobSiteId] = useState("")
+  const [filteredZipcode, setFilteredZipcode] = useState("")
+  const [filteredJobName, setFilteredJobName] = useState("")
+  const [filteredJobNoOfDays, setFilteredJobNoOfDays] = useState("")
+
+  const JobName = [
+    { value: "SoftwareEngineer", label: "Software Engineer" },
+    { value: "DjngoDeveloper", label: "Djngo Developer" },
+    { value: "PythonDeveloper", label: "Python Developer" },
+    { value: "MERNDeveloper", label: "MERN Developer" },
+    { value: "MagentoDeveloper", label: "Magento Developer" },
+  ]
+  const JobNoOfDays = [
+    { value: 1, label: "1 Days" },
+    { value: 2, label: "2 Days" },
+    { value: 3, label: "3 Days" },
+    { value: 4, label: "4 Days" },
+  ]
+  const JobSiteId = [
+    { value: "siteid1", label: "Site id 1" },
+    { value: "Siteid2", label: "Site id 2" },
+    { value: "Siteid3", label: "1Site id 3" },
+  ]
+
+  const toggle = () => {
+    if (modal) {
+      setModal(false)
+      setDataField(null)
+    } else {
+      setModal(true)
+      setDataField(dataField)
+    }
+  }
 
   const handleSearch = (searchInput, filterOption) => {
     console.log("filtered data:", filterOption)
@@ -163,6 +222,17 @@ const TableContainer = ({
     console.log("filteredData:", filteredData)
     setDataField(filteredData)
   }
+
+  const handleClick = () => {
+    toggle()
+  }
+  const clearAllFilters = () => {
+    setFilteredJobNoOfDays("")
+    setFilteredStartDate("")
+    setFilteredJobSiteId("")
+    setFilteredJobName("")
+  }
+
   const handleRefresh = () => {
     setSearchInput("")
     setFilterOption("")
@@ -227,9 +297,87 @@ const TableContainer = ({
   // }
   return (
     <Fragment>
-      <Row className="mb-2">
-        <div className="d-flex mb-0">
-          <input
+      <Modal isOpen={modal} toggle={toggle} className="overflow-visible">
+        <ModalHeader toggle={toggle} tag="h4">
+          {/* {!!isEdit ? "Edit Job" : "Add Job"} */}
+          Filter
+        </ModalHeader>
+        <ModalBody>
+          <form
+            onSubmit={e => {
+              e.preventDefault()
+              validation.handleSubmit()
+              return false
+            }}
+          >
+            <Row>
+              <Col lg="12">
+                <div id="external-events" className="mt-2">
+                  <p className="text-muted mt-3">Filter by Job Name </p>
+
+                  <AnimatedMulti
+                    options={JobName}
+                    value={filteredJobName}
+                    setValue={setFilteredJobName}
+                  />
+                  <p className="text-muted mt-3">Filter by Job Days </p>
+
+                  <AnimatedMulti
+                    options={JobNoOfDays}
+                    value={filteredJobNoOfDays}
+                    setValue={setFilteredJobNoOfDays}
+                  />
+
+                  <p className="text-muted mt-3 mb-0">Job date </p>
+                  <Input
+                    type="date"
+                    className="filter-datepicker"
+                    value={filteredStartDate}
+                    onChange={event => setFilteredStartDate(event.target.value)}
+                  />
+                  <p className="text-muted mt-3 mb-0">End date</p>
+                  <p className="text-muted mt-3">Filter by Job Site Id</p>
+                  <Select
+                    className="basic-single"
+                    classNamePrefix="select"
+                    name="color"
+                    placeholder="Select distance..."
+                    value={filteredJobSiteId}
+                    onChange={value => setFilteredJobSiteId(value)}
+                    options={JobSiteId}
+                  />
+                </div>
+              </Col>
+              <Col>
+                <div className="text-end mt-2">
+                  <button
+                    // type="submit"
+                    className="btn btn-success save-user"
+                  >
+                    Assign
+                  </button>
+                </div>
+              </Col>
+            </Row>
+            {/* <Row> */}
+            {/* <Col>
+                <div className="text-end">
+                  <button
+                    // type="submit"
+                    className="btn btn-success save-user"
+                  >
+                    Assign
+                  </button>
+                </div>
+              </Col> */}
+            {/* </Row> */}
+          </form>
+        </ModalBody>
+      </Modal>
+
+      <Row className="mb-0">
+        <div className="d-flex d-flex justify-content-end mt-2">
+          {/* <input
             id="search"
             name="search"
             type="text"
@@ -250,23 +398,28 @@ const TableContainer = ({
             <option value="building">Building</option>
             <option value="state">State</option>
             <option value="city">City</option>
-            {/* <option value="zipCode">Zip Code</option> */}
+            // <option value="zipCode">Zip Code</option>
             <option value="timeZone">Time Zone</option>
-          </select>
-          <button
-            className="btn btn-primary mdi mdi-filter ms-2"
-            style={{ backgroundColor: "green" }}
-            onClick={() => handleSearch(searchInput, filterOption)}
-          >
-            {/* Search */}
-          </button>
-          <button
-            className="btn btn-primary mdi mdi-refresh ms-2"
-            style={{ backgroundColor: "green" }}
-            onClick={() => handleRefresh()}
-          >
-            {/* Refresh */}
-          </button>
+          </select> */}
+          <div className="flex-shrink-0" style={{ marginRight: 20 }}>
+            <button
+              // className="btn btn-primary mdi mdi-filter ms-2"
+              className="btn btn-primary mdi mdi-filter me-1"
+              style={{ backgroundColor: "green" }}
+              // onClick={() => handleSearch(searchInput, filterOption)}
+              onClick={() => handleClick()}
+            >
+              {/* Search */}
+            </button>
+            <button
+              // className="btn btn-primary mdi mdi-refresh ms-2"
+              className="btn btn-primary mdi mdi-refresh me-1"
+              style={{ backgroundColor: "green" }}
+              onClick={() => handleRefresh()}
+            >
+              {/* Refresh */}
+            </button>
+          </div>
         </div>
 
         {/* <Col md={customPageSizeOptions ? 2 : 1}>
@@ -337,22 +490,31 @@ const TableContainer = ({
         )} */}
       </Row>
 
-      <div className="table-responsive react-table">
+      <div
+      // className="table-responsive react-table"
+      >
         <Table
-          bordered
-          hover
+          // bordered
+          // hover
           // {...getTableProps()}
-          className={className}
+          className="project-list-table table-nowrap align-middle table-borderless"
         >
           <thead
-            style={{
-              fontSize: 16,
-              backgroundColor: "#003768",
-              color: "white",
-              textAlign: "center",
-            }}
+          // style={{
+          //   fontSize: 16,
+          //   backgroundColor: "#003768",
+          //   color: "white",
+          //   textAlign: "center",
+          // }}
           >
-            <tr>
+            <tr
+              style={{
+                fontSize: 14,
+                backgroundColor: "#003768",
+                color: "white",
+                // textAlign: "center",
+              }}
+            >
               <th scope="col" style={{ width: "100px" }}>
                 Site Id
               </th>

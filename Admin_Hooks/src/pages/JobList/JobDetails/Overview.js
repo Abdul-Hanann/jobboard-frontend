@@ -1,11 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState } from "react"
 import { Link } from "react-router-dom"
 
 import * as Yup from "yup"
 // import Select from "react-select"
 import TextField from "@material-ui/core/TextField"
 import Autocomplete from "@material-ui/lab/Autocomplete"
-import Select from "@material-ui/core/Select"
+// import Select from "@material-ui/core/Select"
 import { FormControl, InputLabel, MenuItem } from "@material-ui/core"
 import { useFormik } from "formik"
 import { userTypes } from "pages/Authentication/userTypes"
@@ -18,7 +18,7 @@ import avatar2 from "../../../assets/images/users/avatar-2.jpg"
 import avatar6 from "../../../assets/images/users/avatar-6.jpg"
 import avatar3 from "../../../assets/images/users/avatar-3.jpg"
 // import avatar7 from "../../../assets"
-import ReactSelect from 'react-select'
+import Select from "react-select"
 import {
   Col,
   Row,
@@ -39,7 +39,7 @@ const Overview = ({ jobList }) => {
   const userType = localStorage.getItem("userType")
   const [modal, setModal] = useState(false)
   const [dataField, setDataField] = useState(null)
-  const [selectedGroup, setselectedGroup] = useState(null);
+  const [selectedGroup, setselectedGroup] = useState(null)
   const toggle = () => {
     if (modal) {
       setModal(false)
@@ -47,10 +47,8 @@ const Overview = ({ jobList }) => {
     } else {
       setModal(true)
       setDataField(jobList)
-
     }
   }
-
 
   const optionGroup = [
     {
@@ -58,21 +56,21 @@ const Overview = ({ jobList }) => {
       options: [
         { label: "Mustard", value: "Mustard" },
         { label: "Ketchup", value: "Ketchup" },
-        { label: "Relish", value: "Relish" }
-      ]
+        { label: "Relish", value: "Relish" },
+      ],
     },
     {
       label: "Camping",
       options: [
         { label: "Tent", value: "Tent" },
         { label: "Flashlight", value: "Flashlight" },
-        { label: "Toilet Paper", value: "Toilet Paper" }
-      ]
-    }
-  ];
+        { label: "Toilet Paper", value: "Toilet Paper" },
+      ],
+    },
+  ]
 
   function handleSelectGroup(selectedGroup) {
-    setselectedGroup(selectedGroup);
+    setselectedGroup(selectedGroup)
   }
   // const options = [
   //   "Technician1",
@@ -175,7 +173,7 @@ const Overview = ({ jobList }) => {
 
   return (
     <React.Fragment>
-      <Modal isOpen={modal} toggle={toggle} className='overflow-visible'>
+      <Modal isOpen={modal} toggle={toggle} className="overflow-visible">
         <ModalHeader toggle={toggle} tag="h4">
           {/* {!!isEdit ? "Edit Job" : "Add Job"} */}
           Assign Technician
@@ -192,12 +190,16 @@ const Overview = ({ jobList }) => {
               <Col lg="12">
                 <div className="mb-3">
                   <Label>Technician</Label>
-                  <ReactSelect isSearchable
-                               menuPosition="fixed"
-                               menuPortalTarget={document.body}
-                               styles={{ menuPortal: base => ({ ...base, zIndex: 9999999 }) }}
-                               menuShouldScrollIntoView={false}
-                               options={options} />
+                  <Select
+                    isSearchable
+                    menuPosition="fixed"
+                    menuPortalTarget={document.body}
+                    styles={{
+                      menuPortal: base => ({ ...base, zIndex: 9999999 }),
+                    }}
+                    menuShouldScrollIntoView={false}
+                    options={options}
+                  />
                 </div>
               </Col>
             </Row>
@@ -294,9 +296,9 @@ const Overview = ({ jobList }) => {
                           onClick={() => {
                             handleClick(jobList)
                           }}
-                          className="btn btn-success btn-rounded ms-2">
+                          className="btn btn-success btn-rounded ms-2"
+                        >
                           <i className="fas fa-plus align-middle"></i>
-
                         </button>
                       </div>
                     </td>
@@ -373,7 +375,8 @@ const Overview = ({ jobList }) => {
                           onClick={() => {
                             handleClick(jobList)
                           }}
-                          className="btn btn-success btn-rounded ms-2">
+                          className="btn btn-success btn-rounded ms-2"
+                        >
                           <i className="fas fa-plus align-middle"></i>
                         </button>
                       </div>
@@ -414,7 +417,8 @@ const Overview = ({ jobList }) => {
                             handleClick(jobList)
                           }}
                           type="button"
-                          className="btn btn-success btn-rounded ms-2">
+                          className="btn btn-success btn-rounded ms-2"
+                        >
                           <i className="fas fa-plus align-middle"></i>
                         </button>
                       </div>

@@ -6,7 +6,10 @@ import withRouter from "components/Common/withRouter"
 import { isEmpty, map } from "lodash"
 import * as moment from "moment"
 import { jobsList } from "common/data/job"
+
+import ReactSelect from "react-select"
 import {
+  button,
   Badge,
   Col,
   Container,
@@ -52,6 +55,24 @@ import {
 
 //redux
 import { useSelector, useDispatch } from "react-redux"
+
+import Select from "react-select"
+import makeAnimated from "react-select/animated"
+const AnimatedMulti = props => {
+  const { options, value, setValue } = props
+  const animatedComponents = makeAnimated()
+
+  return (
+    <Select
+      closeMenuOnSelect={false}
+      components={animatedComponents}
+      isMulti
+      onChange={val => setValue(val)}
+      value={value}
+      options={options}
+    />
+  )
+}
 
 const ProjectStatus = ({ status }) => {
   switch (status) {
@@ -152,12 +173,29 @@ const JobsList = () => {
   const [isEdit, setIsEdit] = useState(false)
   const [projectList, setProjectList] = useState([])
 
+  const [filteredStartDate, setFilteredStartDate] = useState("")
+  const [filteredEndDate, setFilteredEndDate] = useState("")
+  const [filteredJobSiteId, setFilteredJobSiteId] = useState("")
+  const [filteredZipcode, setFilteredZipcode] = useState("")
+  const [filteredJobName, setFilteredJobName] = useState("")
+  const [filteredJobNoOfDays, setFilteredJobNoOfDays] = useState("")
+
+  // const toggle = () => {
+  //   if (modal) {
+  //     setModal(false)
+  //     setProject(null)
+  //   } else {
+  //     setModal(true)
+  //   }
+  // }
+
   const toggle = () => {
     if (modal) {
       setModal(false)
-      setProject(null)
+      setDataField(null)
     } else {
       setModal(true)
+      setDataField(dataField)
     }
   }
 
@@ -174,6 +212,25 @@ const JobsList = () => {
 
   //delete order
   const [deleteModal, setDeleteModal] = useState(false)
+
+  const JobName = [
+    { value: "SoftwareEngineer", label: "Software Engineer" },
+    { value: "DjngoDeveloper", label: "Djngo Developer" },
+    { value: "PythonDeveloper", label: "Python Developer" },
+    { value: "MERNDeveloper", label: "MERN Developer" },
+    { value: "MagentoDeveloper", label: "Magento Developer" },
+  ]
+  const JobNoOfDays = [
+    { value: 1, label: "1 Days" },
+    { value: 2, label: "2 Days" },
+    { value: 3, label: "3 Days" },
+    { value: 4, label: "4 Days" },
+  ]
+  const JobSiteId = [
+    { value: "siteid1", label: "Site id 1" },
+    { value: "Siteid2", label: "Site id 2" },
+    { value: "Siteid3", label: "1Site id 3" },
+  ]
 
   const onClickDelete = project => {
     setProject(project)
@@ -246,6 +303,24 @@ const JobsList = () => {
     })
     setDataField(filteredData)
   }
+
+  const handleClick = () => {
+    // setDataField({
+    //   id: jobList ? jobList.id : 0,
+    //   JobName: jobList.JobName,
+    //   JobNoOfDays: jobList.JobNoOfDays,
+    //   JobSiteId: jobList.JobSiteId,
+    //   JobNotes: jobList.JobNotes,
+    //   JobWBS: jobList.JobWBS,
+    // })
+    toggle()
+  }
+  const clearAllFilters = () => {
+    setFilteredJobNoOfDays("")
+    setFilteredStartDate("")
+    setFilteredJobSiteId("")
+    setFilteredJobName("")
+  }
   const handleRefresh = () => {
     setSearchInput("")
     setFilterOption("")
@@ -253,6 +328,127 @@ const JobsList = () => {
   }
   return (
     <React.Fragment>
+      <Modal isOpen={modal} toggle={toggle} className="overflow-visible">
+        <ModalHeader toggle={toggle} tag="h4">
+          {/* {!!isEdit ? "Edit Job" : "Add Job"} */}
+          Filter
+        </ModalHeader>
+        <ModalBody>
+          <form
+            onSubmit={e => {
+              e.preventDefault()
+              validation.handleSubmit()
+              return false
+            }}
+          >
+            <Row>
+              <Col lg="12">
+                <div id="external-events" className="mt-2">
+                  {/* <p className="text-muted">Filter your jobs </p> */}
+                  {/* {categories &&
+                          categories.map((category, i) => (
+                            <label
+                              key={i}
+                              className={`${category.type} categories text-white d-flex align-items-center`}
+                            >
+                              <div
+                              // key={"cat-" + category.id}
+                              // onClick={() => {
+                              //   filterJob(category.id)
+                              // }}
+                              // draggable
+                              // onDrag={event => onDrag(event, category)}
+                              >
+                                <input
+                                  type="checkbox"
+                                  className="custom-checkbox"
+                                  id={`custom-checkbox-${category.index}`}
+                                  name={category.title}
+                                  value={category.checked}
+                                  checked={category.checked}
+                                  onClick={e =>
+                                    handleCheckboxClick(e, category)
+                                  }
+                                />
+                                <span
+                                  className={`${category.type} categories text-white`}
+                                >
+                                  {category.title}
+                                </span>
+                              </div>
+                            </label>
+                          ))} */}
+                  {/* <div className="d-flex flex-row mb-1 justify-content-between align-items-center">
+                    <p className="text-muted mt-3">Filter by status </p>
+                    <button
+                      className="h-25 bg-primary"
+                      onClick={clearAllFilters}
+                    >
+                      Clear all
+                    </button>
+                  </div> */}
+                  <p className="text-muted mt-3">Filter by Job Name </p>
+
+                  <AnimatedMulti
+                    options={JobName}
+                    value={filteredJobName}
+                    setValue={setFilteredJobName}
+                  />
+                  <p className="text-muted mt-3">Filter by Job Days </p>
+
+                  <AnimatedMulti
+                    options={JobNoOfDays}
+                    value={filteredJobNoOfDays}
+                    setValue={setFilteredJobNoOfDays}
+                  />
+
+                  <p className="text-muted mt-3 mb-0">Job date </p>
+                  <Input
+                    type="date"
+                    className="filter-datepicker"
+                    value={filteredStartDate}
+                    onChange={event => setFilteredStartDate(event.target.value)}
+                  />
+                  <p className="text-muted mt-3 mb-0">End date</p>
+                  <p className="text-muted mt-3">Filter by Job Site Id</p>
+                  <Select
+                    className="basic-single"
+                    classNamePrefix="select"
+                    name="color"
+                    placeholder="Select distance..."
+                    value={filteredJobSiteId}
+                    onChange={value => setFilteredJobSiteId(value)}
+                    options={JobSiteId}
+                  />
+                </div>
+              </Col>
+              <Col>
+                <div className="text-end mt-2">
+                  <button
+                    // type="submit"
+                    className="btn btn-success save-user"
+                  >
+                    Assign
+                  </button>
+                </div>
+              </Col>
+            </Row>
+            {/* <Row> */}
+            {/* <Col>
+                <div className="text-end">
+                  <button
+                    // type="submit"
+                    className="btn btn-success save-user"
+                  >
+                    Assign
+                  </button>
+                </div>
+              </Col> */}
+            {/* </Row> */}
+          </form>
+        </ModalBody>
+      </Modal>
+
       <DeleteModal
         show={deleteModal}
         onDeleteClick={handleDeleteOrder}
@@ -265,8 +461,8 @@ const JobsList = () => {
         {/* <Breadcrumbs title="Projects" breadcrumbItem="Projects List" /> */}
 
         <Row>
-          <div className="d-flex mb-0">
-            <input
+          <div className="d-flex d-flex justify-content-end mt-1">
+            {/* <input
               id="search"
               name="search"
               type="text"
@@ -287,22 +483,29 @@ const JobsList = () => {
               <option value="JobSiteId">Job Site Id</option>
               <option value="jobDate">job Date</option>
               <option value="JobNoOfDays">Job No Of Days</option>
-            </select>
-            <button
-              className="btn btn-primary mdi mdi-filter ms-2"
-              style={{ backgroundColor: "green" }}
-              onClick={() => handleSearch(searchInput, filterOption)}
-            >
-              {/* Search */}
-            </button>
-            <button
-              className="btn btn-primary mdi mdi-refresh ms-2"
-              style={{ backgroundColor: "green" }}
-              onClick={() => handleRefresh()}
-            >
-              {/* Refresh */}
-            </button>
+            </select> */}
+            {/* <div className=" mb-2"> */}
+            <div className="flex-shrink-0" style={{ marginRight: 20 }}>
+              <button
+                // className="btn btn-primary mdi mdi-filter ms-2"
+                className="btn btn-primary mdi mdi-filter me-1"
+                style={{ backgroundColor: "green" }}
+                // onClick={() => handleSearch(searchInput, filterOption)}
+                onClick={() => handleClick()}
+              >
+                {/* Search */}
+              </button>
+              <button
+                // className="btn btn-primary mdi mdi-refresh ms-2"
+                className="btn btn-primary mdi mdi-refresh me-1"
+                style={{ backgroundColor: "green" }}
+                onClick={() => handleRefresh()}
+              >
+                {/* Refresh */}
+              </button>
+            </div>
           </div>
+          {/* </div> */}
           <Col lg="12">
             <div>
               <div className="table-responsive">
@@ -333,7 +536,7 @@ const JobsList = () => {
                   </thead>
                   <tbody>
                     {map(
-                      dataField,
+                      jobsList,
                       (jobList, index) => (
                         console.log("jobList data: ", jobList),
                         (
@@ -407,7 +610,7 @@ const JobsList = () => {
                     ).reverse()}
                   </tbody>
                 </Table>
-                <Modal isOpen={modal} toggle={toggle}>
+                {/* <Modal isOpen={modal} toggle={toggle}>
                   <ModalHeader toggle={toggle} tag="h4">
                     {!!isEdit ? "Edit Project" : "Add Project"}
                   </ModalHeader>
@@ -568,7 +771,7 @@ const JobsList = () => {
                       </Row>
                     </Form>
                   </ModalBody>
-                </Modal>
+                </Modal> */}
               </div>
             </div>
           </Col>

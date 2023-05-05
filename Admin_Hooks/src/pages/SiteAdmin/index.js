@@ -234,17 +234,16 @@ function SiteAdmin() {
                     </div>
                   </div>
                 </CardBody>
-                <CardBody>
-                  <TableContainer
-                    columns={[]}
-                    data={siteData}
-                    isGlobalFilter={true}
-                    isAddOptions={false}
-                    // handleJobClicks={handleJobClicks}
-                    isJobListGlobalFilter={true}
-                    customPageSize={1}
-                  />
-                </CardBody>
+                {/* <CardBody style={{ paddingTop: 5 }}> */}
+                <TableContainer
+                  columns={[]}
+                  data={siteData}
+                  isGlobalFilter={true}
+                  isAddOptions={false}
+                  // handleJobClicks={handleJobClicks}
+                  isJobListGlobalFilter={true}
+                  customPageSize={1}
+                />
               </Card>
             </Col>
           </Row>
