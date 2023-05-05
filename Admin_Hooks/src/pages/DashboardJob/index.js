@@ -16,8 +16,8 @@ const DashboardJob = () => {
     const chartsData = [
         {
             id: 1,
-            title: "Job View",
-            price: "14,487",
+            title: "New Jobs",
+            price: "85",
             perstangeValue: "18.89",
             bagdeColor: "success",
             seriesData: [{
@@ -28,8 +28,8 @@ const DashboardJob = () => {
         },
         {
             id: 2,
-            title: "New Application",
-            price: "7,402",
+            title: "Total Technicians",
+            price: "150",
             perstangeValue: "24.07",
             bagdeColor: "success",
             seriesData: [{
@@ -40,8 +40,8 @@ const DashboardJob = () => {
         },
         {
             id: 3,
-            title: "Total Approved",
-            price: "12,487",
+            title: "Jobs Assigned",
+            price: "50",
             perstangeValue: " 8.41",
             bagdeColor: "success",
             seriesData: [{
@@ -52,8 +52,8 @@ const DashboardJob = () => {
         },
         {
             id: 4,
-            title: "Total Rejected",
-            price: "12,487",
+            title: "Jobs Unassigned",
+            price: "25",
             perstangeValue: " 20.63",
             bagdeColor: "danger",
             istrendingArrow: true,
@@ -77,7 +77,7 @@ const DashboardJob = () => {
                         <StatisticsApplications />
 
                         {/* CandidateSection */}
-                        <CandidateSection />
+                        <AddedJobs />
                     </Row>
 
                     <Row>

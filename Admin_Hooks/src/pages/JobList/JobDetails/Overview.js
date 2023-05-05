@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useRef, useState } from "react";
 import { Link } from "react-router-dom"
 
 import * as Yup from "yup"
@@ -18,7 +18,7 @@ import avatar2 from "../../../assets/images/users/avatar-2.jpg"
 import avatar6 from "../../../assets/images/users/avatar-6.jpg"
 import avatar3 from "../../../assets/images/users/avatar-3.jpg"
 // import avatar7 from "../../../assets"
-
+import ReactSelect from 'react-select'
 import {
   Col,
   Row,
@@ -39,6 +39,7 @@ const Overview = ({ jobList }) => {
   const userType = localStorage.getItem("userType")
   const [modal, setModal] = useState(false)
   const [dataField, setDataField] = useState(null)
+  const [selectedGroup, setselectedGroup] = useState(null);
   const toggle = () => {
     if (modal) {
       setModal(false)
@@ -46,7 +47,32 @@ const Overview = ({ jobList }) => {
     } else {
       setModal(true)
       setDataField(jobList)
+
     }
+  }
+
+
+  const optionGroup = [
+    {
+      label: "Picnic",
+      options: [
+        { label: "Mustard", value: "Mustard" },
+        { label: "Ketchup", value: "Ketchup" },
+        { label: "Relish", value: "Relish" }
+      ]
+    },
+    {
+      label: "Camping",
+      options: [
+        { label: "Tent", value: "Tent" },
+        { label: "Flashlight", value: "Flashlight" },
+        { label: "Toilet Paper", value: "Toilet Paper" }
+      ]
+    }
+  ];
+
+  function handleSelectGroup(selectedGroup) {
+    setselectedGroup(selectedGroup);
   }
   // const options = [
   //   "Technician1",
@@ -149,13 +175,13 @@ const Overview = ({ jobList }) => {
 
   return (
     <React.Fragment>
-      <Modal isOpen={modal} toggle={toggle}>
+      <Modal isOpen={modal} toggle={toggle} className='overflow-visible'>
         <ModalHeader toggle={toggle} tag="h4">
           {/* {!!isEdit ? "Edit Job" : "Add Job"} */}
           Assign Technician
         </ModalHeader>
         <ModalBody>
-          <Form
+          <form
             onSubmit={e => {
               e.preventDefault()
               validation.handleSubmit()
@@ -163,125 +189,15 @@ const Overview = ({ jobList }) => {
             }}
           >
             <Row>
-              <Col className="col-12">
+              <Col lg="12">
                 <div className="mb-3">
-                  <Label className="form-label"> Job Id</Label>
-                  <Input
-                    name="jobId"
-                    type="text"
-                    placeholder="Insert Job Id"
-                    validate={{
-                      required: { value: true },
-                    }}
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.jobId || ""}
-                    invalid={
-                      validation.touched.jobId && validation.errors.jobId
-                        ? true
-                        : false
-                    }
-                    readOnly={true}
-                  />
-                  {validation.touched.jobId && validation.errors.jobId ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.jobId}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label"> Job Name</Label>
-                  <Input
-                    name="JobName"
-                    type="text"
-                    placeholder="Insert Job Name"
-                    validate={{
-                      required: { value: true },
-                    }}
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.JobName || ""}
-                    invalid={
-                      validation.touched.JobName && validation.errors.JobName
-                        ? true
-                        : false
-                    }
-                    readOnly={true}
-                  />
-                  {validation.touched.JobName && validation.errors.JobName ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.JobName}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-                <div className="mb-3">
-                  <Label className="form-label">Technician</Label>
-                  <div className="inner col-lg-10 ml-md-auto" id="repeater">
-                    {inputFields.map((field, key) => (
-                      <div
-                        key={key}
-                        id={"nested" + key}
-                        className="mb-3 row align-items-center"
-                      >
-                        <Col md="11">
-                          <FormControl variant="outlined" fullWidth>
-                            <InputLabel htmlFor={"technician-" + key}>
-                              Select technician
-                            </InputLabel>
-                            <Select
-                              labelId={"technician-" + key}
-                              id={"technician-" + key}
-                              value={field.technician}
-                              onChange={event => {
-                                const newValue = event.target.value
-                                const newFields = [...inputFields]
-                                newFields[key].technician = newValue
-                                setinputFields(newFields)
-                              }}
-                              label="Select technician"
-                            >
-                              <MenuItem value="">Select technician</MenuItem>
-                              {options.map(option => (
-                                <MenuItem
-                                  key={option.value}
-                                  value={option.value}
-                                >
-                                  {option.label}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </Col>
-                        <Col md="1">
-                          <div className="mt-2 mt-md-0 d-grid">
-                            <button
-                              // color="primary"
-                              className="btn btn-soft-danger mdi mdi-account-remove"
-                              onClick={() => {
-                                handleRemoveFields(key)
-                              }}
-                              // block
-                            >
-                              Remove
-                            </button>
-                          </div>
-                        </Col>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <button
-                    // type="button"
-                    className="btn btn-soft-success mdi mdi-account-plus mt-0"
-                    onClick={() => {
-                      handleAddFields()
-                    }}
-                  >
-                    {inputFields.length === 0
-                      ? "Add technician"
-                      : " Add another technician"}
-                  </button>
+                  <Label>Technician</Label>
+                  <ReactSelect isSearchable
+                               menuPosition="fixed"
+                               menuPortalTarget={document.body}
+                               styles={{ menuPortal: base => ({ ...base, zIndex: 9999999 }) }}
+                               menuShouldScrollIntoView={false}
+                               options={options} />
                 </div>
               </Col>
             </Row>
@@ -297,7 +213,7 @@ const Overview = ({ jobList }) => {
                 </div>
               </Col>
             </Row>
-          </Form>
+          </form>
         </ModalBody>
       </Modal>
       <Col xl={3}>
@@ -373,6 +289,15 @@ const Overview = ({ jobList }) => {
                           />
                           {/* </Link> */}
                         </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            handleClick(jobList)
+                          }}
+                          className="btn btn-success btn-rounded ms-2">
+                          <i className="fas fa-plus align-middle"></i>
+
+                        </button>
                       </div>
                     </td>
                     {/* <td>
@@ -442,6 +367,15 @@ const Overview = ({ jobList }) => {
                             />
                           </Link>
                         </div>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            handleClick(jobList)
+                          }}
+                          className="btn btn-success btn-rounded ms-2">
+                          <i className="fas fa-plus align-middle"></i>
+                        </button>
                       </div>
                     </td>
                     {/* <td>
@@ -475,33 +409,14 @@ const Overview = ({ jobList }) => {
                     </td>
                     <td>
                       <div className="avatar-group">
-                        <div className="avatar-group-item">
-                          {/* <Link to="#" className="d-inline-block"> */}
-                          <img
-                            src={avatar3}
-                            alt=""
-                            className="rounded-circle avatar-xs"
-                          />
-                          {/* </Link> */}
-                        </div>
-                        <div className="avatar-group-item">
-                          {/* <Link to="#" className="d-inline-block"> */}
-                          <div className="avatar-xs">
-                            <span className="avatar-title rounded-circle bg-warning text-white font-size-16">
-                              R
-                            </span>
-                          </div>
-                          {/* </Link> */}
-                        </div>
-                        <div className="avatar-group-item">
-                          {/* <Link to="#" className="d-inline-block"> */}
-                          <img
-                            src={avatar5}
-                            alt=""
-                            className="rounded-circle avatar-xs"
-                          />
-                          {/* </Link> */}
-                        </div>
+                        <button
+                          onClick={() => {
+                            handleClick(jobList)
+                          }}
+                          type="button"
+                          className="btn btn-success btn-rounded ms-2">
+                          <i className="fas fa-plus align-middle"></i>
+                        </button>
                       </div>
                     </td>
                     {/* <td>
@@ -527,20 +442,20 @@ const Overview = ({ jobList }) => {
                 </button> */}
               </div>
             )}
-            {userType === userTypes.ROLE_ADMIN && (
-              <div className="hstack gap-2">
-                <button
-                  // style={{ backgroundColor: "green", color: "white" }}
-                  onClick={() => {
-                    handleClick(jobList)
-                  }}
-                  // className="btn btn-soft-primary w-100"
-                  className="btn btn-soft-success w-100"
-                >
-                  Assign Technician
-                </button>
-              </div>
-            )}
+            {/*{userType === userTypes.ROLE_ADMIN && (*/}
+            {/*  <div className="hstack gap-2">*/}
+            {/*    <button*/}
+            {/*      // style={{ backgroundColor: "green", color: "white" }}*/}
+            {/*      onClick={() => {*/}
+            {/*        handleClick(jobList)*/}
+            {/*      }}*/}
+            {/*      // className="btn btn-soft-primary w-100"*/}
+            {/*      className="btn btn-soft-success w-100"*/}
+            {/*    >*/}
+            {/*      Assign Technician*/}
+            {/*    </button>*/}
+            {/*  </div>*/}
+            {/*)}*/}
           </CardBody>
         </Card>
 

@@ -14,7 +14,6 @@ const Section = () => {
                         <img src={avatar} alt="" className="avatar-sm rounded" />
                         <div className="ms-3 flex-grow-1">
                             <h5 className="mb-2 card-title">Hello, Henry Franklin</h5>
-                            <p className="text-muted mb-0">Ready to jump back in?</p>
                         </div>
                         <div>
                             <Link to="#" className="btn btn-primary"><i className="bx bx-plus align-middle"></i> Add New Jobs</Link>

@@ -129,8 +129,7 @@ const TasksCreate = () => {
                             </Label>
                             <div
                               className="inner col-lg-10 ml-md-auto"
-                              id="repeater"
-                            >
+                              id="repeater">
                               {inputFields.map((field, key) => (
                                 <div
                                   key={key}

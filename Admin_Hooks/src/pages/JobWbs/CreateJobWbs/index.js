@@ -35,6 +35,18 @@ const TasksCreate = () => {
   const [isEdit, setIsEdit] = useState(false)
   const [editorState, setEditorState] = useState("")
   const [name, setName] = useState("")
+  const inpRow = [{ name: "", file: "" }]
+
+  function handleAddFields() {
+    const item1 = { name: "", file: "" }
+    setinputFields([...inputFields, item1])
+  }
+
+  function handleRemoveFields(idx) {
+    document.getElementById("nested" + idx).style.display = "none"
+  }
+
+  const [inputFields, setinputFields] = useState(inpRow)
 
   useEffect(() => {
     if (state && state.data) {
@@ -114,7 +126,7 @@ const TasksCreate = () => {
                   <Row className="mb-2">
                     <Col>
                       <CardTitle className="mb-4">
-                        {isEdit ? "Edit Wbs" : "Create New Wbs"}
+                        {isEdit ? "Edit Wbs" : ""}
                       </CardTitle>
                     </Col>
                     <Col
@@ -123,24 +135,14 @@ const TasksCreate = () => {
                     >
                       <button
                         // type="submit"
-                        className="btn btn-clear h-75 d-flex justify-content-center align-items-center"
-                        style={{
-                          width: "100px",
-                          backgroundColor: "green",
-                          color: "white",
-                        }}
+                        className="btn btn-dark w-xl d-flex justify-content-center align-items-center"
                         onClick={handleBackClick}
                       >
                         Back
                       </button>
                       <button
                         // type="submit"
-                        className="btn btn-clear ms-4 h-75 d-flex justify-content-center align-items-center"
-                        style={{
-                          width: "100px",
-                          backgroundColor: "green",
-                          color: "white",
-                        }}
+                        className="btn btn-danger w-xl ms-4 d-flex justify-content-center align-items-center"
                         onClick={handleClearClick}
                       >
                         Clear
@@ -184,46 +186,66 @@ const TasksCreate = () => {
                             </FormFeedback>
                           </Col>
                         </FormGroup>
-                        <FormGroup className="mb-4" row>
-                          <Label
-                            htmlFor="tasks"
-                            className="col-form-label col-lg-2"
-                          >
-                            Tasks
-                          </Label>
-                          <Col lg="10">
-                            <Input
-                              id="tasks"
-                              name="tasks"
-                              type="textarea"
-                              className="form-control"
-                              placeholder="Enter Tasks..."
-                              validate={{
-                                required: { value: true },
-                              }}
-                              onChange={e => setEditorState(e.target.value)}
-                              value={editorState || ""}
-                              style={{ height: "200px" }}
-                            />
-                            {/* <Editor
-                              // onEditorStateChange={validation.handleChange}
-                              onChange={e => {
-                                setEditorState(e)
-                              }}
-                              value={editorState}
-                              toolbarClassName="toolbarClassName"
-                              wrapperClassName="wrapperClassName"
-                              editorClassName="editorClassName"
-                            /> */}
-                            <FormFeedback
-                              id="taskEditorError"
-                              style={{ display: "none" }}
-                              type="invalid"
-                            >
-                              Please Enter Your Wbs Tasks{" "}
-                            </FormFeedback>
-                          </Col>
-                        </FormGroup>
+                        <div className="inner-repeater mb-4">
+                          <div className="inner form-group mb-0 row">
+                            <Label className="col-form-label col-lg-2">
+                              Add Task
+                            </Label>
+                            <div
+                              className="inner col-lg-10 ml-md-auto"
+                              id="repeater">
+                              {inputFields.map((field, key) => (
+                                <div
+                                  key={key}
+                                  id={"nested" + key}
+                                  className="mb-3 row align-items-center"
+                                >
+                                  <Col md="10">
+                                    <input
+                                      type="text"
+                                      className="inner form-control"
+                                      defaultValue={field.name}
+                                      placeholder="Enter Name..."
+                                    />
+                                  </Col>
+                                  <Col md="2">
+                                    <div className="mt-2 mt-md-0 d-grid">
+                                      <Button
+                                        color="danger"
+                                        className="inner"
+                                        onClick={() => {
+                                          handleRemoveFields(key)
+                                        }}
+                                        block
+                                      >
+                                        Delete
+                                      </Button>
+                                    </div>
+                                  </Col>
+                                </div>
+                              ))}
+                              <Col md="2">
+                                <div className="mt-2 mt-md-0 d-grid">
+                                  <Button
+                                    color="primary"
+                                    className="inner"
+                                    onClick={() => {
+                                      handleAddFields()
+                                    }}
+                                  >
+                                    Add
+                                  </Button>
+                                </div>
+                              </Col>
+
+                            </div>
+                          </div>
+
+
+
+
+
+                        </div>
                       </div>
                     </div>
                   </form>
@@ -235,12 +257,7 @@ const TasksCreate = () => {
                         <button
                           // type="submit"
                           onClick={handleSubmit}
-                          className="btn btn-success save-user"
-                          style={{
-                            width: "100px",
-                            backgroundColor: "green",
-                            color: "white",
-                          }}
+                          className="btn btn-success save-user w-25"
                         >
                           {!!isEdit ? "Update" : "Create"}
                         </button>
