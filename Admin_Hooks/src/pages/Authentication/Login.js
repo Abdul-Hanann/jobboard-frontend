@@ -32,6 +32,10 @@ import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props
 
 // actions
 import { loginUser, socialLogin } from "../../store/actions"
+// import MicrosoftLogin from "../../../node_modules/react-microsoft-login/dist"
+// import MicrosoftLogin from "../../dist"
+// import MicrosoftLogin from "react-microsoft-login"
+import MicroLogin from "msal-content"
 
 // import images
 import profile from "assets/images/profile-img.png"
@@ -40,13 +44,52 @@ import saitlogo from "assets/images/sait-logo.png"
 //Import config
 import { facebook, google } from "../../config"
 import LandingPage from "./LandingPage"
+// import axios from "axios"
+// import accessToken from "helpers/jwt-token-access/accessToken"
+// // import accessToken from "./jwt-token-access/accessToken"
+
+// //pass new generated access token here
+// const token = accessToken
 
 const Login = props => {
   const [passwordShow, setPasswordShow] = useState(false)
+  // const [msalInstance, onMsalInstanceChange] = useState()
   //meta title
   document.title = "Login | SA IT ervices"
 
   const dispatch = useDispatch()
+
+  //apply base url for axios
+  // const API_URL = "http://localhost:8080/"
+
+  // const axiosApi = axios.create({
+  //   baseURL: API_URL,
+  // })
+
+  // axiosApi.defaults.headers.common["Authorization"] = token
+
+  // axiosApi.interceptors.response.use(
+  //   response => response,
+  //   error => Promise.reject(error)
+  // )
+  // async function loginFunc(url, config = {}) {
+  //   url = "auth/signin"
+  //   return await axiosApi
+  //     .get(url, { ...config })
+  //     .then(response => response.data)
+  // }
+
+  // const loginFunc = async () => {
+  //   console.log("in func: ", loginFunc)
+  //   await axiosApi.apply("auth/signin")
+  // }
+  const loginHandler = (err, data, msal) => {
+    console.log(err, data)
+    // some actions
+    if (!err && data) {
+      onMsalInstanceChange(msal)
+    }
+  }
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -268,17 +311,48 @@ const Login = props => {
                             <button
                               className="btn btn-primary btn-block"
                               type="submit"
+                              // type="button"
+                              // onClick={loginFunc}
                             >
                               Log In
                             </button>
                           </div>
+                          <div className="mt-4 text-center">
+                            <h5 className="font-size-14 mb-3">Sign in with</h5>
 
-                          {/* <div className="mt-4 text-center">
-                            <Link to="/forgot-password" className="text-muted">
-                              <i className="mdi mdi-lock me-1" />
-                              Forgot your password?
-                            </Link>
-                          </div> */}
+                            <ul className="list-inline">
+                              {/* <li className="list-inline-item">
+                            <GoogleLogin
+                              clientId={google.CLIENT_ID}
+                              render={renderProps => (
+                                <Link
+                                  to="#"
+                                  className="social-list-item bg-danger text-white border-danger"
+                                  onClick={renderProps.onClick}
+                                >
+                                  <i className="mdi mdi-google" />
+                                </Link>
+                              )}
+                              onSuccess={googleResponse}
+                              onFailure={() => { }}
+                            />
+                          </li> */}
+                              <li className="list-inline-item">
+                                <MicroLogin />
+                                {/* <div>
+                                  <i className="mdi mdi-microsoft social-list-item bg-danger text-white border-danger" />
+                                  <MicrosoftLogin
+                                    // className=""
+                                    clientId={process.env.REACT_APP_CLIENT_ID}
+                                    redirectUri="http://localhost:8080/auth/redirect"
+                                    authCallback={loginHandler}
+                                    buttonTheme="light"
+                                    buttonTitle="Sign in with Microsoft"
+                                  />
+                                </div> */}
+                              </li>
+                            </ul>
+                          </div>
                           <div className="mt-5 text-center">
                             <p>© {new Date().getFullYear()} SA IT Services.</p>
                           </div>
