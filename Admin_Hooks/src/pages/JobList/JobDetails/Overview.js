@@ -3,10 +3,9 @@ import { Link } from "react-router-dom"
 
 import * as Yup from "yup"
 // import Select from "react-select"
-import TextField from "@material-ui/core/TextField"
-import Autocomplete from "@material-ui/lab/Autocomplete"
+// import TextField from "@material-ui/core/TextField"
+// import Autocomplete from "@material-ui/lab/Autocomplete"
 // import Select from "@material-ui/core/Select"
-import { FormControl, InputLabel, MenuItem } from "@material-ui/core"
 import { useFormik } from "formik"
 import { userTypes } from "pages/Authentication/userTypes"
 
