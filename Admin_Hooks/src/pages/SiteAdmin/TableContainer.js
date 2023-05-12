@@ -15,6 +15,9 @@ import {
   Col,
   Button,
   Input,
+  Modal,
+  ModalHeader,
+  ModalBody,
   CardBody,
   DropdownItem,
   UncontrolledDropdown,
@@ -22,12 +25,31 @@ import {
   DropdownMenu,
 } from "reactstrap"
 
+import Select from "react-select"
+import makeAnimated from "react-select/animated"
+
 import { isEmpty, map } from "lodash"
 // import { Filter, DefaultColumnFilter } from "./filters"
 import { Filter, DefaultColumnFilter } from "components/Common/filters"
 // import JobListGlobalFilter from "../../components/Common/GlobalSearchFilter"
 import JobListGlobalFilter from "components/Common/GlobalSearchFilter"
 import { useNavigate } from "react-router-dom"
+
+const AnimatedMulti = props => {
+  const { options, value, setValue } = props
+  const animatedComponents = makeAnimated()
+
+  return (
+    <Select
+      closeMenuOnSelect={false}
+      components={animatedComponents}
+      isMulti
+      onChange={val => setValue(val)}
+      value={value}
+      options={options}
+    />
+  )
+}
 
 // Define a default UI for filtering
 function GlobalFilter({
@@ -130,11 +152,44 @@ const TableContainer = ({
   const [dataField, setDataField] = useState(data)
   const [searchInput, setSearchInput] = useState("")
   const [filterOption, setFilterOption] = useState("")
+  const [modal, setModal] = useState(false)
+
+  const [filteredStartDate, setFilteredStartDate] = useState("")
+  const [filteredEndDate, setFilteredEndDate] = useState("")
+  const [filteredCity, setFilteredCity] = useState("")
+  const [filteredZipcode, setFilteredZipcode] = useState("")
+  const [filteredSiteId, setFilteredSiteId] = useState("")
+  const [filteredBuilding, setFilteredBuilding] = useState("")
+
+  const SiteId = [
+    { value: "SK2540", label: "SK2540" },
+    { value: "SK2541", label: "SK2541" },
+    { value: "SK2542", label: "SK2542" },
+  ]
+  const Building = [
+    { value: "Building1", label: "Building 1" },
+    { value: "Building2", label: "Building 2" },
+    { value: "Building3", label: "Building 3" },
+    { value: "Building4", label: "Building 4" },
+  ]
+  const City = [
+    { value: "California", label: "California" },
+    { value: "NewYork", label: "NewYork" },
+    { value: "Sydney", label: "Sydney" },
+  ]
+
+  const toggle = () => {
+    if (modal) {
+      setModal(false)
+      setDataField(null)
+    } else {
+      setModal(true)
+      setDataField(dataField)
+    }
+  }
 
   const handleSearch = (searchInput, filterOption) => {
-    console.log("filtered data:", filterOption)
     const filteredData = dataField.filter(rowdata => {
-      console.log("rowdata: ", rowdata.siteId)
       if (filterOption === "siteId") {
         return rowdata.siteId.toLowerCase().includes(searchInput.toLowerCase())
       } else if (filterOption === "building") {
@@ -163,6 +218,17 @@ const TableContainer = ({
     console.log("filteredData:", filteredData)
     setDataField(filteredData)
   }
+
+  const handleClick = () => {
+    toggle()
+  }
+  const clearAllFilters = () => {
+    setFilteredJobNoOfDays("")
+    setFilteredStartDate("")
+    setFilteredJobSiteId("")
+    setFilteredJobName("")
+  }
+
   const handleRefresh = () => {
     setSearchInput("")
     setFilterOption("")
@@ -227,9 +293,78 @@ const TableContainer = ({
   // }
   return (
     <Fragment>
-      <Row className="mb-2">
-        <div className="d-flex mb-0">
-          <input
+      <Modal isOpen={modal} toggle={toggle} className="overflow-visible">
+        <ModalHeader toggle={toggle} tag="h4">
+          {/* {!!isEdit ? "Edit Job" : "Add Job"} */}
+          Filter
+        </ModalHeader>
+        <ModalBody>
+          <form
+            onSubmit={e => {
+              e.preventDefault()
+              validation.handleSubmit()
+              return false
+            }}
+          >
+            <Row>
+              <Col lg="12">
+                <div id="external-events" className="mt-2">
+                  <p className="text-muted mt-3">Filter by Site Id </p>
+
+                  <AnimatedMulti
+                    options={SiteId}
+                    value={filteredSiteId}
+                    setValue={setFilteredSiteId}
+                  />
+                  <p className="text-muted mt-3">Filter by Building </p>
+
+                  <AnimatedMulti
+                    options={Building}
+                    value={filteredBuilding}
+                    setValue={setFilteredBuilding}
+                  />
+                  <p className="text-muted mt-3">Filter by City</p>
+                  <Select
+                    className="basic-single"
+                    classNamePrefix="select"
+                    name="color"
+                    placeholder="Select distance..."
+                    value={filteredCity}
+                    onChange={value => setFilteredCity(value)}
+                    options={City}
+                  />
+                </div>
+              </Col>
+              <Col>
+                <div className="text-end mt-2">
+                  <button
+                    // type="submit"
+                    className="btn btn-success save-user"
+                  >
+                    Filter
+                  </button>
+                </div>
+              </Col>
+            </Row>
+            {/* <Row> */}
+            {/* <Col>
+                <div className="text-end">
+                  <button
+                    // type="submit"
+                    className="btn btn-success save-user"
+                  >
+                    Assign
+                  </button>
+                </div>
+              </Col> */}
+            {/* </Row> */}
+          </form>
+        </ModalBody>
+      </Modal>
+
+      <Row className="mb-0">
+        <div className="d-flex d-flex justify-content-end mt-2">
+          {/* <input
             id="search"
             name="search"
             type="text"
@@ -250,23 +385,28 @@ const TableContainer = ({
             <option value="building">Building</option>
             <option value="state">State</option>
             <option value="city">City</option>
-            {/* <option value="zipCode">Zip Code</option> */}
+            // <option value="zipCode">Zip Code</option>
             <option value="timeZone">Time Zone</option>
-          </select>
-          <button
-            className="btn btn-primary mdi mdi-filter ms-2"
-            style={{ backgroundColor: "green" }}
-            onClick={() => handleSearch(searchInput, filterOption)}
-          >
-            {/* Search */}
-          </button>
-          <button
-            className="btn btn-primary mdi mdi-refresh ms-2"
-            style={{ backgroundColor: "green" }}
-            onClick={() => handleRefresh()}
-          >
-            {/* Refresh */}
-          </button>
+          </select> */}
+          <div className="flex-shrink-0" style={{ marginRight: 20 }}>
+            <button
+              // className="btn btn-primary mdi mdi-filter ms-2"
+              className="btn btn-primary mdi mdi-filter me-1"
+              style={{ backgroundColor: "green" }}
+              // onClick={() => handleSearch(searchInput, filterOption)}
+              onClick={() => handleClick()}
+            >
+              {/* Search */}
+            </button>
+            <button
+              // className="btn btn-primary mdi mdi-refresh ms-2"
+              className="btn btn-primary mdi mdi-refresh me-1"
+              style={{ backgroundColor: "green" }}
+              onClick={() => handleRefresh()}
+            >
+              {/* Refresh */}
+            </button>
+          </div>
         </div>
 
         {/* <Col md={customPageSizeOptions ? 2 : 1}>
@@ -337,22 +477,31 @@ const TableContainer = ({
         )} */}
       </Row>
 
-      <div className="table-responsive react-table">
+      <div
+      // className="table-responsive react-table"
+      >
         <Table
-          bordered
-          hover
+          // bordered
+          // hover
           // {...getTableProps()}
-          className={className}
+          className="project-list-table table-nowrap align-middle table-borderless"
         >
           <thead
-            style={{
-              fontSize: 16,
-              backgroundColor: "#003768",
-              color: "white",
-              textAlign: "center",
-            }}
+          // style={{
+          //   fontSize: 16,
+          //   backgroundColor: "#003768",
+          //   color: "white",
+          //   textAlign: "center",
+          // }}
           >
-            <tr>
+            <tr
+              style={{
+                fontSize: 14,
+                backgroundColor: "#003768",
+                color: "white",
+                // textAlign: "center",
+              }}
+            >
               <th scope="col" style={{ width: "100px" }}>
                 Site Id
               </th>
@@ -360,6 +509,7 @@ const TableContainer = ({
               <th scope="col">Address Line 1</th>
               <th scope="col">Address Line 2</th>
               <th scope="col">City</th>
+              <th scope="col">Company</th>
               <th scope="col">State</th>
               <th scope="col">Zip Code</th>
               <th scope="col">Time Zone</th>
@@ -370,7 +520,7 @@ const TableContainer = ({
           <tbody
           // {...getTableBodyProps()}
           >
-            {map(dataField, (rowdata, index) => (
+            {map(data, (rowdata, index) => (
               <tr key={index}>
                 <td>
                   <h5 className="text-truncate font-size-14">
@@ -394,6 +544,9 @@ const TableContainer = ({
                   <p> {rowdata.city}</p>
                 </td>
                 <td>
+                  <p> {rowdata.company}</p>
+                </td>
+                <td>
                   <p> {rowdata.state}</p>
                 </td>
                 <td>
@@ -412,10 +565,10 @@ const TableContainer = ({
                       <i className="mdi mdi-dots-horizontal font-size-18" />
                     </DropdownToggle>
                     <DropdownMenu className="dropdown-menu-end">
-                      <DropdownItem onClick={() => handleViewClick(jobList)}>
+                      {/* <DropdownItem onClick={() => handleViewClick()}>
                         <i className="mdi mdi-view-dashboard font-size-16 text-success me-1" />{" "}
                         View
-                      </DropdownItem>
+                      </DropdownItem> */}
                       <DropdownItem onClick={() => handleEditClick(rowdata)}>
                         <i className="mdi mdi-pencil font-size-16 text-success me-1" />{" "}
                         Edit

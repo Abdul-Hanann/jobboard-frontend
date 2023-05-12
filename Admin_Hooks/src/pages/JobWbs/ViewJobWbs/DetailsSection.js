@@ -33,13 +33,7 @@ const DetailsSection = ({ jobWbs }) => {
                 </ul> */}
               </div>
               <button
-                // type="submit"
-                className="btn btn-clear h-75 d-flex justify-content-center align-items-center"
-                style={{
-                  width: "100px",
-                  backgroundColor: "green",
-                  color: "white",
-                }}
+                className="btn btn-dark w-lg d-flex justify-content-center align-items-center"
                 onClick={handleBackClick}
               >
                 Back
@@ -48,7 +42,11 @@ const DetailsSection = ({ jobWbs }) => {
           </CardBody>
           <CardBody>
             <h5 className="fw-semibold mb-3">Tasks</h5>
-            <p className="text-muted">{jobWbs?.tasks}</p>
+            <ul className="text-muted">
+              {jobWbs?.tasks.map((task, index) => (
+                <li key={index}>{task}</li>
+              ))}
+            </ul>
           </CardBody>
         </Card>
       </Col>

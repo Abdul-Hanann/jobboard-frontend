@@ -175,24 +175,14 @@ const TasksCreate = () => {
                     >
                       <button
                         // type="submit"
-                        className="btn btn-clear h-75 d-flex justify-content-center align-items-center"
-                        style={{
-                          width: "100px",
-                          backgroundColor: "green",
-                          color: "white",
-                        }}
+                        className="btn btn-dark w-xl h-75 d-flex justify-content-center align-items-center"
                         onClick={handleClick}
                       >
                         Back
                       </button>
                       <button
                         // type="submit"
-                        className="btn btn-clear ms-4 h-75 d-flex justify-content-center align-items-center"
-                        style={{
-                          width: "100px",
-                          backgroundColor: "green",
-                          color: "white",
-                        }}
+                        className="btn btn-danger w-xl ms-4 h-75  d-flex justify-content-center align-items-center"
                         // onClick={handleClearClick}
                       >
                         Clear
@@ -459,14 +449,9 @@ const TasksCreate = () => {
                       <div className="text-end">
                         <button
                           type="submit"
-                          className="btn btn-success save-user"
-                          style={{
-                            width: "100px",
-                            backgroundColor: "green",
-                            color: "white",
-                          }}
+                          className="btn btn-success save-user w-25"
                         >
-                          {!!isEdit ? "Edit" : "Create"}
+                          {!!isEdit ? "Update" : "Create"}
                         </button>
                       </div>
                     </Col>
