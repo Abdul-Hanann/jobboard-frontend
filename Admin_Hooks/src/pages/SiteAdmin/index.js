@@ -221,16 +221,6 @@ function SiteAdmin() {
                       >
                         Add Site Admin
                       </Link>
-                      {/* <Link to="#!" className="btn btn-light me-1"><i className="mdi mdi-refresh"></i></Link> */}
-                      {/* <UncontrolledDropdown className="dropdown d-inline-block me-1">
-                                                <DropdownToggle type="menu" className="btn btn-success" id="dropdownMenuButton1">
-                                                    <i className="mdi mdi-dots-vertical"></i></DropdownToggle>
-                                                <DropdownMenu>
-                                                    <li><DropdownItem href="#">Action</DropdownItem></li>
-                                                    <li><DropdownItem href="#">Another action</DropdownItem></li>
-                                                    <li><DropdownItem href="#">Something else here</DropdownItem></li>
-                                                </DropdownMenu>
-                                            </UncontrolledDropdown> */}
                     </div>
                   </div>
                 </CardBody>
@@ -261,26 +251,6 @@ function SiteAdmin() {
               >
                 <Row>
                   <Col className="col-12">
-                    {/* <div className="mb-3">
-                                            <Label className="form-label"> Job Id</Label>
-                                            <Input
-                                                name="jobId"
-                                                type="text"
-                                                placeholder="Insert Job Id"
-                                                validate={{
-                                                    required: { value: true },
-                                                }}
-                                                onChange={validation.handleChange}
-                                                onBlur={validation.handleBlur}
-                                                value={validation.values.jobId || ""}
-                                                invalid={
-                                                    validation.touched.jobId && validation.errors.jobId ? true : false
-                                                }
-                                            />
-                                            {validation.touched.jobId && validation.errors.jobId ? (
-                                                <FormFeedback type="invalid">{validation.errors.jobId}</FormFeedback>
-                                            ) : null}
-                                        </div> */}
                     <div className="mb-3">
                       <Label className="form-label">Job Name</Label>
                       <Input
@@ -447,28 +417,6 @@ function SiteAdmin() {
                         </FormFeedback>
                       ) : null}
                     </div>
-                    {/* <div className="mb-3">
-                                            <Label className="form-label">Status</Label>
-                                            <Input
-                                                name="status"
-                                                type="select"
-                                                onChange={validation.handleChange}
-                                                onBlur={validation.handleBlur}
-                                                value={
-                                                    validation.values.status || ""
-                                                }
-                                                invalid={
-                                                    validation.touched.status && validation.errors.status ? true : false
-                                                }
-                                            >
-                                                <option>Active</option>
-                                                <option>New</option>
-                                                <option>Close</option>
-                                            </Input>
-                                            {validation.touched.status && validation.errors.status ? (
-                                                <FormFeedback status="invalid">{validation.errors.status}</FormFeedback>
-                                            ) : null}
-                                        </div> */}
                   </Col>
                 </Row>
                 <Row>

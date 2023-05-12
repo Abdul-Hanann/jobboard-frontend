@@ -32,18 +32,18 @@ import "./assets/scss/theme.scss"
 
 import fakeBackend from "./helpers/AuthType/fakeBackend"
 
-import { MsalProvider } from "@azure/msal-react"
-import { ConfidentialClientApplication } from "@azure/msal-node/dist"
-const configuration = {
-  auth: {
-    clientId: process.env.REACT_APP_CLIENT_ID,
-    authority: `https://login.microsoftonline.com/${process.env.REACT_APP_TENANT_ID}`,
-    // redirectUri: "http://localhost:3001/login",
-    clientSecret: process.env.REACT_APP_CLIENT_SECRET,
-  },
-}
+// import { MsalProvider } from "@azure/msal-react"
+// import { ConfidentialClientApplication } from "@azure/msal-node/dist"
+// const configuration = {
+//   auth: {
+//     clientId: process.env.REACT_APP_CLIENT_ID,
+//     authority: `https://login.microsoftonline.com/${process.env.REACT_APP_TENANT_ID}`,
+//     // redirectUri: "http://localhost:3001/login",
+//     clientSecret: process.env.REACT_APP_CLIENT_SECRET,
+//   },
+// }
 
-const pca = new ConfidentialClientApplication(configuration)
+// const pca = new ConfidentialClientApplication(configuration)
 
 // Activating fake backend
 fakeBackend()
@@ -84,17 +84,31 @@ const App = () => {
 
   return (
     <React.Fragment>
-      <MsalProvider instance={pca}>
-        <Routes>
-          {publicRoutes.map((route, idx) => (
-            <Route
-              path={route.path}
-              element={<NonAuthLayout>{route.component}</NonAuthLayout>}
-              key={idx}
-              exact={true}
-            />
-          ))}
-          {authProtectedRoutes.map((route, idx) => (
+      {/* <MsalProvider instance={pca}> */}
+      <Routes>
+        {publicRoutes.map((route, idx) => (
+          <Route
+            path={route.path}
+            element={<NonAuthLayout>{route.component}</NonAuthLayout>}
+            key={idx}
+            exact={true}
+          />
+        ))}
+        {authProtectedRoutes.map((route, idx) => (
+          <Route
+            path={route.path}
+            element={
+              <Authmiddleware>
+                <Layout>{route.component}</Layout>
+              </Authmiddleware>
+            }
+            key={idx}
+            exact={true}
+          />
+        ))}
+
+        {userType === userTypeLabels.ROLE_ADMIN &&
+          adminRoutes.map((route, idx) => (
             <Route
               path={route.path}
               element={
@@ -107,74 +121,60 @@ const App = () => {
             />
           ))}
 
-          {userType === userTypeLabels.ROLE_ADMIN &&
-            adminRoutes.map((route, idx) => (
-              <Route
-                path={route.path}
-                element={
-                  <Authmiddleware>
-                    <Layout>{route.component}</Layout>
-                  </Authmiddleware>
-                }
-                key={idx}
-                exact={true}
-              />
-            ))}
-
-          {userType === userTypeLabels.ROLE_SITE_ADMIN &&
-            siteAdminRoutes.map((route, idx) => (
-              <Route
-                path={route.path}
-                element={
-                  <Authmiddleware>
-                    <Layout>{route.component}</Layout>
-                  </Authmiddleware>
-                }
-                key={idx}
-                exact={true}
-              />
-            ))}
-          {userType === userTypeLabels.ROLE_JOB_CREATOR &&
-            jobCreatorRoutes.map((route, idx) => (
-              <Route
-                path={route.path}
-                element={
-                  <Authmiddleware>
-                    <Layout>{route.component}</Layout>
-                  </Authmiddleware>
-                }
-                key={idx}
-                exact={true}
-              />
-            ))}
-          {userType === userTypeLabels.ROLE_TECHNICIAN &&
-            technicianRoutes.map((route, idx) => (
-              <Route
-                path={route.path}
-                element={
-                  <Authmiddleware>
-                    <Layout>{route.component}</Layout>
-                  </Authmiddleware>
-                }
-                key={idx}
-                exact={true}
-              />
-            ))}
-          {userType === userTypeLabels.ROLE_SCHEDULER &&
-            schedulerRoutes.map((route, idx) => (
-              <Route
-                path={route.path}
-                element={
-                  <Authmiddleware>
-                    <Layout>{route.component}</Layout>
-                  </Authmiddleware>
-                }
-                key={idx}
-                exact={true}
-              />
-            ))}
-        </Routes>
-      </MsalProvider>
+        {userType === userTypeLabels.ROLE_SITE_ADMIN &&
+          siteAdminRoutes.map((route, idx) => (
+            <Route
+              path={route.path}
+              element={
+                <Authmiddleware>
+                  <Layout>{route.component}</Layout>
+                </Authmiddleware>
+              }
+              key={idx}
+              exact={true}
+            />
+          ))}
+        {userType === userTypeLabels.ROLE_JOB_CREATOR &&
+          jobCreatorRoutes.map((route, idx) => (
+            <Route
+              path={route.path}
+              element={
+                <Authmiddleware>
+                  <Layout>{route.component}</Layout>
+                </Authmiddleware>
+              }
+              key={idx}
+              exact={true}
+            />
+          ))}
+        {userType === userTypeLabels.ROLE_TECHNICIAN &&
+          technicianRoutes.map((route, idx) => (
+            <Route
+              path={route.path}
+              element={
+                <Authmiddleware>
+                  <Layout>{route.component}</Layout>
+                </Authmiddleware>
+              }
+              key={idx}
+              exact={true}
+            />
+          ))}
+        {userType === userTypeLabels.ROLE_SCHEDULER &&
+          schedulerRoutes.map((route, idx) => (
+            <Route
+              path={route.path}
+              element={
+                <Authmiddleware>
+                  <Layout>{route.component}</Layout>
+                </Authmiddleware>
+              }
+              key={idx}
+              exact={true}
+            />
+          ))}
+      </Routes>
+      {/* </MsalProvider> */}
     </React.Fragment>
   )
 }

@@ -35,7 +35,7 @@ import { loginUser, socialLogin } from "../../store/actions"
 // import MicrosoftLogin from "../../../node_modules/react-microsoft-login/dist"
 // import MicrosoftLogin from "../../dist"
 // import MicrosoftLogin from "react-microsoft-login"
-import MicroLogin from "msal-content"
+// import MicroLogin from "msal-content"
 
 // import images
 import profile from "assets/images/profile-img.png"
@@ -338,7 +338,7 @@ const Login = props => {
                             />
                           </li> */}
                               <li className="list-inline-item">
-                                <MicroLogin />
+                                {/* <MicroLogin /> */}
                                 {/* <div>
                                   <i className="mdi mdi-microsoft social-list-item bg-danger text-white border-danger" />
                                   <MicrosoftLogin
