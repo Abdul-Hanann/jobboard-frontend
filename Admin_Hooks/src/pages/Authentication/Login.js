@@ -41,15 +41,12 @@ import saitlogo from "assets/images/sait-logo.png"
 import { facebook, google } from "../../config"
 import LandingPage from "./LandingPage"
 
-
 import axios from "axios"
 import accessToken from "helpers/jwt-token-access/accessToken"
 // import accessToken from "./jwt-token-access/accessToken"
 
 //pass new generated access token here
 const token = accessToken
-
-
 
 const Login = props => {
   const [passwordShow, setPasswordShow] = useState(false)
@@ -73,37 +70,28 @@ const Login = props => {
   )
   async function callApi(url, config = {}) {
     // url = "auth/signin"
-    return await axiosApi
-      .get(url, { ...config })
-      .then(
-          response => {
-            return response.data
-          }
-      )
+    return await axiosApi.get(url, { ...config }).then(response => {
+      return response.data
+    })
   }
 
-
   const loginFunc = async () => {
-    console.log("in func: ", loginFunc)
+    // console.log("in func: ", loginFunc)
 
     let result = await callApi("auth/signin")
-    console.log('/auth/signin result: ', result);
+    console.log("/auth/signin result: ", result)
     // let result2 = await callApi(result)
     // https://login.microsoftonline.com/43c967a0-680f-4325-8525-f86a7c47c3f6/oauth2/v2.0/authorize?client_id=e9888fbd-7542-4884-aa02-66254c3b1d73&scope=openid%20profile%20offline_access&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2Fredirect&client-request-id=0c81542f-62eb-44fe-a42c-348fcfd9489a&response_mode=form_post&response_type=code&x-client-SKU=msal.js.node&x-client-VER=1.14.5&x-client-OS=linux&x-client-CPU=x64&client_info=1&code_challenge=MFROBaIUSNsZVCuxvQvZOR7OToLIVUFRIu_VL6Laz7E&code_challenge_method=S256&state=eyJjc3JmVG9rZW4iOiIxYzFhYzVmMS02ZjM3LTQ0MGYtYWQ1Yi1mZGM5NWQ4ODE0ZjkiLCJyZWRpcmVjdFRvIjoiLyJ9
     //
     // let url = "oauth2/v2.0/authorize?client_id=e9888fbd-7542-4884-aa02-66254c3b1d73&scope=openid%20profile%20offline_access&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fauth%2Fredirect&client-request-id=5bb0d00d-b5b1-4b71-8b79-e610d02783f3&response_mode=form_post&response_type=code&x-client-SKU=msal.js.node&x-client-VER=1.14.5&x-client-OS=linux&x-client-CPU=x64&client_info=1&code_challenge=gcHGI-CvGso0s-YQhVfiAUdeOlrHbSvGUwMMaZhO8PQ&code_challenge_method=S256&state=eyJjc3JmVG9rZW4iOiI2M2FiM2FjMy1mYzRkLTRjMjAtYTdiZS03NzM3ZWE0ZjM2NjIiLCJyZWRpcmVjdFRvIjoiLyJ9"
     // const response = await axiosApi.get(`http://localhost:3004/43c967a0-680f-4325-8525-f86a7c47c3f6/${url}`);
-    window.location.href = result; // replace with your desired URL
+    window.location.href = result // replace with your desired URL
 
     // let url = "http://localhost:3004/43c967a0-680f-4325-8525-f86a7c47c3f6/oauth2/v2.0/authorize?client_id=e9888fbd-7542-4884-aa02-66254c3b1d73&scope=openid%20profile%20offline_access&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fauth%2Fredirect&client-request-id=5bb0d00d-b5b1-4b71-8b79-e610d02783f3&response_mode=form_post&response_type=code&x-client-SKU=msal.js.node&x-client-VER=1.14.5&x-client-OS=linux&x-client-CPU=x64&client_info=1&code_challenge=gcHGI-CvGso0s-YQhVfiAUdeOlrHbSvGUwMMaZhO8PQ&code_challenge_method=S256&state=eyJjc3JmVG9rZW4iOiI2M2FiM2FjMy1mYzRkLTRjMjAtYTdiZS03NzM3ZWE0ZjM2NjIiLCJyZWRpcmVjdFRvIjoiLyJ9"
     // let response = await callApi(url)
     //
     // console.log('/auth/redirect result: ', response);
-
   }
-
-
-
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -324,8 +312,8 @@ const Login = props => {
                           <div className="mt-3 d-grid">
                             <button
                               className="btn btn-primary btn-block"
-                              // type="submit"
-                              onClick={loginFunc}
+                              type="submit"
+                              // onClick={loginFunc}
                             >
                               Log In
                             </button>

@@ -27,6 +27,9 @@ import invoices from "./invoices/reducer"
 //jobs
 import JobReducer from "./jobs/reducer"
 
+//sotes
+import SitesReducer from "./sites/reducer"
+
 //projects
 import projects from "./projects/reducer"
 
@@ -56,6 +59,8 @@ import DashboardJob from "./dashboard-jobs/reducer"
 import JobListReducer from "./jobs-v2/reducer"
 import JobWbsReducer from "./jobWbs/reducer"
 
+import CompanyReducer from "./company/reducer"
+
 const rootReducer = combineReducers({
   // public
   Layout,
@@ -79,7 +84,9 @@ const rootReducer = combineReducers({
   DashboardBlog,
   DashboardJob,
   JobListReducer,
+  SitesReducer,
   JobWbsReducer,
+  CompanyReducer,
 })
 
 export default rootReducer

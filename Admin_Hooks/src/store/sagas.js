@@ -22,7 +22,10 @@ import dashboardCryptoSaga from "./dashboard-crypto/saga"
 import dashboardBlogSaga from "./dashboard-blog/saga"
 import dashboardJobSaga from "./dashboard-jobs/saga"
 import AllJobsSaga from "./jobs-v2/saga"
+import AllSitesSaga from "./sites/saga"
 import AllJobWbsSaga from "./jobWbs/saga"
+// import AllCompanySaga from "./company/saga"
+import AllCompanySaga from "./company/saga"
 export default function* rootSaga() {
   yield all([
     //public
@@ -47,6 +50,9 @@ export default function* rootSaga() {
     fork(dashboardBlogSaga),
     fork(dashboardJobSaga),
     fork(AllJobsSaga),
-    fork(AllJobWbsSaga)
+    fork(AllSitesSaga),
+    fork(AllJobWbsSaga),
+    fork(AllCompanySaga),
+    // forK(AllCompanySaga),
   ])
 }

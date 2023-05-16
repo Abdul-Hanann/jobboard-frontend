@@ -72,8 +72,19 @@ export const ADD_NEW_JOB_LIST = baseUrl + "/job"
 export const UPDATE_JOB_LIST = "/update/job"
 export const DELETE_JOB_LIST = "/delete/job"
 
+// SITES
+// export const GET_JOB_LIST_URL = baseUrl + "/jobs"
+export const SITES_URL = baseUrl + "/sites"
+// export const GET_SITES_URL = "/sites"
+// export const ADD_SITE = baseUrl + "/sites"
+// export const UPDATE_SITE = "/update/site"
+// export const DELETE_SITE = "/delete/site"
+
 //Job Wbs
 export const JOB_WBS_URL = baseUrl + "/jobWbs"
+
+//Company
+export const COMPANY_URL = baseUrl + "/company"
 
 //Apply Jobs
 export const GET_APPLY_JOB = "/jobApply"

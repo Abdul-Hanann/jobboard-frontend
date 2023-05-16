@@ -1,5 +1,7 @@
 import React, { Fragment, useState, useEffect } from "react"
 import PropTypes from "prop-types"
+import toast from "toastr"
+import "toastr/build/toastr.min.css"
 import {
   useTable,
   useGlobalFilter,
@@ -24,6 +26,10 @@ import {
   DropdownToggle,
   DropdownMenu,
 } from "reactstrap"
+
+import { deleteSite as onDeleteSite, fetchSites } from "store/actions"
+//redux
+import { useSelector, useDispatch } from "react-redux"
 
 import Select from "react-select"
 import makeAnimated from "react-select/animated"
@@ -51,60 +57,9 @@ const AnimatedMulti = props => {
   )
 }
 
-// Define a default UI for filtering
-function GlobalFilter({
-  preGlobalFilteredRows,
-  globalFilter,
-  setGlobalFilter,
-  isJobListGlobalFilter,
-}) {
-  const count = preGlobalFilteredRows.length
-  const [value, setValue] = React.useState(globalFilter)
-  const onChange = useAsyncDebounce(value => {
-    setGlobalFilter(value || undefined)
-  }, 200)
-
-  return (
-    <React.Fragment>
-      <Col md={4}>
-        <div className="search-box me-xxl-2 my-3 my-xxl-0 d-inline-block">
-          <div className="position-relative">
-            <label htmlFor="search-bar-0" className="search-label">
-              <span id="search-bar-0-label" className="sr-only">
-                Search this table
-              </span>
-              <input
-                onChange={e => {
-                  setValue(e.target.value)
-                  onChange(e.target.value)
-                }}
-                id="search-bar-0"
-                type="text"
-                className="form-control"
-                placeholder={`${count} records...`}
-                value={value || ""}
-              />
-            </label>
-            <i className="bx bx-search-alt search-icon"></i>
-          </div>
-        </div>
-      </Col>
-      {isJobListGlobalFilter && <JobListGlobalFilter />}
-    </React.Fragment>
-  )
-}
-
 const TableContainer = ({
   columns,
   data,
-  isGlobalFilter,
-  isJobListGlobalFilter,
-  // isAddOptions,
-  // isAddUserList,
-  // handleOrderClicks,
-  // handleUserClick,
-  // handleCustomerClick,
-  // isAddCustList,
   customPageSize,
   className,
   customPageSizeOptions,
@@ -148,16 +103,38 @@ const TableContainer = ({
     useExpanded,
     usePagination
   )
-  console.log("data:", data)
-  const [dataField, setDataField] = useState(data)
-  const [searchInput, setSearchInput] = useState("")
-  const [filterOption, setFilterOption] = useState("")
+
+  const [sitesList, setSitesList] = useState([])
+  const [dataField, setDataField] = useState([])
+  const [site, setSite] = useState(null)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(fetchSites())
+  }, [])
+  const { sites, isLoading, success } = useSelector(state => state.SitesReducer)
+
+  useEffect(() => {
+    setSitesList(sites)
+  }, [sites])
+
+  console.log("site sites 2 .....:", sitesList)
+  const onClickDelete = siteId => {
+    dispatch(onDeleteSite(siteId))
+  }
+  useEffect(() => {
+    if (!isLoading && success) {
+      toast.success("Data deleted successfully")
+      dispatch(fetchSites())
+    }
+  }, [isLoading, success])
+
   const [modal, setModal] = useState(false)
 
-  const [filteredStartDate, setFilteredStartDate] = useState("")
-  const [filteredEndDate, setFilteredEndDate] = useState("")
+  // const [filteredStartDate, setFilteredStartDate] = useState("")
+  // const [filteredEndDate, setFilteredEndDate] = useState("")
   const [filteredCity, setFilteredCity] = useState("")
-  const [filteredZipcode, setFilteredZipcode] = useState("")
+  // const [filteredZipcode, setFilteredZipcode] = useState("")
   const [filteredSiteId, setFilteredSiteId] = useState("")
   const [filteredBuilding, setFilteredBuilding] = useState("")
 
@@ -188,88 +165,90 @@ const TableContainer = ({
     }
   }
 
-  const handleSearch = (searchInput, filterOption) => {
-    const filteredData = dataField.filter(rowdata => {
-      if (filterOption === "siteId") {
-        return rowdata.siteId.toLowerCase().includes(searchInput.toLowerCase())
-      } else if (filterOption === "building") {
-        return rowdata.building
-          .toLowerCase()
-          .includes(searchInput.toLowerCase())
-      } else if (filterOption === "state") {
-        return rowdata.state.toLowerCase().includes(searchInput.toLowerCase())
-      } else if (filterOption === "city") {
-        return rowdata.city.toLowerCase().includes(searchInput.toLowerCase())
-      } else if (filterOption === "timeZone") {
-        return rowdata.timeZone
-          .toLowerCase()
-          .includes(searchInput.toLowerCase())
-      } else {
-        return (
-          rowdata.siteId.toLowerCase().includes(searchInput.toLowerCase()) ||
-          rowdata.building.toLowerCase().includes(searchInput.toLowerCase()) ||
-          rowdata.state.toLowerCase().includes(searchInput.toLowerCase()) ||
-          rowdata.city.toLowerCase().includes(searchInput.toLowerCase()) ||
-          rowdata.zipCode.toLowerCase().includes(searchInput.toLowerCase()) ||
-          rowdata.timeZone.toLowerCase().includes(searchInput.toLowerCase())
-        )
-      }
-    })
-    console.log("filteredData:", filteredData)
-    setDataField(filteredData)
-  }
+  // const handleSearch = (searchInput, filterOption) => {
+  //   const filteredData = dataField.filter(rowdata => {
+  //     if (filterOption === "siteId") {
+  //       return rowdata.siteId.toLowerCase().includes(searchInput.toLowerCase())
+  //     } else if (filterOption === "building") {
+  //       return rowdata.building
+  //         .toLowerCase()
+  //         .includes(searchInput.toLowerCase())
+  //     } else if (filterOption === "state") {
+  //       return rowdata.state.toLowerCase().includes(searchInput.toLowerCase())
+  //     } else if (filterOption === "city") {
+  //       return rowdata.city.toLowerCase().includes(searchInput.toLowerCase())
+  //     } else if (filterOption === "timeZone") {
+  //       return rowdata.timeZone
+  //         .toLowerCase()
+  //         .includes(searchInput.toLowerCase())
+  //     } else {
+  //       return (
+  //         rowdata.siteId.toLowerCase().includes(searchInput.toLowerCase()) ||
+  //         rowdata.building.toLowerCase().includes(searchInput.toLowerCase()) ||
+  //         rowdata.state.toLowerCase().includes(searchInput.toLowerCase()) ||
+  //         rowdata.city.toLowerCase().includes(searchInput.toLowerCase()) ||
+  //         rowdata.zipCode.toLowerCase().includes(searchInput.toLowerCase()) ||
+  //         rowdata.timeZone.toLowerCase().includes(searchInput.toLowerCase())
+  //       )
+  //     }
+  //   })
+  //   console.log("filteredData:", filteredData)
+  //   setDataField(filteredData)
+  // }
 
   const handleClick = () => {
     toggle()
   }
-  const clearAllFilters = () => {
-    setFilteredJobNoOfDays("")
-    setFilteredStartDate("")
-    setFilteredJobSiteId("")
-    setFilteredJobName("")
-  }
+  // const clearAllFilters = () => {
+  //   setFilteredJobNoOfDays("")
+  //   setFilteredStartDate("")
+  //   setFilteredJobSiteId("")
+  //   setFilteredJobName("")
+  // }
 
   const handleRefresh = () => {
     setSearchInput("")
     setFilterOption("")
-    setDataField(data)
+    setDataField(Data)
   }
 
-  const [showEntries, setshowEntries] = useState(10)
-  const [paginationItems, setpaginationItems] = useState(1)
-  const [selectedPaginationItem, setselectedPaginationItem] = useState(1)
-  const [currentTableData, setcurrentTableData] = useState([])
-  const count = data.length
-  const [value, setValue] = useState("")
-  useEffect(() => {
-    if (data) {
-      setpaginationItems(Math.ceil(data.length / showEntries))
-    }
-  }, [data, showEntries])
+  // const [showEntries, setshowEntries] = useState(10)
+  // const [paginationItems, setpaginationItems] = useState(1)
+  // const [selectedPaginationItem, setselectedPaginationItem] = useState(1)
+  // const [currentTableData, setcurrentTableData] = useState([])
+  // const count = sites.length
+  // const [value, setValue] = useState("")
+  // useEffect(() => {
+  //   if (sites) {
+  //     setpaginationItems(Math.ceil(sites.length / showEntries))
+  //   }
+  // }, [sites, showEntries])
 
-  useEffect(() => {
-    if (data) {
-      let rows = selectedPaginationItem * showEntries
-      let selectedRowsStart = rows - showEntries
-      let selectedRowsEnd = rows - 1
-      if (selectedRowsEnd > data.length - 1) {
-        selectedRowsEnd = data.length
-      }
-      setcurrentTableData(data.slice(selectedRowsStart, selectedRowsEnd + 1))
-    }
-  }, [data, paginationItems, selectedPaginationItem, showEntries])
+  // useEffect(() => {
+  //   if (sites) {
+  //     let rows = selectedPaginationItem * showEntries
+  //     let selectedRowsStart = rows - showEntries
+  //     let selectedRowsEnd = rows - 1
+  //     if (selectedRowsEnd > sites.length - 1) {
+  //       selectedRowsEnd = sites.length
+  //     }
+  //     setcurrentTableData(sites.slice(selectedRowsStart, selectedRowsEnd + 1))
+  //   }
+  // }, [sites, paginationItems, selectedPaginationItem, showEntries])
   const navigate = useNavigate()
-  const handleEditClick = data => {
-    navigate("/siteadmin/edit", { state: { data: data, canEdit: true } })
+  const handleEditClick = site => {
+    navigate("/siteadmin/edit", {
+      state: { sites: site, canEdit: true },
+    })
   }
 
-  const generateSortingIndicator = column => {
-    return column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : ""
-  }
+  // const generateSortingIndicator = column => {
+  //   return column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : ""
+  // }
 
-  const onChangeInSelect = event => {
-    setPageSize(Number(event.target.value))
-  }
+  // const onChangeInSelect = event => {
+  //   setPageSize(Number(event.target.value))
+  // }
 
   const onChangeInInput = event => {
     const page = event.target.value ? Number(event.target.value) - 1 : 0
@@ -281,7 +260,7 @@ const TableContainer = ({
   //   // if (e.target.value === "") {
   //   //   setshowEntries(25)
   //   // }
-  //   let currentList = data.filter(jobWbs => {
+  //   let currentList = sites.filter(jobWbs => {
   //     return e.target.value === ""
   //       ? true
   //       : jobWbs.projectName
@@ -346,18 +325,6 @@ const TableContainer = ({
                 </div>
               </Col>
             </Row>
-            {/* <Row> */}
-            {/* <Col>
-                <div className="text-end">
-                  <button
-                    // type="submit"
-                    className="btn btn-success save-user"
-                  >
-                    Assign
-                  </button>
-                </div>
-              </Col> */}
-            {/* </Row> */}
           </form>
         </ModalBody>
       </Modal>
@@ -408,98 +375,18 @@ const TableContainer = ({
             </button>
           </div>
         </div>
-
-        {/* <Col md={customPageSizeOptions ? 2 : 1}>
-          <select
-            className="form-select"
-            value={pageSize}
-            onChange={onChangeInSelect}
-          >
-            {[10, 20, 30, 40, 50].map(pageSize => (
-              <option key={pageSize} value={pageSize}>
-                Show {pageSize}
-              </option>
-            ))}
-          </select>
-        </Col>
-        {isGlobalFilter && (
-          <GlobalFilter
-            preGlobalFilteredRows={preGlobalFilteredRows}
-            globalFilter={state.globalFilter}
-            setGlobalFilter={setGlobalFilter}
-            isJobListGlobalFilter={isJobListGlobalFilter}
-          />
-        )} */}
-        {/* {isAddOptions && (
-          <Col sm="7">
-            <div className="text-sm-end">
-              <Button
-                type="button"
-                color="success"
-                className="btn-rounded  mb-2 me-2"
-                onClick={handleOrderClicks}
-              >
-                <i className="mdi mdi-plus me-1" />
-                Add New Order
-              </Button>
-            </div>
-          </Col>
-        )}
-        {isAddUserList && (
-          <Col sm="7">
-            <div className="text-sm-end">
-              <Button
-                type="button"
-                color="primary"
-                className="btn mb-2 me-2"
-                onClick={handleUserClick}
-              >
-                <i className="mdi mdi-plus-circle-outline me-1" />
-                Create New User
-              </Button>
-            </div>
-          </Col>
-        )}
-        {isAddCustList && (
-          <Col sm="7">
-            <div className="text-sm-end">
-              <Button
-                type="button"
-                color="success"
-                className="btn-rounded mb-2 me-2"
-                onClick={handleCustomerClick}
-              >
-                <i className="mdi mdi-plus me-1" />
-                New Customers
-              </Button>
-            </div>
-          </Col>
-        )} */}
       </Row>
 
       <div
       // className="table-responsive react-table"
       >
-        <Table
-          // bordered
-          // hover
-          // {...getTableProps()}
-          className="project-list-table table-nowrap align-middle table-borderless"
-        >
-          <thead
-          // style={{
-          //   fontSize: 16,
-          //   backgroundColor: "#003768",
-          //   color: "white",
-          //   textAlign: "center",
-          // }}
-          >
+        <Table className="project-list-table table-nowrap align-middle table-borderless">
+          <thead>
             <tr
               style={{
                 fontSize: 14,
                 backgroundColor: "#003768",
                 color: "white",
-                // textAlign: "center",
               }}
             >
               <th scope="col" style={{ width: "100px" }}>
@@ -509,6 +396,7 @@ const TableContainer = ({
               <th scope="col">Address Line 1</th>
               <th scope="col">Address Line 2</th>
               <th scope="col">City</th>
+              <th scope="col">JobWBS</th>
               <th scope="col">Company</th>
               <th scope="col">State</th>
               <th scope="col">Zip Code</th>
@@ -517,11 +405,10 @@ const TableContainer = ({
             </tr>
           </thead>
 
-          <tbody
-          // {...getTableBodyProps()}
-          >
-            {map(data, (rowdata, index) => (
+          <tbody>
+            {map(sitesList, (rowdata, index) => (
               <tr key={index}>
+                {console.log(rowdata)}
                 <td>
                   <h5 className="text-truncate font-size-14">
                     {/* <Link
@@ -529,31 +416,34 @@ const TableContainer = ({
                               className="text-dark"
                             > */}
                     {/* <img src={img} alt="" className="avatar-sm" /> */}
-                    {rowdata.siteId}
+                    {rowdata?.siteId}
                     {/* </Link> */}
                   </h5>
                 </td>
-                <td> {rowdata.building}</td>
+                <td> {rowdata?.building}</td>
                 <td>
-                  <p> {rowdata.addressLine1}</p>
+                  <p> {rowdata?.addressLine1}</p>
                 </td>
                 <td>
-                  <p> {rowdata.addressLine2}</p>
+                  <p> {rowdata?.addressLine2}</p>
                 </td>
                 <td>
-                  <p> {rowdata.city}</p>
+                  <p> {rowdata?.city}</p>
                 </td>
                 <td>
-                  <p> {rowdata.company}</p>
+                  <p> {rowdata?.jobWbs?.name}</p>
                 </td>
                 <td>
-                  <p> {rowdata.state}</p>
+                  <p> {rowdata?.company?.name}</p>
                 </td>
                 <td>
-                  <p> {rowdata.zipCode}</p>
+                  <p> {rowdata?.state}</p>
                 </td>
                 <td>
-                  <p> {rowdata.timeZone}</p>
+                  <p> {rowdata?.zipcode}</p>
+                </td>
+                <td>
+                  <p> {rowdata?.timezone}</p>
                 </td>
                 <td>
                   <UncontrolledDropdown>
@@ -569,13 +459,13 @@ const TableContainer = ({
                         <i className="mdi mdi-view-dashboard font-size-16 text-success me-1" />{" "}
                         View
                       </DropdownItem> */}
-                      <DropdownItem onClick={() => handleEditClick(rowdata)}>
+                      <DropdownItem onClick={() => handleEditClick(rowdata.id)}>
                         <i className="mdi mdi-pencil font-size-16 text-success me-1" />{" "}
                         Edit
                       </DropdownItem>
                       <DropdownItem
-                        href="#"
-                        onClick={() => onClickDelete(rowdata)}
+                        // href="#"
+                        onClick={() => onClickDelete(rowdata.id)}
                       >
                         <i className="mdi mdi-trash-can font-size-16 text-danger me-1" />{" "}
                         Delete

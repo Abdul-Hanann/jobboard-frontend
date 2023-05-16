@@ -196,6 +196,13 @@ export const getInvoiceDetail = id =>
 // }
 export const getJobList = () => get(url.GET_JOB_LIST_URL)
 // get Apply Jobs
+
+// get sites
+export const getSites = () => get(url.SITES_URL)
+
+// get site
+export const getSite = id => get(`${url.SITES_URL}/${id}`)
+
 export default () => get(url.GET_APPLY_JOB)
 
 // get project
@@ -222,6 +229,16 @@ export const deleteUser = user => del(url.DELETE_USER, { headers: { user } })
 
 // add jobs
 export const addNewJobList = job => post(url.ADD_NEW_JOB_LIST, job)
+
+// add site
+export const addNewSite = site => post(url.SITES_URL, site)
+
+// update site
+export const updateSite = (siteId, site) =>
+  put(`${url.SITES_URL}/${siteId}`, site)
+
+// delete site
+export const deleteSite = siteId => del(`${url.SITES_URL}/${siteId}`)
 
 // update jobs
 export const updateJobList = job => put(url.UPDATE_JOB_LIST, job)
