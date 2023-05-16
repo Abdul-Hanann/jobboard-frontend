@@ -38,7 +38,6 @@ import { addNewSite, updateSite, deleteSite } from "helpers/fakebackend_helper"
 function* fetchAllSitesSaga() {
   try {
     const allSites = yield call(getSites)
-    console.log("allSites:", allSites)
     yield put(fetchSitesSuccess(allSites))
   } catch (error) {
     yield put(fetchSitesFail(error))
@@ -48,7 +47,6 @@ function* fetchAllSitesSaga() {
 function* fetchAllSiteSaga({ payload: id }) {
   try {
     const Site = yield call(getSite, id)
-    console.log("Site:", Site)
     yield put(fetchSiteSuccess(Site))
   } catch (error) {
     yield put(fetchSiteFail(error))
@@ -66,8 +64,6 @@ function* onAddNewSite({ payload: data }) {
 
 function* onUpdateSite({ payload: data }) {
   try {
-    console.log("payload id:", data.data)
-    console.log("payload data:", data.id)
     const response = yield call(updateSite, data.id, data.data)
     yield put(updateSiteSuccess(response))
   } catch (error) {

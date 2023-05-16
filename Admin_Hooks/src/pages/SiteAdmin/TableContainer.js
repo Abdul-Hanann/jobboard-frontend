@@ -118,7 +118,6 @@ const TableContainer = ({
     setSitesList(sites)
   }, [sites])
 
-  console.log("site sites 2 .....:", sitesList)
   const onClickDelete = siteId => {
     dispatch(onDeleteSite(siteId))
   }
@@ -408,7 +407,7 @@ const TableContainer = ({
           <tbody>
             {map(sitesList, (rowdata, index) => (
               <tr key={index}>
-                {console.log(rowdata)}
+                {/* {console.log(rowdata)} */}
                 <td>
                   <h5 className="text-truncate font-size-14">
                     {/* <Link

@@ -120,7 +120,6 @@ const TasksCreate = () => {
 
   const { jobWbs } = useSelector(state => state.JobWbsReducer)
   const { company } = useSelector(state => state.CompanyReducer)
-  console.log("isEdit:", isEdit)
   // console.log("site List:", data)
   // console.log("jobWbs List:", jobWbs)
 
@@ -232,12 +231,10 @@ const TasksCreate = () => {
   }
   useEffect(() => {
     if (!isLoading && success) {
-      console.log("Data added successfully")
       toast.success("Data added successfully")
       navigate("/siteadmin")
     }
     if (!isLoading && error) {
-      console.log("Error occurs during adding data")
       toast.error("Error occurs during adding data")
     }
   }, [isLoading, success, error])
