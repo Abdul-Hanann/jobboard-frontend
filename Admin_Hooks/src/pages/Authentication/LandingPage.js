@@ -13,8 +13,10 @@ const CarouselPage = () => {
   const dispatch = useDispatch()
 
   const handlerFunc = () => {
-    console.log("login clicked")
-    dispatch(socialLogin())
+    console.log("login clicked");
+    let url = 'http://localhost:3000/auth/signin';
+    window.location.href = url;
+    // dispatch(socialLogin())
   }
 
   const { url } = useSelector(state => state.loginV2)

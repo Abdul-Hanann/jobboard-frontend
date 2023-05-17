@@ -99,7 +99,7 @@ const Login = props => {
     enableReinitialize: true,
 
     initialValues: {
-      role: "",
+      role: "ROLE_ADMIN",
       email: "admin@saitservices.com" || "",
       password: "123456" || "",
     },
