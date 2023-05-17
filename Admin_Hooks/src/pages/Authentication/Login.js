@@ -13,6 +13,7 @@ import {
   Input,
   FormFeedback,
   Label,
+  Button,
 } from "reactstrap"
 
 //redux
@@ -114,9 +115,9 @@ const Login = props => {
     },
   })
 
-  const { error } = useSelector(state => ({
-    error: state.Login.error,
-  }))
+  // const { error } = useSelector(state => ({
+  //   error: state.Login.error,
+  // }))
 
   const signIn = (res, type) => {
     if (type === "google" && res) {

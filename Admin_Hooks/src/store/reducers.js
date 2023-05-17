@@ -4,7 +4,8 @@ import { combineReducers } from "redux"
 import Layout from "./layout/reducer"
 
 // Authentication
-import Login from "./auth/login/reducer"
+// import Login from "./auth/login/reducer"
+import loginV2 from "./auth-v2/login/reducer"
 import Account from "./auth/register/reducer"
 import ForgetPassword from "./auth/forgetpwd/reducer"
 import Profile from "./auth/profile/reducer"
@@ -64,7 +65,8 @@ import CompanyReducer from "./company/reducer"
 const rootReducer = combineReducers({
   // public
   Layout,
-  Login,
+  // Login,
+  loginV2,
   Account,
   ForgetPassword,
   Profile,

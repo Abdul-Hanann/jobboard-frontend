@@ -94,7 +94,7 @@ const postJwtLogin = data => post(url.POST_FAKE_JWT_LOGIN, data)
 const postJwtForgetPwd = data => post(url.POST_FAKE_JWT_PASSWORD_FORGET, data)
 
 // postSocialLogin
-export const postSocialLogin = data => post(url.SOCIAL_LOGIN, data)
+export const getSocialLogin = () => get(url.SOCIAL_LOGIN)
 
 // get Products
 export const getProducts = () => get(url.GET_PRODUCTS)

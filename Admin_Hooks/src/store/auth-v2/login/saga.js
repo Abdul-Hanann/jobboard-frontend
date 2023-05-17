@@ -78,15 +78,17 @@ function* logoutUser({ payload: { history } }) {
   }
 }
 
-function* socialLogin({ payload: { data, history, type } }) {
+function* socialLogin() {
   try {
-    if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
-      const fireBaseBackend = getFirebaseBackend()
-      const response = yield call(fireBaseBackend.socialLoginUser, data, type)
-      localStorage.setItem("authUser", JSON.stringify(response))
-      yield put(loginSuccess(response))
-    } else {
-      const response = yield call(getSocialLogin, data)
+    //   if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
+    //     const fireBaseBackend = getFirebaseBackend()
+    //     const response = yield call(fireBaseBackend.socialLoginUser, data, type)
+    //     localStorage.setItem("authUser", JSON.stringify(response))
+    //     yield put(loginSuccess(response))
+    //   } else
+    {
+      const response = yield call(getSocialLogin)
+      console.log("response:", response)
       localStorage.setItem("authUser", JSON.stringify(response))
       yield put(loginSuccess(response))
     }
@@ -96,10 +98,10 @@ function* socialLogin({ payload: { data, history, type } }) {
   }
 }
 
-function* authSaga() {
+function* authSaga_v2() {
   yield takeEvery(LOGIN_USER, loginUser)
   yield takeLatest(SOCIAL_LOGIN, socialLogin)
   yield takeEvery(LOGOUT_USER, logoutUser)
 }
 
-export default authSaga
+export default authSaga_v2
