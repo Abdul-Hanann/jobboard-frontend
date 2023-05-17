@@ -26,7 +26,6 @@ const INIT_STATE = {
 const SitesReducer = (state = INIT_STATE, action) => {
   switch (action.type) {
     case FETCH_SITES:
-      console.log("FETCH_SITESSSSSSSSSSSS")
       return {
         ...state,
         isLoading: true,
@@ -34,7 +33,6 @@ const SitesReducer = (state = INIT_STATE, action) => {
         error: false,
       }
     case FETCH_SITES_SUCCESS:
-      console.log("FETCH_SITES_SUCCESS")
       return {
         ...state,
         isLoading: false,
@@ -52,7 +50,6 @@ const SitesReducer = (state = INIT_STATE, action) => {
       }
 
     case FETCH_SITE:
-      console.log("FETCH_SITE")
       return {
         ...state,
         isLoading: true,
@@ -60,7 +57,6 @@ const SitesReducer = (state = INIT_STATE, action) => {
         error: false,
       }
     case FETCH_SITE_SUCCESS:
-      console.log("FETCH_SITE_SUCCESS")
       return {
         ...state,
         isLoading: false,
@@ -78,7 +74,6 @@ const SitesReducer = (state = INIT_STATE, action) => {
       }
 
     case ADD_NEW_SITE:
-      console.log("ADD_NEW_SITE")
       return {
         ...state,
         isLoading: true,
@@ -87,7 +82,6 @@ const SitesReducer = (state = INIT_STATE, action) => {
       }
 
     case ADD_SITE_SUCCESS:
-      console.log("ADD_SITE_SUCCESS")
       return {
         ...state,
         isLoading: false,
@@ -105,7 +99,6 @@ const SitesReducer = (state = INIT_STATE, action) => {
       }
 
     case UPDATE_SITE:
-      console.log("UPDATE_SITE")
       return {
         ...state,
         isLoading: true,
@@ -114,7 +107,6 @@ const SitesReducer = (state = INIT_STATE, action) => {
       }
 
     case UPDATE_SITE_SUCCESS:
-      console.log("UPDATE_SITE_SUCCESS")
       return {
         ...state,
         isLoading: false,
