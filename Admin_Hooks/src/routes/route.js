@@ -22,18 +22,6 @@ const Authmiddleware = (props) => {
   //     <Navigate to={{ pathname: "/dashboard" }} />
   //   );
   // }
-  if (!isAuthenticated) {
-    return (
-      <Navigate to={{ pathname: "/login", state: { from: props.location } }} />
-    );
-  } else {
-    return (
-      <Navigate to={{ pathname: "/dashboard", state: { from: props.location } }} />
-    );
-  }
-
-
-
   return (<React.Fragment>
     {props.children}
   </React.Fragment>);
