@@ -12,21 +12,37 @@ import { socialLogin } from "store/actions"
 const CarouselPage = () => {
   const dispatch = useDispatch()
 
+  // const getCookies = () => {
+  //   const cookies = document.cookie.split(";")
+  //   const cookieData = {}
+
+  //   cookies.forEach(cookie => {
+  //     const [name, value] = cookie.trim().split("=")
+  //     cookieData[name] = decodeURIComponent(value)
+  //   })
+
+  //   return cookieData
+  // }
+
+  // const cookies = getCookies()
+  // console.log("cookies:", cookies)
+
   const handlerFunc = () => {
-    console.log("login clicked");
-    let url = 'http://localhost:3000/auth/signin';
-    window.location.href = url;
+    console.log("login clicked")
+    let url = "http://localhost:3000/auth/signin"
+    window.location.href = url
     // dispatch(socialLogin())
   }
+  // const url = localStorage.getItem("authUserUrl")
+  // console.log("url in login :", url)
+  // const { url } = useSelector(state => state.loginV2)
 
-  const { url } = useSelector(state => state.loginV2)
-
-  useEffect(() => {
-    if (url) {
-      console.log("url:", url)
-      window.location.href = url
-    }
-  }, [url])
+  // useEffect(() => {
+  //   if (url) {
+  //     console.log("url:", url)
+  //     window.location.href = url
+  //   }
+  // }, [url])
 
   return (
     <React.Fragment>
