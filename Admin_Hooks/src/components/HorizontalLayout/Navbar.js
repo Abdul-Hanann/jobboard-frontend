@@ -35,25 +35,6 @@ const Navbar = props => {
   const [auth, setauth] = useState(false)
   const [utility, setutility] = useState(false)
 
-  const getCookies = () => {
-    const cookies = document.cookie.split(";")
-    const cookieData = {}
-
-    cookies.forEach(cookie => {
-      const [name, value] = cookie.trim().split("=")
-      cookieData[name] = decodeURIComponent(value)
-    })
-
-    return cookieData
-  }
-
-  const cookies = getCookies()
-  useEffect(() => {
-    if (cookies && cookies.userRole) {
-      console.log("cookies:", cookies)
-      localStorage.setItem("userType", cookies.userRole)
-    }
-  }, [cookies])
 
   const userType = localStorage.getItem("userType")
   console.log("userType:", userType)
@@ -135,57 +116,57 @@ const Navbar = props => {
                   userType === userTypes.ROLE_JOB_CREATOR ||
                   userType === userTypes.ROLE_SCHEDULER ||
                   userType === userTypes.ROLE_TECHNICIAN) && (
-                  <li className="nav-item dropdown">
-                    <Link
-                      className="nav-link dropdown-toggle arrow-none"
-                      to="/dashboard"
-                    >
-                      <i className="bx bx-home-circle me-2"></i>
-                      {props.t("Dashboard")}
-                    </Link>
-                  </li>
-                )}
+                    <li className="nav-item dropdown">
+                      <Link
+                        className="nav-link dropdown-toggle arrow-none"
+                        to="/dashboard"
+                      >
+                        <i className="bx bx-home-circle me-2"></i>
+                        {props.t("Dashboard")}
+                      </Link>
+                    </li>
+                  )}
                 {(userType === userTypes.ROLE_ADMIN ||
                   userType === userTypes.ROLE_SITE_ADMIN ||
                   userType === userTypes.ROLE_SCHEDULER ||
                   userType === userTypes.ROLE_TECHNICIAN) && (
-                  <li className="nav-item dropdown">
-                    <Link
-                      to="/schedule"
-                      className="nav-link dropdown-toggle arrow-none"
-                    >
-                      <i className="bx bx-tone me-2"></i>
-                      Tech Schedule
-                    </Link>
-                  </li>
-                )}
+                    <li className="nav-item dropdown">
+                      <Link
+                        to="/schedule"
+                        className="nav-link dropdown-toggle arrow-none"
+                      >
+                        <i className="bx bx-tone me-2"></i>
+                        Tech Schedule
+                      </Link>
+                    </li>
+                  )}
                 {(userType === userTypes.ROLE_ADMIN ||
                   userType === userTypes.ROLE_SITE_ADMIN ||
                   userType === userTypes.ROLE_JOB_CREATOR ||
                   userType === userTypes.ROLE_SCHEDULER ||
                   userType === userTypes.ROLE_TECHNICIAN) && (
-                  <li className="nav-item dropdown">
-                    <Link
-                      to="/job-list"
-                      className="nav-link dropdown-togglez arrow-none"
-                    >
-                      <i className="bx bx-customize me-2"></i>
-                      Job List
-                    </Link>
-                  </li>
-                )}
+                    <li className="nav-item dropdown">
+                      <Link
+                        to="/job-list"
+                        className="nav-link dropdown-togglez arrow-none"
+                      >
+                        <i className="bx bx-customize me-2"></i>
+                        Job List
+                      </Link>
+                    </li>
+                  )}
                 {(userType === userTypes.ROLE_ADMIN ||
                   userType === userTypes.ROLE_SITE_ADMIN) && (
-                  <li className="nav-item dropdown">
-                    <Link
-                      to="/siteadmin"
-                      className="nav-link dropdown-toggle arrow-none"
-                    >
-                      <i className="bx bx-collection me-2"></i>
-                      Site Admin
-                    </Link>
-                  </li>
-                )}
+                    <li className="nav-item dropdown">
+                      <Link
+                        to="/siteadmin"
+                        className="nav-link dropdown-toggle arrow-none"
+                      >
+                        <i className="bx bx-collection me-2"></i>
+                        Site Admin
+                      </Link>
+                    </li>
+                  )}
                 {userType === userTypes.ROLE_ADMIN && (
                   <li className="nav-item dropdown">
                     <Link

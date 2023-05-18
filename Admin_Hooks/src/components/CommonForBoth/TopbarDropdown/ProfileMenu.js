@@ -36,6 +36,7 @@ const ProfileMenu = props => {
     console.log("logout clicked")
     localStorage.removeItem("authUser")
     localStorage.removeItem("userType")
+    localStorage.removeItem("isAuthenticated")
     console.log("loging out")
     window.open(GET_LOGOUT, "_blank")
     // window.location.href = GET_LOGOUT

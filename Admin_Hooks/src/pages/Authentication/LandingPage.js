@@ -29,13 +29,15 @@ const CarouselPage = () => {
     <React.Fragment>
       <Col
         className="heroCol"
-        xl={9}
+        xl={12}
         style={{
           backgroundColor: "#e0ecf0",
           display: "flex",
+            overflow:"hidden",
         }}
       >
-        {/* <div className="auth-full-bg pt-lg-5 p-4"> */}
+        {/* <div className="auth
+        -full-bg pt-lg-5 p-4"> */}
         {/* <div className="pt-lg-5" style={{ marginBottom: 100 }}>
           <div className="w-100"></div>
         </div> */}
@@ -130,7 +132,7 @@ const CarouselPage = () => {
               // height={242}
               style={{
                 width: "1300px",
-                height: "850px",
+                height: "820px",
                 marginTop: 5.39,
               }}
             ></img>

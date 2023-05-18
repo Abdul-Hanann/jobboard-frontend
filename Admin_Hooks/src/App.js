@@ -1,5 +1,5 @@
 import PropTypes from "prop-types"
-import React from "react"
+import React, { useEffect } from "react"
 import { useSelector } from "react-redux"
 import { Routes, Route } from "react-router-dom"
 import { layoutTypes } from "./constants/layout"
@@ -65,7 +65,36 @@ fakeBackend()
 // };
 
 const App = () => {
+  const getCookies = () => {
+    const cookies = document.cookie.split(";")
+    const cookieData = {}
+
+    cookies.forEach(cookie => {
+      const [name, value] = cookie.trim().split("=")
+      cookieData[name] = decodeURIComponent(value)
+    })
+
+    return cookieData
+  }
+
+  const cookies = getCookies()
+  useEffect(() => {
+    if (cookies && cookies.userRole) {
+      console.log("cookies:", cookies)
+      localStorage.setItem("userType", cookies.userRole)
+    }
+    if (cookies && cookies.isAuthenticated) {
+      localStorage.setItem("isAuthenticated", cookies.isAuthenticated)
+    }
+  }, [cookies])
+
+  const isAuthenticated = localStorage.getItem("isAuthenticated")
+  console.log("isAuthenticated App:", isAuthenticated)
+
+
+
   const userType = localStorage.getItem("userType")
+  console.log("userType App:", userType)
 
   const Layout = HorizontalLayout
 
@@ -84,9 +113,9 @@ const App = () => {
           <Route
             path={route.path}
             element={
-              // <Authmiddleware>
-              <Layout>{route.component}</Layout>
-              // </Authmiddleware>
+              <Authmiddleware>
+                <Layout>{route.component}</Layout>
+              </Authmiddleware>
             }
             key={idx}
             exact={true}
