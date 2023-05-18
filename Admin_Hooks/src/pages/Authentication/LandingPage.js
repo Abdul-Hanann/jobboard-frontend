@@ -2,18 +2,12 @@ import React, { useEffect } from "react"
 import { Carousel } from "react-responsive-carousel"
 import "react-responsive-carousel/lib/styles/carousel.min.css"
 import { Col, Row, Button } from "reactstrap"
-// redux
-import { useSelector, useDispatch } from "react-redux"
 
 // import saitlogo from "assets/images/SA-IT-Services-Hero-Image.webp"
 
 import saitlogo from "assets/images/SA-IT-Services-Hero-Image-removebg-preview.png"
 import { socialLogin } from "store/actions"
 const CarouselPage = () => {
-  const dispatch = useDispatch()
-
-  // console.log("cookies:", cookies)
-
   const handlerFunc = () => {
     console.log("login clicked")
     let url = "http://localhost:3000/auth/signin"

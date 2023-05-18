@@ -10,6 +10,7 @@ import {
   postFakeLogin,
   postJwtLogin,
   getSocialLogin,
+  getLogout,
 } from "../../../helpers/fakebackend_helper"
 
 const fireBaseBackend = getFirebaseBackend()
@@ -67,11 +68,13 @@ function* loginUser({ payload: { user, history } }) {
 function* logoutUser({ payload: { history } }) {
   try {
     localStorage.removeItem("authUser")
+    localStorage.removeItem("userType")
 
-    if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
-      const response = yield call(fireBaseBackend.logout)
-      yield put(logoutUserSuccess(response))
-    }
+    // if (process.env.REACT_APP_DEFAULTAUTH === "firebase")
+    // {
+    const response = yield call(getLogout)
+    yield put(logoutUserSuccess(response))
+    // }
     history("/login")
   } catch (error) {
     yield put(apiError(error))

@@ -96,6 +96,9 @@ const postJwtForgetPwd = data => post(url.POST_FAKE_JWT_PASSWORD_FORGET, data)
 // postSocialLogin
 export const getSocialLogin = () => get(url.SOCIAL_LOGIN)
 
+// postSocialLogin
+export const getLogout = () => get(url.GET_LOGOUT, history)
+
 // get Products
 export const getProducts = () => get(url.GET_PRODUCTS)
 

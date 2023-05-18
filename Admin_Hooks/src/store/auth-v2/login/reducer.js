@@ -9,6 +9,7 @@ import {
 const initialState = {
   url: "",
   error: "",
+  isUserLogout: false,
   loading: false,
 }
 
