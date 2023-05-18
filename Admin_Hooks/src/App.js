@@ -31,6 +31,8 @@ import "./assets/scss/theme.scss"
 // import { initFirebaseBackend } from "./helpers/firebase_helper";
 
 import fakeBackend from "./helpers/AuthType/fakeBackend"
+import Dashboard from "pages/Dashboard"
+import Login from "pages/Authentication/Login"
 
 // Activating fake backend
 fakeBackend()
@@ -78,15 +80,19 @@ const App = () => {
   }
 
   const cookies = getCookies()
-  useEffect(() => {
-    if (cookies && cookies.userRole) {
-      console.log("cookies:", cookies)
-      localStorage.setItem("userType", cookies.userRole)
-    }
-    if (cookies && cookies.isAuthenticated) {
-      localStorage.setItem("isAuthenticated", cookies.isAuthenticated)
-    }
-  }, [cookies])
+
+  localStorage.setItem("userType", cookies.userRole)
+
+  localStorage.setItem("isAuthenticated", cookies.isAuthenticated)
+  // useEffect(() => {
+  //   if (cookies && cookies.userRole) {
+  //     console.log("cookies:", cookies)
+  //     localStorage.setItem("userType", cookies.userRole)
+  //   }
+  //   if (cookies && cookies.isAuthenticated) {
+  //     localStorage.setItem("isAuthenticated", cookies.isAuthenticated)
+  //   }
+  // }, [cookies])
 
   const isAuthenticated = localStorage.getItem("isAuthenticated")
   console.log("isAuthenticated App:", isAuthenticated)
@@ -100,27 +106,56 @@ const App = () => {
 
   return (
     <React.Fragment>
+      {console.log("authProtectedRoutes")}
+
+
+
       <Routes>
-        {publicRoutes.map((route, idx) => (
-          <Route
-            path={route.path}
-            element={<NonAuthLayout>{route.component}</NonAuthLayout>}
-            key={idx}
-            exact={true}
-          />
-        ))}
-        {authProtectedRoutes.map((route, idx) => (
-          <Route
-            path={route.path}
-            element={
-              <Authmiddleware>
-                <Layout>{route.component}</Layout>
-              </Authmiddleware>
-            }
-            key={idx}
-            exact={true}
-          />
-        ))}
+
+        {
+          isAuthenticated === undefined ? (
+            <>
+              <Route path="/*" element={<Authmiddleware />} />
+
+              {publicRoutes.map((route, idx) => (
+                <Route
+                  path={route.path}
+                  element={<NonAuthLayout>{route.component}</NonAuthLayout>}
+                  key={idx}
+                  exact={true}
+                />
+              ))}
+            </>
+
+          ) : (
+            <Route path="/*" element={<Dashboard />} />
+
+          )
+        }
+
+
+        {
+          isAuthenticated ? (
+            <>
+              {authProtectedRoutes.map((route, idx) => (
+                < Route
+                  path={route.path}
+                  element={
+                    < Authmiddleware >
+                      <Layout>{route.component}</Layout>
+                    </Authmiddleware>
+                  }
+                  key={idx}
+                  exact={true}
+                />
+              ))}
+            </>
+
+          ) : (
+            <Route path="/*" element={<Login />} />
+
+          )
+        }
 
         {userType === userTypeLabels.ROLE_ADMIN &&
           adminRoutes.map((route, idx) => (
@@ -189,7 +224,7 @@ const App = () => {
             />
           ))}
       </Routes>
-    </React.Fragment>
+    </React.Fragment >
   )
 }
 
