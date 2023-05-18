@@ -12,26 +12,6 @@ import { socialLogin } from "store/actions"
 const CarouselPage = () => {
   const dispatch = useDispatch()
 
-  const getCookies = () => {
-    const cookies = document.cookie.split(";")
-    const cookieData = {}
-
-    cookies.forEach(cookie => {
-      const [name, value] = cookie.trim().split("=")
-      cookieData[name] = decodeURIComponent(value)
-    })
-
-    return cookieData
-  }
-
-  const cookies = getCookies()
-  useEffect(() => {
-    if (cookies) {
-      console.log("cookies:", cookies)
-      localStorage.setItem("userType", cookies.userRole)
-      console.log("userType:", localStorage.getItem("userType"))
-    }
-  }, [cookies])
   // console.log("cookies:", cookies)
 
   const handlerFunc = () => {
