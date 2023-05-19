@@ -93,7 +93,7 @@ const App = () => {
           />
         ))}
 
-        {userType === userTypeLabels.ROLE_ADMIN &&
+        {/* {userType === userTypeLabels.ROLE_ADMIN &&
           adminRoutes.map((route, idx) => (
             <Route
               path={route.path}
@@ -105,9 +105,9 @@ const App = () => {
               key={idx}
               exact={true}
             />
-          ))}
+          ))} */}
 
-        {userType === userTypeLabels.ROLE_SITE_ADMIN &&
+        {/* {userType === userTypeLabels.ROLE_SITE_ADMIN &&
           siteAdminRoutes.map((route, idx) => (
             <Route
               path={route.path}
@@ -119,8 +119,8 @@ const App = () => {
               key={idx}
               exact={true}
             />
-          ))}
-        {userType === userTypeLabels.ROLE_JOB_CREATOR &&
+          ))} */}
+        {/* {userType === userTypeLabels.ROLE_JOB_CREATOR &&
           jobCreatorRoutes.map((route, idx) => (
             <Route
               path={route.path}
@@ -132,8 +132,8 @@ const App = () => {
               key={idx}
               exact={true}
             />
-          ))}
-        {userType === userTypeLabels.ROLE_TECHNICIAN &&
+          ))} */}
+        {/* {userType === userTypeLabels.ROLE_TECHNICIAN &&
           technicianRoutes.map((route, idx) => (
             <Route
               path={route.path}
@@ -145,8 +145,8 @@ const App = () => {
               key={idx}
               exact={true}
             />
-          ))}
-        {userType === userTypeLabels.ROLE_SCHEDULER &&
+          ))} */}
+        {/* {userType === userTypeLabels.ROLE_SCHEDULER &&
           schedulerRoutes.map((route, idx) => (
             <Route
               path={route.path}
@@ -158,7 +158,7 @@ const App = () => {
               key={idx}
               exact={true}
             />
-          ))}
+          ))} */}
       </Routes>
     </React.Fragment>
   )
