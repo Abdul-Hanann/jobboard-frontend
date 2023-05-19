@@ -191,12 +191,6 @@ export const getInvoices = () => get(url.GET_INVOICES)
 export const getInvoiceDetail = id =>
   get(`${url.GET_INVOICE_DETAIL}/${id}`, { params: { id } })
 
-// get jobs
-// export const getJobList = () => get("http://localhost:8080/jobs");
-// export const getJobList = () => {
-//   console.log("url.GET_JOB_LIST", url.GET_JOB_LIST_URL)
-//   return getDep(url.GET_JOB_LIST_URL)
-// }
 export const getJobList = () => get(url.GET_JOB_LIST_URL)
 // get Apply Jobs
 

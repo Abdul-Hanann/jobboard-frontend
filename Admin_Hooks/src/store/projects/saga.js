@@ -33,7 +33,6 @@ import {
 function* fetchProjects() {
   try {
     const response = yield call(getProjects)
-    console.log("response:", response)
     yield put(getProjectsSuccess(response))
   } catch (error) {
     yield put(getProjectsFail(error))

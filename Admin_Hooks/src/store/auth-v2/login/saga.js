@@ -42,7 +42,6 @@ function* loginUser({ payload: { user, history } }) {
       localStorage.setItem("authUser", JSON.stringify(response))
       // yield put(loginSuccess(response))
     }
-    console.log("Role:", user.role)
     localStorage.setItem("userType", user.role)
     history("/dashboard")
   } catch (error) {
@@ -91,7 +90,6 @@ function* socialLogin() {
     //   } else
     {
       const response = yield call(getSocialLogin)
-      console.log("response:", response)
       localStorage.setItem("authUser", JSON.stringify(response))
       // localStorage.setItem("authUserUrl", response)
       yield put(loginSuccess(response))

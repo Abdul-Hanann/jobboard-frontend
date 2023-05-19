@@ -45,7 +45,6 @@ import { GET_JOB_LIST_URL } from "helpers/url_helper"
 function* fetchJobsList() {
   try {
     const allJobs = yield call(getJobList)
-    console.log("allJobs", allJobs)
     yield put(getJobListSuccess(allJobs))
   } catch (error) {
     yield put(getJobListFail(error))

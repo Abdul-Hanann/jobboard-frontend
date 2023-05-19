@@ -122,7 +122,6 @@ const ProjectsList = () => {
   const { projects } = useSelector(state => ({
     projects: state.projects.projects,
   }))
-  console.log("project 1:", projects)
   const [modal, setModal] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
   const [projectList, setProjectList] = useState([])
@@ -175,13 +174,11 @@ const ProjectsList = () => {
   }, [dispatch])
 
   useEffect(() => {
-    console.log("projects:", projects)
     setProjectList(projects)
   }, [projects])
 
   useEffect(() => {
     if (!isEmpty(projects)) {
-      console.log("projects:2", projects)
       setProjectList(projects)
     }
   }, [projects])

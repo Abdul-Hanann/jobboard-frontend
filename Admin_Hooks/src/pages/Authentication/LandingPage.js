@@ -14,16 +14,6 @@ const CarouselPage = () => {
     window.location.href = url
     // dispatch(socialLogin())
   }
-  // const url = localStorage.getItem("authUserUrl")
-  // console.log("url in login :", url)
-  // const { url } = useSelector(state => state.loginV2)
-
-  // useEffect(() => {
-  //   if (url) {
-  //     console.log("url:", url)
-  //     window.location.href = url
-  //   }
-  // }, [url])
 
   return (
     <React.Fragment>
@@ -33,14 +23,9 @@ const CarouselPage = () => {
         style={{
           backgroundColor: "#e0ecf0",
           display: "flex",
-            overflow:"hidden",
+          overflow: "hidden",
         }}
       >
-        {/* <div className="auth
-        -full-bg pt-lg-5 p-4"> */}
-        {/* <div className="pt-lg-5" style={{ marginBottom: 100 }}>
-          <div className="w-100"></div>
-        </div> */}
         <Row
           className="landing-page-row-1 mt-5 pt-5 mr-5"
           style={{ overflow: "hidden" }}
@@ -104,19 +89,6 @@ const CarouselPage = () => {
                 Sign in with Microsoft
               </button>
             </div>
-            {/* <Button
-                // onClick={loginFunc}
-                style={{
-                  className:
-                    "mdi mdi-microsoft social-list-item bg-success text-white border-success",
-                  backgroundColor: "transparent",
-                  color: "black",
-                }}
-              >
-         socialLogin       <i className="mdi mdi-microsoft social-list-item bg-success text-white" />
-                Sign in with Microsoft
-              </Button> */}
-            {/* </div> */}
           </Col>
 
           <Col md={1} lg={1} xs={0} className="mid-col">

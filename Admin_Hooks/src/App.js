@@ -51,10 +51,8 @@ const App = () => {
   // localStorage.setItem("isAuthenticated", true)
 
   let isAuthenticated = localStorage.getItem("isAuthenticated")
-  console.log("isAuthenticated App:", isAuthenticated)
 
   const userRole = localStorage.getItem("userRole")
-  console.log("userRole App:", userRole)
 
   const Layout = HorizontalLayout
 
@@ -69,20 +67,6 @@ const App = () => {
           userRole === userTypes.ROLE_SCHEDULER ||
           userRole === userTypes.ROLE_TECHNICIAN) ? (
           <>
-            {console.log("in isAuthenticated ")}
-            {/* {authProtectedRoutes.map((route, idx) => (
-              <Route
-                path={route.path}
-                element={
-                  // <Authmiddleware>
-                  <Layout>{route.component}</Layout>
-                  // </Authmiddleware>
-                }
-                key={idx}
-                exact={true}
-              />
-            ))} */}
-
             {userRole === userTypes.ROLE_ADMIN &&
               adminRoutes.map((route, idx) => (
                 <Route
@@ -152,7 +136,6 @@ const App = () => {
           </>
         ) : (
           <>
-            {console.log("in else isAuthenticated")}
             {publicRoutes.map((route, idx) => (
               <Route
                 path={route.path}

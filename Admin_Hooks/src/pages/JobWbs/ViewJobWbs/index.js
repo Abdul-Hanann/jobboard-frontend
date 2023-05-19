@@ -17,11 +17,6 @@ const JobDetails = () => {
     }
   }, [state])
 
-  //   const { jobList } = location.state ? location.state.jobList : {}
-  //   const jobList = props.location.state.jobList ? props.location.state.jobList : {}
-
-  console.log("jobList:", jobWbs)
-
   return (
     <React.Fragment>
       <div className="page-content">

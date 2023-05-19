@@ -84,12 +84,6 @@ const TasksCreate = () => {
   const { site, isLoading, success, error } = useSelector(
     state => state.SitesReducer
   )
-
-  // console.log("sites:", site)
-  // console.log("isLoading:", isLoading)
-  // console.log("success:", success)
-  // console.log("error:", error)
-
   useEffect(() => {
     dispatch(fetchJobWbs())
     dispatch(fetchCompany())
@@ -120,8 +114,6 @@ const TasksCreate = () => {
 
   const { jobWbs } = useSelector(state => state.JobWbsReducer)
   const { company } = useSelector(state => state.CompanyReducer)
-  // console.log("site List:", data)
-  // console.log("jobWbs List:", jobWbs)
 
   document.title = isEdit
     ? "Edit Site Admin | SAIT Job Board"

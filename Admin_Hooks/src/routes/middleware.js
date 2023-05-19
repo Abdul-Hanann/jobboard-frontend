@@ -11,10 +11,8 @@ import { userTypes } from "pages/Authentication/userTypes"
 
 export const Middleware: FC = () => {
   const isAuthenticated = localStorage.getItem("isAuthenticated")
-  console.log("isAuthenticated:", isAuthenticated)
 
   const userRole = localStorage.getItem("userRole")
-  console.log("userRole:", userRole)
 
   if (
     isAuthenticated === "true" &&

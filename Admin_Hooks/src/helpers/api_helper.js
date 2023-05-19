@@ -24,15 +24,6 @@ export async function get(url, config = {}) {
 export async function getDep(url, config = {}) {
   console.log(url)
   axios.get("http://localhost:8080/jobs").then(response => response.data)
-  // console.log(response.data);
-  // console.log(response.status);
-  // console.log(response.statusText);
-  // console.log(response.headers);
-  // console.log(response.config);
-  // });
-  // return await axiosApi
-  //   .get(url, { ...config })
-  //   .then((response) => console.log("data:",(response.data)));
 }
 
 export async function post(url, data, config = {}) {

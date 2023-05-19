@@ -49,21 +49,6 @@ function* loginUser({ payload: { user, history } }) {
   }
 }
 
-// function* logoutUser({ payload: { history } }) {
-//   try {
-//     localStorage.removeItem("authUser");
-
-//     if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
-//       const response = yield call(fireBaseBackend.logout);
-//       yield put(logoutUserSuccess(response));
-//     }
-//     console.log("history",history)
-//     history("/login");
-//   } catch (error) {
-//     yield put(apiError(error));
-//   }
-// }
-
 function* logoutUser({ payload: { history } }) {
   try {
     localStorage.removeItem("authUser")

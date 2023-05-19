@@ -36,7 +36,6 @@ const Navbar = props => {
   const [utility, setutility] = useState(false)
 
   const userRole = localStorage.getItem("userRole")
-  console.log("userRole:", userRole)
 
   useEffect(() => {
     var matchingMenuItem = null
@@ -167,7 +166,6 @@ const Navbar = props => {
                   </li>
                 )}
                 {userRole === userTypes.ROLE_ADMIN && (
-
                   <li className="nav-item dropdown">
                     <Link
                       className="nav-link dropdown-toggle arrow-none"

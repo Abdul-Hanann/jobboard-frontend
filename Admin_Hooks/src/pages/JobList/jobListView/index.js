@@ -149,24 +149,7 @@ const JobsList = () => {
     },
   })
 
-  // const { projects } = useSelector(state => ({
-  //   projects: state.projects.projects,
-  // }))
-
-  // const { jobsList } = useSelector(state => ({
-  //   jobsList: state.JobReducer.jobsList,
-  // }))
-  // const { jobsList } = useSelector(state => {
-  //   const jobsList = state.JobReducer?.jobsList
-  //   if (!jobsList) {
-  //     console.error("Error: jobsList is undefined")
-  //   }
-  //   return { jobsList }
-  // })
-
-  console.log("jobs List:", jobsList)
   const [dataField, setDataField] = useState(jobsList)
-  console.log("dataField:", dataField)
   const [searchInput, setSearchInput] = useState("")
   const [filterOption, setFilterOption] = useState("")
   const [modal, setModal] = useState(false)
@@ -275,7 +258,6 @@ const JobsList = () => {
     return date1
   }
   const handleSearch = (searchInput, filterOption) => {
-    // console.log("filtered data:", filterOption)
     const filteredData = dataField.filter(rowdata => {
       if (filterOption === "JobName") {
         return rowdata.JobName.toLowerCase().includes(searchInput.toLowerCase())
@@ -534,79 +516,72 @@ const JobsList = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {map(
-                      jobsList,
-                      (jobList, index) => (
-                        console.log("jobList data: ", jobList),
-                        (
-                          <tr key={index}>
-                            {/* console.log("job List data: ",jobList) */}
-                            <td>
-                              {/* {jobList.id} */}
-                              <img src={img} alt="" className="avatar-sm" />
-                              {/* <img src={img} alt="" className="avatar-sm" /> */}
-                            </td>
-                            <td>
-                              <h5 className="text-truncate font-size-14">
-                                {/* <Link
+                    {map(jobsList, (jobList, index) => (
+                      <tr key={index}>
+                        <td>
+                          {/* {jobList.id} */}
+                          <img src={img} alt="" className="avatar-sm" />
+                          {/* <img src={img} alt="" className="avatar-sm" /> */}
+                        </td>
+                        <td>
+                          <h5 className="text-truncate font-size-14">
+                            {/* <Link
                               to={`/projects-overview/${project.id}`}
                               className="text-dark"
                             > */}
-                                {/* <img src={img} alt="" className="avatar-sm" /> */}
-                                {jobList.JobName}
-                                {/* </Link> */}
-                              </h5>
-                              {/* <p className="text-muted mb-0">
+                            {/* <img src={img} alt="" className="avatar-sm" /> */}
+                            {jobList.JobName}
+                            {/* </Link> */}
+                          </h5>
+                          {/* <p className="text-muted mb-0">
                             {project.description}
                           </p> */}
-                            </td>
-                            <td> {handleValidDate(jobList.jobDate)}</td>
-                            <td>
-                              <p> {jobList.JobNoOfDays}</p>
-                            </td>
-                            {/* <td>
+                        </td>
+                        <td> {handleValidDate(jobList.jobDate)}</td>
+                        <td>
+                          <p> {jobList.JobNoOfDays}</p>
+                        </td>
+                        {/* <td>
                           <p> {jobList.JobNotes}</p>
                         </td> */}
-                            <td>
-                              <p> {jobList.JobSiteId}</p>
-                            </td>
-                            <td>
-                              <UncontrolledDropdown>
-                                <DropdownToggle
-                                  // href="#"
-                                  className="card-drop"
-                                  tag="a"
-                                >
-                                  <i className="mdi mdi-dots-horizontal font-size-18" />
-                                </DropdownToggle>
-                                <DropdownMenu className="dropdown-menu-end">
-                                  <DropdownItem
-                                    onClick={() => handleViewClick(jobList)}
-                                  >
-                                    <i className="mdi mdi-view-dashboard font-size-16 text-success me-1" />{" "}
-                                    View
-                                  </DropdownItem>
-                                  <DropdownItem
-                                    href="#"
-                                    onClick={() => handleEditClick(jobList)}
-                                  >
-                                    <i className="mdi mdi-pencil font-size-16 text-success me-1" />{" "}
-                                    Edit
-                                  </DropdownItem>
-                                  <DropdownItem
-                                    href="#"
-                                    onClick={() => onClickDelete(jobList)}
-                                  >
-                                    <i className="mdi mdi-trash-can font-size-16 text-danger me-1" />{" "}
-                                    Delete
-                                  </DropdownItem>
-                                </DropdownMenu>
-                              </UncontrolledDropdown>
-                            </td>
-                          </tr>
-                        )
-                      )
-                    ).reverse()}
+                        <td>
+                          <p> {jobList.JobSiteId}</p>
+                        </td>
+                        <td>
+                          <UncontrolledDropdown>
+                            <DropdownToggle
+                              // href="#"
+                              className="card-drop"
+                              tag="a"
+                            >
+                              <i className="mdi mdi-dots-horizontal font-size-18" />
+                            </DropdownToggle>
+                            <DropdownMenu className="dropdown-menu-end">
+                              <DropdownItem
+                                onClick={() => handleViewClick(jobList)}
+                              >
+                                <i className="mdi mdi-view-dashboard font-size-16 text-success me-1" />{" "}
+                                View
+                              </DropdownItem>
+                              <DropdownItem
+                                href="#"
+                                onClick={() => handleEditClick(jobList)}
+                              >
+                                <i className="mdi mdi-pencil font-size-16 text-success me-1" />{" "}
+                                Edit
+                              </DropdownItem>
+                              <DropdownItem
+                                href="#"
+                                onClick={() => onClickDelete(jobList)}
+                              >
+                                <i className="mdi mdi-trash-can font-size-16 text-danger me-1" />{" "}
+                                Delete
+                              </DropdownItem>
+                            </DropdownMenu>
+                          </UncontrolledDropdown>
+                        </td>
+                      </tr>
+                    )).reverse()}
                   </tbody>
                 </Table>
                 {/* <Modal isOpen={modal} toggle={toggle}>
