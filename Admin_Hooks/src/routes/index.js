@@ -392,6 +392,11 @@ const publicRoutes = [
     path: "/auth-two-step-verification-2",
     component: <TwostepVerification2 />,
   },
+  {
+    path: "/",
+    exact: true,
+    component: <Navigate to="/login" />,
+  },
 ]
 
 export {
