@@ -35,9 +35,8 @@ const Navbar = props => {
   const [auth, setauth] = useState(false)
   const [utility, setutility] = useState(false)
 
-
-  const userType = localStorage.getItem("userType")
-  console.log("userType:", userType)
+  const userRole = localStorage.getItem("userRole")
+  console.log("userRole:", userRole)
 
   useEffect(() => {
     var matchingMenuItem = null
@@ -111,63 +110,64 @@ const Navbar = props => {
               id="topnav-menu-content"
             >
               <ul className="navbar-nav">
-                {(userType === userTypes.ROLE_ADMIN ||
-                  userType === userTypes.ROLE_SITE_ADMIN ||
-                  userType === userTypes.ROLE_JOB_CREATOR ||
-                  userType === userTypes.ROLE_SCHEDULER ||
-                  userType === userTypes.ROLE_TECHNICIAN) && (
-                    <li className="nav-item dropdown">
-                      <Link
-                        className="nav-link dropdown-toggle arrow-none"
-                        to="/dashboard"
-                      >
-                        <i className="bx bx-home-circle me-2"></i>
-                        {props.t("Dashboard")}
-                      </Link>
-                    </li>
-                  )}
-                {(userType === userTypes.ROLE_ADMIN ||
-                  userType === userTypes.ROLE_SITE_ADMIN ||
-                  userType === userTypes.ROLE_SCHEDULER ||
-                  userType === userTypes.ROLE_TECHNICIAN) && (
-                    <li className="nav-item dropdown">
-                      <Link
-                        to="/schedule"
-                        className="nav-link dropdown-toggle arrow-none"
-                      >
-                        <i className="bx bx-tone me-2"></i>
-                        Tech Schedule
-                      </Link>
-                    </li>
-                  )}
-                {(userType === userTypes.ROLE_ADMIN ||
-                  userType === userTypes.ROLE_SITE_ADMIN ||
-                  userType === userTypes.ROLE_JOB_CREATOR ||
-                  userType === userTypes.ROLE_SCHEDULER ||
-                  userType === userTypes.ROLE_TECHNICIAN) && (
-                    <li className="nav-item dropdown">
-                      <Link
-                        to="/job-list"
-                        className="nav-link dropdown-togglez arrow-none"
-                      >
-                        <i className="bx bx-customize me-2"></i>
-                        Job List
-                      </Link>
-                    </li>
-                  )}
-                {(userType === userTypes.ROLE_ADMIN ||
-                  userType === userTypes.ROLE_SITE_ADMIN) && (
-                    <li className="nav-item dropdown">
-                      <Link
-                        to="/siteadmin"
-                        className="nav-link dropdown-toggle arrow-none"
-                      >
-                        <i className="bx bx-collection me-2"></i>
-                        Site Admin
-                      </Link>
-                    </li>
-                  )}
-                {userType === userTypes.ROLE_ADMIN && (
+                {(userRole === userTypes.ROLE_ADMIN ||
+                  userRole === userTypes.ROLE_SITE_ADMIN ||
+                  userRole === userTypes.ROLE_JOB_CREATOR ||
+                  userRole === userTypes.ROLE_SCHEDULER ||
+                  userRole === userTypes.ROLE_TECHNICIAN) && (
+                  <li className="nav-item dropdown">
+                    <Link
+                      className="nav-link dropdown-toggle arrow-none"
+                      to="/dashboard"
+                    >
+                      <i className="bx bx-home-circle me-2"></i>
+                      {props.t("Dashboard")}
+                    </Link>
+                  </li>
+                )}
+                {(userRole === userTypes.ROLE_ADMIN ||
+                  userRole === userTypes.ROLE_SITE_ADMIN ||
+                  userRole === userTypes.ROLE_SCHEDULER ||
+                  userRole === userTypes.ROLE_TECHNICIAN) && (
+                  <li className="nav-item dropdown">
+                    <Link
+                      to="/schedule"
+                      className="nav-link dropdown-toggle arrow-none"
+                    >
+                      <i className="bx bx-tone me-2"></i>
+                      Tech Schedule
+                    </Link>
+                  </li>
+                )}
+                {(userRole === userTypes.ROLE_ADMIN ||
+                  userRole === userTypes.ROLE_SITE_ADMIN ||
+                  userRole === userTypes.ROLE_JOB_CREATOR ||
+                  userRole === userTypes.ROLE_SCHEDULER ||
+                  userRole === userTypes.ROLE_TECHNICIAN) && (
+                  <li className="nav-item dropdown">
+                    <Link
+                      to="/job-list"
+                      className="nav-link dropdown-togglez arrow-none"
+                    >
+                      <i className="bx bx-customize me-2"></i>
+                      Job List
+                    </Link>
+                  </li>
+                )}
+                {(userRole === userTypes.ROLE_ADMIN ||
+                  userRole === userTypes.ROLE_SITE_ADMIN) && (
+                  <li className="nav-item dropdown">
+                    <Link
+                      to="/siteadmin"
+                      className="nav-link dropdown-toggle arrow-none"
+                    >
+                      <i className="bx bx-collection me-2"></i>
+                      Site Admin
+                    </Link>
+                  </li>
+                )}
+                {userRole === userTypes.ROLE_ADMIN && (
+
                   <li className="nav-item dropdown">
                     <Link
                       className="nav-link dropdown-toggle arrow-none"
