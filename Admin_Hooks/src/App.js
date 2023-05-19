@@ -1,5 +1,6 @@
 import PropTypes from "prop-types"
-import React from "react"
+import React, { useEffect } from "react"
+import { useSelector } from "react-redux"
 import { Routes, Route } from "react-router-dom"
 import Login from "pages/Authentication/Login"
 import { userTypes } from "pages/Authentication/userTypes"

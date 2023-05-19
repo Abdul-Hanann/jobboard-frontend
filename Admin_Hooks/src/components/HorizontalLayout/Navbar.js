@@ -35,26 +35,6 @@ const Navbar = props => {
   const [auth, setauth] = useState(false)
   const [utility, setutility] = useState(false)
 
-  // const getCookies = () => {
-  //   const cookies = document.cookie.split(";")
-  //   const cookieData = {}
-
-  //   cookies.forEach(cookie => {
-  //     const [name, value] = cookie.trim().split("=")
-  //     cookieData[name] = decodeURIComponent(value)
-  //   })
-
-  //   return cookieData
-  // }
-
-  // const cookies = getCookies()
-  // useEffect(() => {
-  //   if (cookies && cookies.userRole) {
-  //     console.log("cookies:", cookies)
-  //     localStorage.setItem("userType", cookies.userRole)
-  //   }
-  // }, [cookies])
-
   const userRole = localStorage.getItem("userRole")
   console.log("userRole:", userRole)
 
@@ -187,6 +167,7 @@ const Navbar = props => {
                   </li>
                 )}
                 {userRole === userTypes.ROLE_ADMIN && (
+
                   <li className="nav-item dropdown">
                     <Link
                       className="nav-link dropdown-toggle arrow-none"

@@ -21,6 +21,7 @@ const INIT_STATE = {
   site: [],
   error: {},
   success: false,
+  success_delete: false,
   isLoading: false,
 }
 const SitesReducer = (state = INIT_STATE, action) => {
@@ -30,6 +31,7 @@ const SitesReducer = (state = INIT_STATE, action) => {
         ...state,
         isLoading: true,
         success: false,
+        success_delete: false,
         error: false,
       }
     case FETCH_SITES_SUCCESS:
@@ -37,6 +39,7 @@ const SitesReducer = (state = INIT_STATE, action) => {
         ...state,
         isLoading: false,
         // success: true,
+        success_delete: false,
         error: false,
         sites: action.payload,
       }
@@ -46,6 +49,7 @@ const SitesReducer = (state = INIT_STATE, action) => {
         ...state,
         isLoading: false,
         success: false,
+        success_delete: false,
         error: action.payload,
       }
 
@@ -54,6 +58,7 @@ const SitesReducer = (state = INIT_STATE, action) => {
         ...state,
         isLoading: true,
         success: false,
+        success_delete: false,
         error: false,
       }
     case FETCH_SITE_SUCCESS:
@@ -62,6 +67,7 @@ const SitesReducer = (state = INIT_STATE, action) => {
         isLoading: false,
         // success: true,
         error: false,
+        success_delete: false,
         site: action.payload,
       }
 
@@ -70,6 +76,7 @@ const SitesReducer = (state = INIT_STATE, action) => {
         ...state,
         isLoading: false,
         success: false,
+        success_delete: false,
         error: action.payload,
       }
 
@@ -78,6 +85,7 @@ const SitesReducer = (state = INIT_STATE, action) => {
         ...state,
         isLoading: true,
         success: false,
+        success_delete: false,
         error: false,
       }
 
@@ -87,6 +95,7 @@ const SitesReducer = (state = INIT_STATE, action) => {
         isLoading: false,
         success: true,
         error: false,
+        success_delete: false,
         site: action.payload,
       }
 
@@ -95,6 +104,7 @@ const SitesReducer = (state = INIT_STATE, action) => {
         ...state,
         isLoading: false,
         success: false,
+        success_delete: false,
         error: action.payload,
       }
 
@@ -103,6 +113,7 @@ const SitesReducer = (state = INIT_STATE, action) => {
         ...state,
         isLoading: true,
         success: false,
+        success_delete: false,
         error: false,
       }
 
@@ -111,6 +122,7 @@ const SitesReducer = (state = INIT_STATE, action) => {
         ...state,
         isLoading: false,
         success: true,
+        success_delete: false,
         error: false,
         sites: action.payload,
       }
@@ -120,6 +132,7 @@ const SitesReducer = (state = INIT_STATE, action) => {
         ...state,
         isLoading: false,
         success: false,
+        success_delete: false,
         error: action.payload,
       }
 
@@ -127,7 +140,7 @@ const SitesReducer = (state = INIT_STATE, action) => {
       return {
         ...state,
         isLoading: true,
-        success: false,
+        success_delete: false,
         error: false,
       }
 
@@ -135,7 +148,7 @@ const SitesReducer = (state = INIT_STATE, action) => {
       return {
         ...state,
         isLoading: false,
-        success: true,
+        success_delete: true,
         error: false,
         sites: action.payload,
       }
@@ -144,7 +157,7 @@ const SitesReducer = (state = INIT_STATE, action) => {
       return {
         ...state,
         isLoading: false,
-        success: false,
+        success_delete: false,
         error: action.payload,
       }
 

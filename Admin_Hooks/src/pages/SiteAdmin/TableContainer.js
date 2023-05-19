@@ -112,7 +112,7 @@ const TableContainer = ({
   useEffect(() => {
     dispatch(fetchSites())
   }, [])
-  const { sites, isLoading, success } = useSelector(state => state.SitesReducer)
+  const { sites, isLoading, success, success_delete, error } = useSelector(state => state.SitesReducer)
 
   useEffect(() => {
     setSitesList(sites)
@@ -122,11 +122,11 @@ const TableContainer = ({
     dispatch(onDeleteSite(siteId))
   }
   useEffect(() => {
-    if (!isLoading && success) {
+    if (!isLoading && success_delete) {
       toast.success("Data deleted successfully")
       dispatch(fetchSites())
     }
-  }, [isLoading, success])
+  }, [isLoading, success_delete])
 
   const [modal, setModal] = useState(false)
 
@@ -409,40 +409,40 @@ const TableContainer = ({
               <tr key={index}>
                 {/* {console.log(rowdata)} */}
                 <td>
-                  <h5 className="text-truncate font-size-14">
-                    {/* <Link
+                  {/* <h5 className="text-truncate font-size-14"> */}
+                  {/* <Link
                               to={`/projects-overview/${project.id}`}
                               className="text-dark"
                             > */}
-                    {/* <img src={img} alt="" className="avatar-sm" /> */}
-                    {rowdata?.siteId}
-                    {/* </Link> */}
-                  </h5>
+                  {/* <img src={img} alt="" className="avatar-sm" /> */}
+                  {rowdata?.siteId}
+                  {/* </Link> */}
+                  {/* </h5> */}
                 </td>
-                <td> {rowdata?.building}</td>
+                <td>{rowdata?.building}</td>
                 <td>
-                  <p> {rowdata?.addressLine1}</p>
-                </td>
-                <td>
-                  <p> {rowdata?.addressLine2}</p>
+                  {rowdata?.addressLine1}
                 </td>
                 <td>
-                  <p> {rowdata?.city}</p>
+                  {rowdata?.addressLine2}
                 </td>
                 <td>
-                  <p> {rowdata?.jobWbs?.name}</p>
+                  {rowdata?.city}
                 </td>
                 <td>
-                  <p> {rowdata?.company?.name}</p>
+                  {rowdata?.jobWbs?.name}
                 </td>
                 <td>
-                  <p> {rowdata?.state}</p>
+                  {rowdata?.company?.name}
                 </td>
                 <td>
-                  <p> {rowdata?.zipcode}</p>
+                  {rowdata?.state}
                 </td>
                 <td>
-                  <p> {rowdata?.timezone}</p>
+                  {rowdata?.zipcode}
+                </td>
+                <td>
+                  {rowdata?.timezone}
                 </td>
                 <td>
                   <UncontrolledDropdown>
