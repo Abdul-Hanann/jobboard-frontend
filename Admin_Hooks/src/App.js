@@ -61,7 +61,12 @@ const App = () => {
     <React.Fragment>
       <Routes>
         <Route path="/*" element={<Middleware />} />
-        {isAuthenticated === "true" ? (
+        {isAuthenticated === "true" &&
+        (userRole === userTypes.ROLE_ADMIN ||
+          userRole === userTypes.ROLE_SITE_ADMIN ||
+          userRole === userTypes.ROLE_JOB_CREATOR ||
+          userRole === userTypes.ROLE_SCHEDULER ||
+          userRole === userTypes.ROLE_TECHNICIAN) ? (
           <>
             {console.log("in isAuthenticated ")}
             {/* {authProtectedRoutes.map((route, idx) => (
