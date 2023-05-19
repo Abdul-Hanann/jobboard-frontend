@@ -2,6 +2,7 @@ import PropTypes from "prop-types"
 import React from "react"
 import { Routes, Route } from "react-router-dom"
 import Login from "pages/Authentication/Login"
+import { userTypes } from "pages/Authentication/userTypes"
 // Import Routes all
 import {
   authProtectedRoutes,
@@ -63,7 +64,7 @@ const App = () => {
         {isAuthenticated === "true" ? (
           <>
             {console.log("in isAuthenticated ")}
-            {authProtectedRoutes.map((route, idx) => (
+            {/* {authProtectedRoutes.map((route, idx) => (
               <Route
                 path={route.path}
                 element={
@@ -74,7 +75,74 @@ const App = () => {
                 key={idx}
                 exact={true}
               />
-            ))}
+            ))} */}
+
+            {userRole === userTypes.ROLE_ADMIN &&
+              adminRoutes.map((route, idx) => (
+                <Route
+                  path={route.path}
+                  element={
+                    // <Authmiddleware>
+                    <Layout>{route.component}</Layout>
+                    // </Authmiddleware>
+                  }
+                  key={idx}
+                  exact={true}
+                />
+              ))}
+
+            {userRole === userTypes.ROLE_SITE_ADMIN &&
+              siteAdminRoutes.map((route, idx) => (
+                <Route
+                  path={route.path}
+                  element={
+                    // <Authmiddleware>
+                    <Layout>{route.component}</Layout>
+                    // </Authmiddleware>
+                  }
+                  key={idx}
+                  exact={true}
+                />
+              ))}
+            {userRole === userTypes.ROLE_JOB_CREATOR &&
+              jobCreatorRoutes.map((route, idx) => (
+                <Route
+                  path={route.path}
+                  element={
+                    // <Authmiddleware>
+                    <Layout>{route.component}</Layout>
+                    // </Authmiddleware>
+                  }
+                  key={idx}
+                  exact={true}
+                />
+              ))}
+            {userRole === userTypes.ROLE_TECHNICIAN &&
+              technicianRoutes.map((route, idx) => (
+                <Route
+                  path={route.path}
+                  element={
+                    // <Authmiddleware>
+                    <Layout>{route.component}</Layout>
+                    // </Authmiddleware>
+                  }
+                  key={idx}
+                  exact={true}
+                />
+              ))}
+            {userRole === userTypes.ROLE_SCHEDULER &&
+              schedulerRoutes.map((route, idx) => (
+                <Route
+                  path={route.path}
+                  element={
+                    // <Authmiddleware>
+                    <Layout>{route.component}</Layout>
+                    // </Authmiddleware>
+                  }
+                  key={idx}
+                  exact={true}
+                />
+              ))}
           </>
         ) : (
           <>

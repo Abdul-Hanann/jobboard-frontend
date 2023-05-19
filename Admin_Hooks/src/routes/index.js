@@ -190,43 +190,129 @@ import Schedule from "pages/Schedule"
 const adminRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
   { path: "/joblist", component: <JobList /> },
+  { path: "/joblist/jobcreate", component: <JobCreate /> },
+  { path: "/joblist/editJob", component: <JobCreate /> },
+  { path: "/joblist/jobDetails", component: <JobDetails /> },
+  { path: "/jobwbs", component: <JobWbs /> },
+  { path: "/jobWbs/create", component: <JobWbsCreate /> },
+  { path: "/jobWbs/edit", component: <JobWbsCreate /> },
+  { path: "/jobWbs/view", component: <JobWbsView /> },
+  { path: "/schedule", component: <Schedule /> },
+  { path: "/addjob", component: <AddJob /> },
   { path: "/siteadmin", component: <SiteAdmin /> },
+  { path: "/siteadmin/create", component: <SiteAdminCreate /> },
+  { path: "/siteadmin/edit", component: <SiteAdminCreate /> },
   { path: "/useradmin", component: <UserAdmin /> },
+  { path: "/dashboard-saas", component: <DashboardSaas /> },
+  { path: "/dashboard-crypto", component: <DashboardCrypto /> },
+  { path: "/blog", component: <Blog /> },
+  { path: "/dashboard-job", component: <DashboardJob /> },
+
+  // //calendar
+  { path: "/calendar", component: <Calendar /> },
+
+  // //profile
+  { path: "/profile", component: <UserProfile /> },
+
+  //Email
+  { path: "/email-inbox", component: <EmailInbox /> },
+  { path: "/email-read", component: <EmailRead /> },
+  { path: "/email-template-basic", component: <EmailBasicTemplte /> },
+  { path: "/email-template-alert", component: <EmailAlertTemplte /> },
+  { path: "/email-template-billing", component: <EmailTemplateBilling /> },
+
+  //Projects
+  { path: "/projects-grid", component: <ProjectsGrid /> },
+  { path: "/projectslist", component: <ProjectsList /> },
+  { path: "/projects-overview", component: <ProjectsOverview /> },
+  { path: "/projects-overview/:id", component: <ProjectsOverview /> },
+  { path: "/projects-create", component: <ProjectsCreate /> },
+
+  //job
+  { path: "/job-grid", component: <JobGrid /> },
+  { path: "/job-details", component: <JobDetails /> },
+  { path: "/job-categories", component: <JobCategories /> },
+  { path: "/job-list", component: <JobList /> },
+  { path: "/job-apply", component: <ApplyJobs /> },
+  { path: "/candidate-list", component: <CandidateList /> },
+  { path: "/candidate-overview", component: <CandidateOverview /> },
   // { path: "/techschedule", component: <TechSchedule /> },
   // { path: "/jobwbsdmin", component: <JobwbsAdmin /> },
   // { path: "/dashboard-saas", component: <DashboardSaas /> },
   // { path: "/dashboard-crypto", component: <DashboardCrypto /> },
   // // { path: "/blog", component: <Blog /> },
   // { path: "/dashboard-job", component: <DashboardJob /> },
+  {
+    path: "/",
+    exact: true,
+    component: <Navigate to="/dashboard" />,
+  },
 ]
 const siteAdminRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
   { path: "/joblist", component: <JobList /> },
+  { path: "/joblist/jobcreate", component: <JobCreate /> },
+  { path: "/joblist/editJob", component: <JobCreate /> },
+  { path: "/joblist/jobDetails", component: <JobDetails /> },
   { path: "/siteadmin", component: <SiteAdmin /> },
+  { path: "/siteadmin/create", component: <SiteAdminCreate /> },
+  { path: "/siteadmin/edit", component: <SiteAdminCreate /> },
+  { path: "/schedule", component: <Schedule /> },
+  {
+    path: "/",
+    exact: true,
+    component: <Navigate to="/dashboard" />,
+  },
 ]
 const jobCreatorRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
   { path: "/joblist", component: <JobList /> },
+  { path: "/joblist/jobcreate", component: <JobCreate /> },
+  { path: "/joblist/editJob", component: <JobCreate /> },
+  { path: "/joblist/jobDetails", component: <JobDetails /> },
+  {
+    path: "/",
+    exact: true,
+    component: <Navigate to="/dashboard" />,
+  },
 ]
 const technicianRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
   { path: "/joblist", component: <JobList /> },
+  { path: "/joblist/jobcreate", component: <JobCreate /> },
+  { path: "/joblist/editJob", component: <JobCreate /> },
+  { path: "/joblist/jobDetails", component: <JobDetails /> },
+  { path: "/schedule", component: <Schedule /> },
   // { path: "/techschedule", component: <TechSchedule /> },
   // { path: "/jobwbsdmin", component: <JobwbsAdmin /> },
   // { path: "/dashboard-saas", component: <DashboardSaas /> },
   // { path: "/dashboard-crypto", component: <DashboardCrypto /> },
   // // { path: "/blog", component: <Blog /> },
   // { path: "/dashboard-job", component: <DashboardJob /> },
+  {
+    path: "/",
+    exact: true,
+    component: <Navigate to="/dashboard" />,
+  },
 ]
 const schedulerRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
   { path: "/joblist", component: <JobList /> },
+  { path: "/joblist/jobcreate", component: <JobCreate /> },
+  { path: "/joblist/editJob", component: <JobCreate /> },
+  { path: "/joblist/jobDetails", component: <JobDetails /> },
+  { path: "/schedule", component: <Schedule /> },
   // { path: "/techschedule", component: <TechSchedule /> },
   // { path: "/jobwbsdmin", component: <JobwbsAdmin /> },
   // { path: "/dashboard-saas", component: <DashboardSaas /> },
   // { path: "/dashboard-crypto", component: <DashboardCrypto /> },
   // // { path: "/blog", component: <Blog /> },
   // { path: "/dashboard-job", component: <DashboardJob /> },
+  {
+    path: "/",
+    exact: true,
+    component: <Navigate to="/dashboard" />,
+  },
 ]
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
