@@ -222,14 +222,28 @@ const TasksCreate = () => {
     }
   }
   useEffect(() => {
-    if (!isLoading && success) {
-      toast.success("Data added successfully")
+    // if (!isLoading && success) {
+    //   toast.success("Data added successfully")
+    //   navigate("/siteadmin")
+    // }
+    // if (!isLoading && error) {
+    //   toast.error("Error occurs during adding data")
+    // }
+    if (!isEdit && !isLoading && success) {
+      toast.success("Data Added successfully")
       navigate("/siteadmin")
     }
-    if (!isLoading && error) {
+    if (!isEdit && !isLoading && error) {
       toast.error("Error occurs during adding data")
     }
-  }, [isLoading, success, error])
+    if (isEdit && !isLoading && success) {
+      toast.success("Data updated successfully")
+      navigate("/siteadmin")
+    }
+    if (isEdit && !isLoading && error) {
+      toast.error("Error occurs during updating data")
+    }
+  }, [isEdit, isLoading, success, error])
   // console.log("success:", isSuccess)
   const submitData = () => {
     validatePage()

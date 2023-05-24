@@ -191,7 +191,7 @@ export const getInvoices = () => get(url.GET_INVOICES)
 export const getInvoiceDetail = id =>
   get(`${url.GET_INVOICE_DETAIL}/${id}`, { params: { id } })
 
-export const getJobList = () => get(url.GET_JOB_LIST_URL)
+export const getJobList = () => get(url.JOB_LIST_URL)
 // get Apply Jobs
 
 // get sites
@@ -224,9 +224,6 @@ export const updateUser = user => put(url.UPDATE_USER, user)
 // delete user
 export const deleteUser = user => del(url.DELETE_USER, { headers: { user } })
 
-// add jobs
-export const addNewJobList = job => post(url.ADD_NEW_JOB_LIST, job)
-
 // add site
 export const addNewSite = site => post(url.SITES_URL, site)
 
@@ -237,12 +234,28 @@ export const updateSite = (siteId, site) =>
 // delete site
 export const deleteSite = siteId => del(`${url.SITES_URL}/${siteId}`)
 
+// add jobs
+export const addNewJobList = job => post(url.ADD_NEW_JOB_LIST, job)
 // update jobs
 export const updateJobList = job => put(url.UPDATE_JOB_LIST, job)
 
 // delete jobs
 export const deleteJobList = job =>
   del(url.DELETE_JOB_LIST, { headers: { job } })
+
+export const getJobWbs = () => get(url.JOB_WBS_URL)
+
+export const getJobWbsById = id => get(`${url.SITES_URL}/${id}`)
+
+// add site
+export const addNewJobWbs = jobWbs => post(url.JOB_WBS_URL, jobWbs)
+
+// update site
+export const updateJobWbs = (id, jobWbs) =>
+  put(`${url.JOB_WBS_URL}/${id}`, jobWbs)
+
+// delete site
+export const deleteJobWbs = id => del(`${url.JOB_WBS_URL}/${id}`)
 
 // Delete Apply Jobs
 export const deleteApplyJob = data =>

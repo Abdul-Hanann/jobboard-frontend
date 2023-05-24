@@ -23,7 +23,7 @@ import { addNewJobList } from "helpers/fakebackend_helper"
 //     yield put(fetchJobListFail(error))
 //   }
 // }
-function* fetchAllJobsSaga() {
+function* fetchJobList() {
   try {
     const allJobs = yield call(getJobList)
     yield put(fetchJobListSuccess(allJobs))
@@ -41,7 +41,7 @@ function* onAddNewJobList({ payload: data }) {
 }
 
 export function* watchFetchAllJobs() {
-  yield takeEvery(FETCH_JOB_LIST, fetchAllJobsSaga)
+  yield takeEvery(FETCH_JOB_LIST, fetchJobList)
   yield takeEvery(ADD_NEW_JOB, onAddNewJobList)
 }
 

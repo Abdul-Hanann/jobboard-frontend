@@ -22,6 +22,13 @@ import {
   DropdownMenu,
 } from "reactstrap"
 
+import toast from "toastr"
+import "toastr/build/toastr.min.css"
+
+import { fetchJobWbs, deleteJobWbs as onDeleteJobWbs } from "store/actions"
+//redux
+import { useSelector, useDispatch } from "react-redux"
+
 import { isEmpty, map } from "lodash"
 // import { Filter, DefaultColumnFilter } from "./filters"
 import { Filter, DefaultColumnFilter } from "components/Common/filters"
@@ -135,6 +142,19 @@ const TableContainer = ({
 
   const count = data.length
   const [value, setValue] = useState("")
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(fetchJobWbs())
+  }, [dispatch])
+
+  const { jobWbs, isLoading, successDelete, errorDelete, error } = useSelector(
+    state => state.JobWbsReducer
+  )
+
+  console.log("jobws:", jobWbs)
+
   useEffect(() => {
     if (data) {
       setpaginationItems(Math.ceil(data.length / showEntries))
@@ -189,9 +209,23 @@ const TableContainer = ({
   const handleViewClick = jobWbs => {
     navigate("/jobWbs/view", { state: { data: jobWbs } })
   }
-  const handleDeleteClick = () => {
-    //TODO
+  const onClickDelete = id => {
+    dispatch(onDeleteJobWbs(id))
   }
+  useEffect(() => {
+    if (!isLoading && !successDelete && !errorDelete && error) {
+      toast.error("Error occurs during ferching Data")
+    }
+    if (!isLoading && successDelete) {
+      toast.success("Data deleted successfully")
+      dispatch(fetchJobWbs())
+    }
+    if (!isLoading && errorDelete && error) {
+      toast.error("Error occurs during deleting Data: ", error)
+      dispatch(fetchJobWbs())
+    }
+  }, [isLoading, errorDelete, error])
+
   const handleRefresh = () => {
     setSearchInput("")
     setFilterOption("")
@@ -211,83 +245,95 @@ const TableContainer = ({
           onChange={e => setSearchInput(e.target.value)}
         />
       </div>
-      <div className="table-responsive react-table">
-        <Table bordered hover {...getTableProps()} className={className}>
-          <thead
-            style={{
-              fontSize: 16,
-              backgroundColor: "#003768",
-              color: "white",
-              textAlign: "center",
-            }}
-          >
-            <tr>
-              <th scope="col" style={{ width: "100px" }}>
+      <div
+      // className="table-responsive react-table"
+      >
+        <Table className="project-list-table table-nowrap align-middle table-borderless">
+          <thead>
+            <tr
+              style={{
+                fontSize: 14,
+                backgroundColor: "#003768",
+                color: "white",
+                textAlign: "center",
+              }}
+            >
+              {/* <th scope="col" style={{ width: "100px" }}>
                 Id
-              </th>
+              </th> */}
               <th scope="col">Name</th>
               <th scope="col">Tasks</th>
               <th scope="col">Action</th>
             </tr>
           </thead>
 
-          <tbody {...getTableBodyProps()}>
-            {map(data, (rowdata, index) => (
-              <tr key={index}>
-                <td>
-                  <h5 className="text-truncate text-center font-size-14">
-                    {rowdata.id}
-                  </h5>
-                </td>
-                <td>
-                  <h5 className="text-truncate font-size-14">{rowdata.name}</h5>
-                </td>
-                <td
-                  style={{
-                    textOverflow: "ellipsis",
-                    whiteSpace: " nowrap",
-                    maxWidth: "500px",
-                    overflow: "hidden",
-                  }}
-                >
-                  {rowdata.tasks.join(", ")}
-                  {/* {JSON.parse(rowdata?.tasks)?.blocks[0].text} */}
-                </td>
-                <td>
-                  <UncontrolledDropdown>
-                    <DropdownToggle
-                      // href="#"
-                      className="card-drop"
-                      tag="a"
-                    >
-                      <i className="mdi mdi-dots-horizontal font-size-18" />
-                    </DropdownToggle>
-                    <DropdownMenu className="dropdown-menu-end">
-                      <DropdownItem onClick={() => handleViewClick(rowdata)}>
-                        <i className="mdi mdi-view-dashboard font-size-16 text-success me-1" />{" "}
-                        View
-                      </DropdownItem>
-                      <DropdownItem
-                        // href="/siteadmin/edit"
-                        // to={`/siteadmin/edit/${rowdata: rowdata, isedit: true}`}
-                        // onClick={() => handleEditClick(rowdata)}
-                        onClick={() => handleEditClick(rowdata)}
-                      >
-                        <i className="mdi mdi-pencil font-size-16 text-success me-1" />{" "}
-                        Edit
-                      </DropdownItem>
-                      <DropdownItem
-                        href="#"
-                        onClick={() => handleDeleteClick()}
-                      >
-                        <i className="mdi mdi-trash-can font-size-16 text-danger me-1" />{" "}
-                        Delete
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </UncontrolledDropdown>
+          <tbody>
+            {jobWbs.length === 0 ? (
+              <tr>
+                <td colSpan="4" className="text-center">
+                  <i className="mdi mdi-table-off font-size-24 text-muted" />
+                  <p>No data available</p>
                 </td>
               </tr>
-            ))}
+            ) : (
+              map(jobWbs, (rowdata, index) => (
+                <tr key={index}>
+                  {/* <td>
+                    <h5 className="text-truncate text-center font-size-14">
+                      {rowdata?.id}
+                    </h5>
+                  </td> */}
+                  <td>
+                    <h5 className="text-truncate text-center font-size-14">
+                      {rowdata?.name}
+                    </h5>
+                  </td>
+                  <td
+                  // style={{
+                  //   textOverflow: "ellipsis",
+                  //   whiteSpace: " nowrap",
+                  //   maxWidth: "600px",
+                  //   overflow: "hidden",
+                  // }}
+                  >
+                    {rowdata?.tasks?.join(", ")}
+                    {/* {rowdata.tasks.join(", ")} */}
+                    {/* {JSON.parse(rowdata?.tasks)?.blocks[0].text} */}
+                  </td>
+                  <td>
+                    <UncontrolledDropdown>
+                      <DropdownToggle
+                        className="card-drop d-flex justify-content-center align-items-center"
+                        tag="a"
+                      >
+                        <i className="mdi mdi-dots-horizontal font-size-18" />
+                      </DropdownToggle>
+                      <DropdownMenu className="dropdown-menu-end">
+                        <DropdownItem onClick={() => handleViewClick(rowdata)}>
+                          <i className="mdi mdi-view-dashboard font-size-16 text-success me-1" />{" "}
+                          View
+                        </DropdownItem>
+                        <DropdownItem
+                          // href="/siteadmin/edit"
+                          // to={`/siteadmin/edit/${rowdata: rowdata, isedit: true}`}
+                          // onClick={() => handleEditClick(rowdata)}
+                          onClick={() => handleEditClick(rowdata)}
+                        >
+                          <i className="mdi mdi-pencil font-size-16 text-success me-1" />{" "}
+                          Edit
+                        </DropdownItem>
+                        <DropdownItem
+                          onClick={() => onClickDelete(rowdata?.id)}
+                        >
+                          <i className="mdi mdi-trash-can font-size-16 text-danger me-1" />{" "}
+                          Delete
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </Table>
       </div>

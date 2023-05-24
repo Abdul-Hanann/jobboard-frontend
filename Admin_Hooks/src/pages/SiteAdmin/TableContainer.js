@@ -112,7 +112,9 @@ const TableContainer = ({
   useEffect(() => {
     dispatch(fetchSites())
   }, [])
-  const { sites, isLoading, success, success_delete, error } = useSelector(state => state.SitesReducer)
+  const { sites, isLoading, success, success_delete, error } = useSelector(
+    state => state.SitesReducer
+  )
 
   useEffect(() => {
     setSitesList(sites)
@@ -405,75 +407,66 @@ const TableContainer = ({
           </thead>
 
           <tbody>
-            {map(sitesList, (rowdata, index) => (
-              <tr key={index}>
-                {/* {console.log(rowdata)} */}
-                <td>
-                  {/* <h5 className="text-truncate font-size-14"> */}
-                  {/* <Link
+            {sitesList.length === 0 ? (
+              <tr>
+                <td colSpan="4" className="text-center">
+                  <i className="mdi mdi-table-off font-size-24 text-muted" />
+                  <p>No data available</p>
+                </td>
+              </tr>
+            ) : (
+              map(sitesList, (rowdata, index) => (
+                <tr key={index}>
+                  {/* {console.log(rowdata)} */}
+                  <td>
+                    {/* <h5 className="text-truncate font-size-14"> */}
+                    {/* <Link
                               to={`/projects-overview/${project.id}`}
                               className="text-dark"
                             > */}
-                  {/* <img src={img} alt="" className="avatar-sm" /> */}
-                  {rowdata?.siteId}
-                  {/* </Link> */}
-                  {/* </h5> */}
-                </td>
-                <td>{rowdata?.building}</td>
-                <td>
-                  {rowdata?.addressLine1}
-                </td>
-                <td>
-                  {rowdata?.addressLine2}
-                </td>
-                <td>
-                  {rowdata?.city}
-                </td>
-                <td>
-                  {rowdata?.jobWbs?.name}
-                </td>
-                <td>
-                  {rowdata?.company?.name}
-                </td>
-                <td>
-                  {rowdata?.state}
-                </td>
-                <td>
-                  {rowdata?.zipcode}
-                </td>
-                <td>
-                  {rowdata?.timezone}
-                </td>
-                <td>
-                  <UncontrolledDropdown>
-                    <DropdownToggle
-                      // href="#"
-                      className="card-drop"
-                      tag="a"
-                    >
-                      <i className="mdi mdi-dots-horizontal font-size-18" />
-                    </DropdownToggle>
-                    <DropdownMenu className="dropdown-menu-end">
-                      {/* <DropdownItem onClick={() => handleViewClick()}>
+                    {/* <img src={img} alt="" className="avatar-sm" /> */}
+                    {rowdata?.siteId}
+                    {/* </Link> */}
+                    {/* </h5> */}
+                  </td>
+                  <td>{rowdata?.building}</td>
+                  <td>{rowdata?.addressLine1}</td>
+                  <td>{rowdata?.addressLine2}</td>
+                  <td>{rowdata?.city}</td>
+                  <td>{rowdata?.jobWbs?.name}</td>
+                  <td>{rowdata?.company?.name}</td>
+                  <td>{rowdata?.state}</td>
+                  <td>{rowdata?.zipcode}</td>
+                  <td>{rowdata?.timezone}</td>
+                  <td>
+                    <UncontrolledDropdown>
+                      <DropdownToggle className="card-drop" tag="a">
+                        <i className="mdi mdi-dots-horizontal font-size-18" />
+                      </DropdownToggle>
+                      <DropdownMenu className="dropdown-menu-end">
+                        {/* <DropdownItem onClick={() => handleViewClick()}>
                         <i className="mdi mdi-view-dashboard font-size-16 text-success me-1" />{" "}
                         View
                       </DropdownItem> */}
-                      <DropdownItem onClick={() => handleEditClick(rowdata.id)}>
-                        <i className="mdi mdi-pencil font-size-16 text-success me-1" />{" "}
-                        Edit
-                      </DropdownItem>
-                      <DropdownItem
-                        // href="#"
-                        onClick={() => onClickDelete(rowdata.id)}
-                      >
-                        <i className="mdi mdi-trash-can font-size-16 text-danger me-1" />{" "}
-                        Delete
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </UncontrolledDropdown>
-                </td>
-              </tr>
-            )).reverse()}
+                        <DropdownItem
+                          onClick={() => handleEditClick(rowdata.id)}
+                        >
+                          <i className="mdi mdi-pencil font-size-16 text-success me-1" />{" "}
+                          Edit
+                        </DropdownItem>
+                        <DropdownItem
+                          // href="#"
+                          onClick={() => onClickDelete(rowdata.id)}
+                        >
+                          <i className="mdi mdi-trash-can font-size-16 text-danger me-1" />{" "}
+                          Delete
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
+                  </td>
+                </tr>
+              )).reverse()
+            )}
           </tbody>
         </Table>
       </div>

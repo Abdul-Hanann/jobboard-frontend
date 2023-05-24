@@ -38,7 +38,7 @@ const JobListReducer = (state = INIT_STATE, action) => {
         success: false,
         error: action.payload,
       }
-    
+
     case ADD_NEW_JOB:
       return {
         ...state,
@@ -47,21 +47,21 @@ const JobListReducer = (state = INIT_STATE, action) => {
         error: false,
       }
 
-    case ADD_JOB_SUCCESS:           
+    case ADD_JOB_SUCCESS:
       return {
-          ...state,
-          success: true,
-          error: false,
-          jobs: action.payload,
-      };
+        ...state,
+        success: true,
+        error: false,
+        jobs: action.payload,
+      }
 
     case ADD_JOB_FAIL:
       return {
-          ...state,
-          isLoading: false,
-          success: false,
-          error: action.payload,
-      };
+        ...state,
+        isLoading: false,
+        success: false,
+        error: action.payload,
+      }
 
     default:
       return state
