@@ -19,11 +19,11 @@ const DetailsSection = ({ jobList }) => {
             <div className="d-flex">
               <img src={wechat} alt="" height="50" />
               <div className="flex-grow-1 ms-3">
-                <h5 className="fw-semibold">{jobList.JobName}</h5>
+                <h5 className="fw-semibold">{jobList.jobName}</h5>
                 <ul className="list-unstyled hstack gap-2 mb-0">
                   <li>
                     <i className="bx bx-building-house"></i>{" "}
-                    <span className="text-muted">{jobList.JobSiteId}</span>
+                    <span className="text-muted">{jobList.site?.siteId}</span>
                   </li>
                   <li>
                     <i className="bx bx-map"></i>{" "}
@@ -48,7 +48,7 @@ const DetailsSection = ({ jobList }) => {
           <CardBody>
             <h5 className="fw-semibold mb-3">Description</h5>
             <p className="text-muted">
-              {jobList.JobNotes}
+              {jobList.notes}
               {/* We are looking to hire a skilled Magento developer to build and
               maintain eCommerce websites for our clients. As a Magento
               developer, you will be responsible for liaising with the design

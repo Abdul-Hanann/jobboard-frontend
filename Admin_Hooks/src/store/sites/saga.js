@@ -3,6 +3,7 @@ import { takeEvery, fork, put, all, call } from "redux-saga/effects"
 // Redux States
 import {
   FETCH_SITES,
+  FETCH_SITES_BY_PARAMS,
   FETCH_SITE,
   ADD_NEW_SITE,
   UPDATE_SITE,
@@ -20,7 +21,7 @@ import {
   deleteSiteSuccess,
   deleteSiteFail,
 } from "./actions"
-import { getSites, getSite } from "helpers/fakebackend_helper"
+import { getSites, getSite, getSitesFilter } from "helpers/fakebackend_helper"
 
 import { GET_JOB_LIST_URL } from "../../helpers/url_helper"
 import { getRequestData } from "../../helpers/GlobalUtils"
@@ -38,6 +39,14 @@ import { addNewSite, updateSite, deleteSite } from "helpers/fakebackend_helper"
 function* fetchAllSitesSaga() {
   try {
     const allSites = yield call(getSites)
+    yield put(fetchSitesSuccess(allSites))
+  } catch (error) {
+    yield put(fetchSitesFail(error))
+  }
+}
+function* fetchAllSitesFilterSaga({ payload: data }) {
+  try {
+    const allSites = yield call(getSitesFilter, data)
     yield put(fetchSitesSuccess(allSites))
   } catch (error) {
     yield put(fetchSitesFail(error))
@@ -81,6 +90,7 @@ function* onDeleteSite({ payload: siteId }) {
 
 export function* watchFetchAllSites() {
   yield takeEvery(FETCH_SITES, fetchAllSitesSaga)
+  yield takeEvery(FETCH_SITES_BY_PARAMS, fetchAllSitesFilterSaga)
   yield takeEvery(FETCH_SITE, fetchAllSiteSaga)
   yield takeEvery(ADD_NEW_SITE, onAddNewSite)
   yield takeEvery(UPDATE_SITE, onUpdateSite)

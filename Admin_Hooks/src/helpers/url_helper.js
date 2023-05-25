@@ -85,7 +85,7 @@ export const SITES_URL = baseUrl + "/sites"
 // export const DELETE_SITE = "/delete/site"
 
 //Job Wbs
-export const JOB_WBS_URL = baseUrl + "/jobWbs"
+export const JOB_WBS_URL = baseUrl + "/jobwbs"
 
 //Company
 export const COMPANY_URL = baseUrl + "/company"

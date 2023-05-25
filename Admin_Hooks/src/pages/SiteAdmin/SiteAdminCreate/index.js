@@ -64,6 +64,7 @@ const TasksCreate = () => {
   const [selectedCompanyOption, setSelectedCompanyOption] = useState(null)
   const [selectedjobWBSOption, setSelectedjobWBSOption] = useState(null)
   const dispatch = useDispatch()
+  console.log("selectedjobWBSOption?.value:", selectedjobWBSOption?.value)
 
   // useEffect(() => {
   //   setIsSuccess(success)
@@ -164,10 +165,12 @@ const TasksCreate = () => {
       ? (document.getElementById("AddressLine2Error").style.display = "block")
       : (document.getElementById("AddressLine2Error").style.display = "none")
 
-    selectedjobWBSOption?.value === ""
+    selectedjobWBSOption?.value === "" ||
+    selectedjobWBSOption?.value === undefined
       ? (document.getElementById("jobWbsError").style.display = "block")
       : (document.getElementById("jobWbsError").style.display = "none")
-    selectedCompanyOption?.value === ""
+    selectedCompanyOption?.value === "" ||
+    selectedCompanyOption?.value === undefined
       ? (document.getElementById("CompanyError").style.display = "block")
       : (document.getElementById("CompanyError").style.display = "none")
 
@@ -215,6 +218,7 @@ const TasksCreate = () => {
       if (isEdit) {
         dispatch(onUpdateSite(input))
       } else {
+        console.log("DAta:", data)
         dispatch(onAddNewSite(data))
       }
     } else {

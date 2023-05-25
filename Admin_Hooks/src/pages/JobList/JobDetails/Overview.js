@@ -227,7 +227,7 @@ const Overview = ({ jobList }) => {
                 <tbody>
                   <tr>
                     <th scope="col">Job Name</th>
-                    <td scope="col">{jobList.JobName}</td>
+                    <td scope="col">{jobList.jobName}</td>
                   </tr>
                   <tr>
                     <th scope="row">Job Date:</th>
@@ -235,11 +235,11 @@ const Overview = ({ jobList }) => {
                   </tr>
                   <tr>
                     <th scope="row">Job No Of Days:</th>
-                    <td>{jobList.JobNoOfDays}</td>
+                    <td>{jobList.numberOfDays}</td>
                   </tr>
                   <tr>
                     <th scope="row">Job Site Id</th>
-                    <td>{jobList.JobSiteId}</td>
+                    <td>{jobList.site?.siteId}</td>
                   </tr>
                 </tbody>
               </table>

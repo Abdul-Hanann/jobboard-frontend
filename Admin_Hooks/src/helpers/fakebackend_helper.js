@@ -192,10 +192,20 @@ export const getInvoiceDetail = id =>
   get(`${url.GET_INVOICE_DETAIL}/${id}`, { params: { id } })
 
 export const getJobList = () => get(url.JOB_LIST_URL)
+
+// add jobs
+export const addNewJobList = job => post(url.JOB_LIST_URL, job)
+// update jobs
+export const updateJobList = job => put(url.JOB_LIST_URL, job)
+
+// delete jobs
+export const deleteJobList = job => del(url.JOB_LIST_URL, { headers: { job } })
 // get Apply Jobs
 
 // get sites
 export const getSites = () => get(url.SITES_URL)
+
+export const getSitesFilter = data => get(`${url.SITES_URL}?select=${data}`)
 
 // get site
 export const getSite = id => get(`${url.SITES_URL}/${id}`)
@@ -233,15 +243,6 @@ export const updateSite = (siteId, site) =>
 
 // delete site
 export const deleteSite = siteId => del(`${url.SITES_URL}/${siteId}`)
-
-// add jobs
-export const addNewJobList = job => post(url.ADD_NEW_JOB_LIST, job)
-// update jobs
-export const updateJobList = job => put(url.UPDATE_JOB_LIST, job)
-
-// delete jobs
-export const deleteJobList = job =>
-  del(url.DELETE_JOB_LIST, { headers: { job } })
 
 export const getJobWbs = () => get(url.JOB_WBS_URL)
 

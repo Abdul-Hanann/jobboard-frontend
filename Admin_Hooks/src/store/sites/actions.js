@@ -1,5 +1,6 @@
 import {
   FETCH_SITES,
+  FETCH_SITES_BY_PARAMS,
   FETCH_SITES_FAIL,
   FETCH_SITE_SUCCESS,
   FETCH_SITE,
@@ -18,6 +19,11 @@ import {
 
 export const fetchSites = () => ({
   type: FETCH_SITES,
+})
+
+export const fetchSitesFilter = data => ({
+  type: FETCH_SITES_BY_PARAMS,
+  payload: data,
 })
 
 export const fetchSitesSuccess = sites => ({

@@ -7,9 +7,9 @@ export const FETCH_JOB_WBS_FAIL_BY_ID = "FETCH_JOB_WBS_FAIL_BY_ID"
 export const FETCH_JOB_WBS_SUCCESS_BY_ID = "FETCH_JOB_WBS_SUCCESS_BY_ID"
 
 // Add jobWbs
-export const ADD_NEW_JOB_WBS = "ADD_NEW_JOB"
-export const ADD_JOB_WBS_SUCCESS = "ADD_JOB_SUCCESS"
-export const ADD_JOB_WBS_FAIL = "ADD_JOB_FAIL"
+export const ADD_NEW_JOB_WBS = "ADD_NEW_JOB_WBS"
+export const ADD_JOB_WBS_SUCCESS = "ADD_JOB_WBS_SUCCESS"
+export const ADD_JOB_WBS_FAIL = "ADD_JOB_WBS_FAIL"
 // update jobWbs
 export const UPDATE_JOB_WBS = "UPDATE_JOB_WBS"
 export const UPDATE_JOB_WBS_SUCCESS = "UPDATE_JOB_WBS_SUCCESS"

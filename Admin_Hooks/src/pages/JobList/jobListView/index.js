@@ -143,8 +143,8 @@ const JobsList = () => {
   }
 
   const navigate = useNavigate()
-  const handleViewClick = jobList => {
-    navigate("/joblist/jobDetails", { state: { jobList } })
+  const handleViewClick = job => {
+    navigate("/joblist/jobDetails", { state: { job } })
   }
 
   const handleEditClick = jobList => {
@@ -436,7 +436,7 @@ const JobsList = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {map(jobsList, (jobList, index) => (
+                    {map(jobs, (job, index) => (
                       <tr key={index}>
                         <td>
                           {/* {jobList.id} */}
@@ -450,16 +450,16 @@ const JobsList = () => {
                               className="text-dark"
                             > */}
                             {/* <img src={img} alt="" className="avatar-sm" /> */}
-                            {jobList.JobName}
+                            {job.jobName}
                             {/* </Link> */}
                           </h5>
                         </td>
-                        <td> {handleValidDate(jobList.jobDate)}</td>
+                        <td> {handleValidDate(job.jobDate)}</td>
                         <td>
-                          <p> {jobList.JobNoOfDays}</p>
+                          <p> {job.numberOfDays}</p>
                         </td>
                         <td>
-                          <p> {jobList.JobSiteId}</p>
+                          <p> {job.site?.siteId}</p>
                         </td>
                         <td>
                           <UncontrolledDropdown>
@@ -472,21 +472,21 @@ const JobsList = () => {
                             </DropdownToggle>
                             <DropdownMenu className="dropdown-menu-end">
                               <DropdownItem
-                                onClick={() => handleViewClick(jobList)}
+                                onClick={() => handleViewClick(job)}
                               >
                                 <i className="mdi mdi-view-dashboard font-size-16 text-success me-1" />{" "}
                                 View
                               </DropdownItem>
                               <DropdownItem
                                 href="#"
-                                onClick={() => handleEditClick(jobList)}
+                                onClick={() => handleEditClick(job)}
                               >
                                 <i className="mdi mdi-pencil font-size-16 text-success me-1" />{" "}
                                 Edit
                               </DropdownItem>
                               <DropdownItem
                                 href="#"
-                                onClick={() => onClickDelete(jobList)}
+                                onClick={() => onClickDelete(job)}
                               >
                                 <i className="mdi mdi-trash-can font-size-16 text-danger me-1" />{" "}
                                 Delete

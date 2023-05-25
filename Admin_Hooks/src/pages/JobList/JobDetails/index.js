@@ -11,10 +11,10 @@ import DetailsSection from "./DetailsSection"
 const JobDetails = () => {
   document.title = "Job Details | SAIT Job Board"
   const { state } = useLocation()
-  const [jobList, setJobList] = useState(state.jobList)
+  const [jobList, setJobList] = useState(state.job)
   useEffect(() => {
-    if (state && state.jobList) {
-      setJobList(state.jobList)
+    if (state && state.job) {
+      setJobList(state.job)
     }
   }, [state])
 
