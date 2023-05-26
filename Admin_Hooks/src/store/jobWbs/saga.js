@@ -45,8 +45,8 @@ function* fetchJobWbsSaga() {
 
 function* fetchJobWbsByIdSaga({ payload: id }) {
   try {
-    const Site = yield call(getJobWbsById, id)
-    yield put(fetchJobWbsByIdSuccess(Site))
+    const response = yield call(getJobWbsById, id)
+    yield put(fetchJobWbsByIdSuccess(response))
   } catch (error) {
     yield put(fetchJobWbsByIdFail(error))
   }

@@ -5,6 +5,12 @@ import {
   ADD_NEW_JOB,
   ADD_JOB_SUCCESS,
   ADD_JOB_FAIL,
+  UPDATE_JOB_LIST,
+  UPDATE_JOB_LIST_SUCCESS,
+  UPDATE_JOB_LIST_FAIL,
+  DELETE_JOB_LIST,
+  DELETE_JOB_LIST_SUCCESS,
+  DELETE_JOB_LIST_FAIL,
 } from "./actionTypes"
 
 export const fetchJobList = () => ({
@@ -33,5 +39,39 @@ export const addJobSuccess = job => ({
 
 export const addJobFail = error => ({
   type: ADD_JOB_FAIL,
+  payload: error,
+})
+
+// export const updateJob = data => ({
+//   type: UPDATE_JOB_LIST,
+//   payload: data,
+// })
+export const updateJob = data => ({
+  type: UPDATE_JOB_LIST,
+  payload: data,
+})
+
+export const updateJobSuccess = job => ({
+  type: UPDATE_JOB_LIST_SUCCESS,
+  payload: job,
+})
+
+export const updateJobFail = error => ({
+  type: UPDATE_JOB_LIST_FAIL,
+  payload: error,
+})
+
+export const deleteJob = data => ({
+  type: DELETE_JOB_LIST,
+  payload: data,
+})
+
+export const deleteJobSuccess = job => ({
+  type: DELETE_JOB_LIST_SUCCESS,
+  payload: job,
+})
+
+export const deleteJobFail = error => ({
+  type: DELETE_JOB_LIST_FAIL,
   payload: error,
 })

@@ -1,16 +1,26 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Card, CardBody, Col } from "reactstrap"
+
+//redux
+import { useSelector, useDispatch } from "react-redux"
 
 //import images
 import wechat from "../../../assets/images/companies/wechat.svg"
 
 const DetailsSection = ({ jobList }) => {
+  const dispatch = useDispatch()
   const navigate = useNavigate()
+  const [data, setData] = useState(jobList)
+  useEffect(() => {
+    if (jobList) {
+      setData(jobList)
+    }
+  }, [jobList])
+
   const handleBackClick = () => {
     navigate("/joblist")
   }
-  console.log("job list in details selection:", jobList)
   return (
     <React.Fragment>
       <Col xl={9}>
@@ -27,7 +37,7 @@ const DetailsSection = ({ jobList }) => {
                   </li>
                   <li>
                     <i className="bx bx-map"></i>{" "}
-                    <span className="text-muted">California</span>
+                    <span className="text-muted">{jobList.site?.city}</span>
                   </li>
                 </ul>
               </div>
@@ -47,103 +57,7 @@ const DetailsSection = ({ jobList }) => {
           </CardBody>
           <CardBody>
             <h5 className="fw-semibold mb-3">Description</h5>
-            <p className="text-muted">
-              {jobList.notes}
-              {/* We are looking to hire a skilled Magento developer to build and
-              maintain eCommerce websites for our clients. As a Magento
-              developer, you will be responsible for liaising with the design
-              team, setting up Magento 1x and 2x sites, building modules and
-              customizing extensions, testing the performance of each site, and
-              maintaining security and feature updates after the installation is
-              complete. */}
-            </p>
-
-            {/* <h5 className="fw-semibold mb-3">Responsibilities:</h5>
-            <ul className="vstack gap-3">
-              <li>
-                Meeting with the design team to discuss the needs of the
-                company.
-              </li>
-              <li>
-                Building and configuring Magento 1x and 2x eCommerce websites.
-              </li>
-              <li>Coding of the Magento templates.</li>
-              <li>Developing Magento modules in PHP using best practices.</li>
-              <li>Designing themes and interfaces.</li>
-              <li>Setting performance tasks and goals.</li>
-              <li>Updating website features and security patches.</li>
-            </ul>
-
-            <h5 className="fw-semibold mb-3">Requirements:</h5>
-            <ul className="vstack gap-3">
-              <li>Bachelor’s degree in computer science or related field.</li>
-              <li>
-                Advanced knowledge of Magento, JavaScript, HTML, PHP, CSS, and
-                MySQL.
-              </li>
-              <li>Experience with complete eCommerce lifecycle development.</li>
-              <li>Understanding of modern UI/UX trends.</li>
-              <li>
-                Knowledge of Google Tag Manager, SEO, Google Analytics, PPC, and
-                A/B Testing.
-              </li>
-              <li>
-                Good working knowledge of Adobe Photoshop and Adobe Illustrator.
-              </li>
-              <li>Strong attention to detail.</li>
-              <li>Ability to project-manage and work to strict deadlines.</li>
-              <li>Ability to work in a team environment.</li>
-            </ul>
-
-            <h5 className="fw-semibold mb-3">Qualification:</h5>
-            <ul className="vstack gap-3">
-              <li>B.C.A / M.C.A under National University course complete.</li>
-              <li>3 or more years of professional design experience</li>
-              <li>
-                Advanced degree or equivalent experience in graphic and web
-                design
-              </li>
-            </ul>
-
-            <h5 className="fw-semibold mb-3">Skill & Experience:</h5>
-            <ul className="vstack gap-3 mb-0">
-              <li>Understanding of key Design Principal</li>
-              <li>Proficiency With HTML, CSS, Bootstrap</li>
-              <li>WordPress: 1 year (Required)</li>
-              <li>
-                Experience designing and developing responsive design websites
-              </li>
-              <li>web designing: 1 year (Preferred)</li>
-            </ul>
-
-            <div className="mt-4">
-              <span className="badge badge-soft-warning me-1">PHP</span>
-              <span className="badge badge-soft-warning me-1">Magento</span>
-              <span className="badge badge-soft-warning me-1">Marketing</span>
-              <span className="badge badge-soft-warning me-1">WordPress</span>
-              <span className="badge badge-soft-warning">Bootstrap</span>
-            </div>
-
-            <div className="mt-4">
-              <ul className="list-inline mb-0">
-                <li className="list-inline-item mt-1">Share this job:</li>
-                <li className="list-inline-item mt-1">
-                  <Link to="#" className="btn btn-outline-primary btn-hover">
-                    <i className="uil uil-facebook-f"></i> Facebook
-                  </Link>
-                </li>
-                <li className="list-inline-item mt-1">
-                  <Link to="#" className="btn btn-outline-danger btn-hover">
-                    <i className="uil uil-google"></i> Google+
-                  </Link>
-                </li>
-                <li className="list-inline-item mt-1">
-                  <Link to="#" className="btn btn-outline-success btn-hover">
-                    <i className="uil uil-linkedin-alt"></i> linkedin
-                  </Link>
-                </li>
-              </ul>
-            </div> */}
+            <p className="text-muted">{jobList.notes}</p>
           </CardBody>
         </Card>
         <Card>
@@ -154,50 +68,13 @@ const DetailsSection = ({ jobList }) => {
                 <h4>Job WBS</h4>
                 {/* <h5 className="fw-semibold">{jobList.JobWBS}</h5> */}
                 {/* <h5 className="text-muted">{jobList.JobWBS}</h5> */}
-                <h5>Carpentar</h5>
-                <ul>
-                  <li>
-                    Inspect the plumbing system to identify any faults or
-                    issues.
-                  </li>
-                  <li>
-                    Create a plan for repairing or upgrading the plumbing
-                    system.
-                  </li>
-                  <li>Shut off the water supply to the affected area.</li>
-                  <li>
-                    Replace any faulty or damaged pipes or fixtures. 5. Install
-                    any new pipes or fixtures needed to upgrade the system.
-                  </li>
-                  <li>
-                    Test the plumbing system to ensure it is functioning
-                    properly.
-                  </li>
-                  <li>
-                    Test the plumbing system to ensure it is functioning
-                    properly.
-                  </li>
-                  <li>
-                    Turn the water supply back on and ensure all plumbing
-                    fixtures are working correctly.
-                  </li>
-                  <li>Clean up any debris or materials used during the job.</li>
-                  <li>
-                    Review the work with the client and ensure their
-                    satisfaction. Document the work performed and any necessary
-                    follow-up actions.
-                  </li>
+                <h5>{data?.jobWbs?.name}</h5>
+                {/* <h5 className="fw-semibold mb-3">Tasks</h5> */}
+                <ul className="text-muted">
+                  {data?.jobWbs?.tasks?.map((task, index) => (
+                    <li key={index}>{task}</li>
+                  ))}
                 </ul>
-                {/* <ul className="list-unstyled hstack gap-2 mb-0">
-                  <li>
-                    <i className="bx bx-building-house"></i>{" "}
-                    <span className="text-muted">{jobList.JobSiteId}</span>
-                  </li>
-                  <li>
-                    <i className="bx bx-map"></i>{" "}
-                    <span className="text-muted">California</span>
-                  </li>
-                </ul> */}
               </div>
             </div>
           </CardBody>

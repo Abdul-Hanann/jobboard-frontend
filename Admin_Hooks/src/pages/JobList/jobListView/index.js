@@ -7,6 +7,9 @@ import { isEmpty, map } from "lodash"
 import * as moment from "moment"
 import { jobsList } from "common/data/job"
 
+import toast from "toastr"
+import "toastr/build/toastr.min.css"
+
 import ReactSelect from "react-select"
 import {
   button,
@@ -31,6 +34,8 @@ import {
 import * as Yup from "yup"
 import { useFormik } from "formik"
 
+import { fetchJobWbsById } from "store/actions"
+
 //Import Component
 import Breadcrumbs from "components/Common/Breadcrumb"
 import DeleteModal from "components/Common/DeleteModal"
@@ -46,7 +51,7 @@ import img from "assets/images/companies/img-1.png"
 //   deleteJobList as onDeleteJobList,
 // } from "store/actions"
 
-import { fetchJobList } from "store/actions"
+import { fetchJobList, deleteJob as onDeleteJobList } from "store/actions"
 
 import {
   getProjects as onGetProjects,
@@ -103,11 +108,25 @@ const JobsList = () => {
   useEffect(() => {
     console.log("getting jobs")
     dispatch(fetchJobList())
-  }, [])
+  }, [dispatch])
 
-  const { jobs } = useSelector(state => state.JobListReducer)
-  console.log("joblist:", jobs)
+  const { jobs, isLoading, successDelete, errorDelete, error } = useSelector(
+    state => state.JobListReducer
+  )
   // validation
+  const [data, setData] = useState(jobs)
+
+  useEffect(() => {
+    if (jobs) {
+      setData(jobs)
+    }
+  }, [jobs])
+
+  useEffect(() => {
+    if (data) {
+      setJobWbsId(data.site?.jobWbs)
+    }
+  }, [data])
 
   const [dataField, setDataField] = useState(jobsList)
   const [searchInput, setSearchInput] = useState("")
@@ -175,10 +194,23 @@ const JobsList = () => {
     { value: "Siteid3", label: "1Site id 3" },
   ]
 
-  const onClickDelete = project => {
-    setProject(project)
-    setDeleteModal(true)
+  const onClickDelete = id => {
+    dispatch(onDeleteJobList(id))
   }
+
+  useEffect(() => {
+    // if (!isLoading && !successDelete && !errorDelete && error) {
+    //   toast.error("Error occurs during ferching Data")
+    // }
+    if (!isLoading && successDelete) {
+      toast.success("Data deleted successfully")
+      dispatch(fetchJobList())
+    }
+    if (!isLoading && errorDelete && error) {
+      toast.error("Error occurs during deleting Data: ", error)
+      dispatch(fetchJobList())
+    }
+  }, [isLoading, errorDelete, error])
 
   const handleDeleteOrder = () => {
     if (project && project.id) {
@@ -430,8 +462,8 @@ const JobsList = () => {
                       <th scope="col">Job Date</th>
                       <th scope="col">Job No Of Days</th>
                       <th scope="col">Job Site Id</th>
-                      {/* <th scope="col">Job Notes</th>
-                      <th scope="col">Job WBS</th> */}
+                      {/* <th scope="col">Job Notes</th> */}
+                      <th scope="col">Job WBS</th>
                       <th scope="col">Action</th>
                     </tr>
                   </thead>
@@ -462,6 +494,9 @@ const JobsList = () => {
                           <p> {job.site?.siteId}</p>
                         </td>
                         <td>
+                          <p> {job.jobWbs?.name || "N/A"}</p>
+                        </td>
+                        <td>
                           <UncontrolledDropdown>
                             <DropdownToggle
                               // href="#"
@@ -478,15 +513,13 @@ const JobsList = () => {
                                 View
                               </DropdownItem>
                               <DropdownItem
-                                href="#"
                                 onClick={() => handleEditClick(job)}
                               >
                                 <i className="mdi mdi-pencil font-size-16 text-success me-1" />{" "}
                                 Edit
                               </DropdownItem>
                               <DropdownItem
-                                href="#"
-                                onClick={() => onClickDelete(job)}
+                                onClick={() => onClickDelete(job.id)}
                               >
                                 <i className="mdi mdi-trash-can font-size-16 text-danger me-1" />{" "}
                                 Delete
@@ -503,7 +536,7 @@ const JobsList = () => {
           </Col>
         </Row>
 
-        <Row>
+        {/* <Row>
           <Col xs="12">
             <div className="text-center my-3">
               <Link to="#" className="text-success">
@@ -512,7 +545,7 @@ const JobsList = () => {
               </Link>
             </div>
           </Col>
-        </Row>
+        </Row> */}
         {/* </Container> */}
       </div>
     </React.Fragment>

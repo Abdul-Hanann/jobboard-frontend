@@ -9,6 +9,7 @@ import * as Yup from "yup"
 import { useFormik } from "formik"
 import { userTypes } from "pages/Authentication/userTypes"
 
+import * as moment from "moment"
 //Import Images
 import avatar4 from "../../../assets/images/users/avatar-4.jpg"
 import avatar5 from "../../../assets/images/users/avatar-5.jpg"
@@ -49,33 +50,23 @@ const Overview = ({ jobList }) => {
     }
   }
 
-  const optionGroup = [
-    {
-      label: "Picnic",
-      options: [
-        { label: "Mustard", value: "Mustard" },
-        { label: "Ketchup", value: "Ketchup" },
-        { label: "Relish", value: "Relish" },
-      ],
-    },
-    {
-      label: "Camping",
-      options: [
-        { label: "Tent", value: "Tent" },
-        { label: "Flashlight", value: "Flashlight" },
-        { label: "Toilet Paper", value: "Toilet Paper" },
-      ],
-    },
-  ]
-
-  function handleSelectGroup(selectedGroup) {
-    setselectedGroup(selectedGroup)
-  }
-  // const options = [
-  //   "Technician1",
-  //   "Technician2",
-  //   "Technician3",
-  //   "Technician4",
+  // const optionGroup = [
+  //   {
+  //     label: "Picnic",
+  //     options: [
+  //       { label: "Mustard", value: "Mustard" },
+  //       { label: "Ketchup", value: "Ketchup" },
+  //       { label: "Relish", value: "Relish" },
+  //     ],
+  //   },
+  //   {
+  //     label: "Camping",
+  //     options: [
+  //       { label: "Tent", value: "Tent" },
+  //       { label: "Flashlight", value: "Flashlight" },
+  //       { label: "Toilet Paper", value: "Toilet Paper" },
+  //     ],
+  //   },
   // ]
   const options = [
     { value: "Technician1", label: "Technician1" },
@@ -84,62 +75,9 @@ const Overview = ({ jobList }) => {
     { value: "Technician4", label: "Technician4" },
   ]
 
-  // validation
-  const validation = useFormik({
-    // enableReinitialize : use this flag when initial values needs to be changed
-    enableReinitialize: true,
-
-    initialValues: {
-      jobId: (dataField && dataField.id) || "",
-      JobName: (dataField && dataField.JobName) || "",
-      technician: "",
-    },
-    validationSchema: Yup.object({
-      // jobId: Yup.string().matches(
-      //     /[0-9\.\-\s+\/()]+/,
-      //     "Please Enter Valid Job Id"
-      // ).required("Please Enter Your Job Id"),
-      jobId: Yup.string().required("Please Enter Your Job Id"),
-      JobName: Yup.string().required("Please Enter Your Job Name"),
-      technician: Yup.string().required("Please Select technician Name"),
-    }),
-    onSubmit: values => {
-      console.log("okay")
-      console.log("values:", values)
-      if (isEdit) {
-        const updateJobList = {
-          id: jobList ? jobList.id : 0,
-          // JobNo: values.JobNo,
-          JobName: values.JobName,
-          jobDate: dateObject,
-          JobNoOfDays: values.JobNoOfDays,
-          JobSiteId: values.JobSiteId,
-          JobNotes: values.JobNotes,
-          JobWBS: values.JobWBS,
-        }
-        // update Job
-        dispatch(onUpdateJobList(updateJobList))
-        validation.resetForm()
-      } else {
-        const newJobList = {
-          id: Math.floor(Math.random() * (30 - 20)) + 20,
-          // JobNo: values["JobNo"],
-          JobName: values["JobName"],
-          jobDate: values["jobDate"],
-          JobNoOfDays: values["JobNoOfDays"],
-          JobSiteId: values["JobSiteId"],
-          JobNotes: values["JobNotes"],
-          JobWBS: values["JobWBS"],
-        }
-        // save new Job
-        console.log("okay")
-        dispatch(onAddNewJobList(newJobList))
-        validation.resetForm()
-      }
-      toggle()
-    },
-  })
-
+  function handleSelectGroup(selectedGroup) {
+    setselectedGroup(selectedGroup)
+  }
   const handleClick = jobList => {
     setDataField({
       id: jobList ? jobList.id : 0,
@@ -168,6 +106,11 @@ const Overview = ({ jobList }) => {
     const newInputFields = [...inputFields]
     newInputFields.splice(key, 1)
     setinputFields(newInputFields)
+  }
+
+  const handleValidDate = date => {
+    const date1 = moment(new Date(date)).format("DD MMM Y")
+    return date1
   }
 
   return (
@@ -227,19 +170,30 @@ const Overview = ({ jobList }) => {
                 <tbody>
                   <tr>
                     <th scope="col">Job Name</th>
-                    <td scope="col">{jobList.jobName}</td>
+                    <td
+                      scope="col"
+                      className="d-flex justify-content-center text-align-center"
+                    >
+                      {jobList.jobName}
+                    </td>
                   </tr>
                   <tr>
                     <th scope="row">Job Date:</th>
-                    <td>{jobList.jobDate}</td>
+                    <td className="d-flex justify-content-center text-align-center">
+                      {handleValidDate(jobList.jobDate)}
+                    </td>
                   </tr>
                   <tr>
                     <th scope="row">Job No Of Days:</th>
-                    <td>{jobList.numberOfDays}</td>
+                    <td className="d-flex justify-content-center text-align-center">
+                      {jobList.numberOfDays}
+                    </td>
                   </tr>
                   <tr>
                     <th scope="row">Job Site Id</th>
-                    <td>{jobList.site?.siteId}</td>
+                    <td className="d-flex justify-content-center text-align-center">
+                      {jobList.site?.siteId}
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -251,22 +205,9 @@ const Overview = ({ jobList }) => {
               <table className="table table-nowrap align-middle mb-0">
                 <tbody>
                   <tr>
-                    <td style={{ width: "40px" }}>
-                      {/* <div className="form-check font-size-16">
-                          {/* <input
-                            className="form-check-input"
-                            type="checkbox"
-                            id="upcomingtaskCheck01"
-                          />
-                          <label
-                            className="form-check-label"
-                            htmlFor="upcomingtaskCheck01"
-                          ></label> */}
-                      {/* </div> */}
-                    </td>
+                    <td style={{ width: "40px" }}></td>
                     <td>
                       <h5 className="text-truncate font-size-14 m-0">
-                        {/* <Link to="/" className="text-dark"> */}
                         Day 1{/* </Link> */}
                       </h5>
                     </td>
@@ -310,20 +251,7 @@ const Overview = ({ jobList }) => {
                       </td> */}
                   </tr>
                   <tr>
-                    <td>
-                      {/* <div className="form-check font-size-16">
-                          {/* <input
-                            className="form-check-input"
-                            type="checkbox"
-                            id="upcomingtaskCheck02"
-                            defaultChecked
-                          />
-                          <label
-                            className="form-check-label"
-                            htmlFor="upcomingtaskCheck02"
-                          ></label> */}
-                      {/* </div> */}
-                    </td>
+                    <td></td>
                     <td>
                       <h5 className="text-truncate font-size-14 m-0">
                         {/* <Link to="#" className="text-dark"> */}
@@ -390,19 +318,7 @@ const Overview = ({ jobList }) => {
                   </tr>
 
                   <tr>
-                    <td>
-                      {/* <div className="form-check font-size-16">
-                          {/* <input
-                            className="form-check-input"
-                            type="checkbox"
-                            id="upcomingtaskCheck03"
-                          />
-                          <label
-                            className="form-check-label"
-                            htmlFor="upcomingtaskCheck03"
-                          ></label> */}
-                      {/* </div> */}
-                    </td>
+                    <td></td>
                     <td>
                       <h5 className="text-truncate font-size-14 m-0">
                         {/* <Link to="#" className="text-dark"> */}
@@ -440,25 +356,8 @@ const Overview = ({ jobList }) => {
                 <button className="btn btn-soft-success w-100">
                   Apply Now
                 </button>
-                {/* <button className="btn btn-soft-danger w-100">
-                  Contact Us
-                </button> */}
               </div>
             )}
-            {/*{userType === userTypes.ROLE_ADMIN && (*/}
-            {/*  <div className="hstack gap-2">*/}
-            {/*    <button*/}
-            {/*      // style={{ backgroundColor: "green", color: "white" }}*/}
-            {/*      onClick={() => {*/}
-            {/*        handleClick(jobList)*/}
-            {/*      }}*/}
-            {/*      // className="btn btn-soft-primary w-100"*/}
-            {/*      className="btn btn-soft-success w-100"*/}
-            {/*    >*/}
-            {/*      Assign Technician*/}
-            {/*    </button>*/}
-            {/*  </div>*/}
-            {/*)}*/}
           </CardBody>
         </Card>
 

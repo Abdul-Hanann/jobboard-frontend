@@ -153,8 +153,6 @@ const TableContainer = ({
     state => state.JobWbsReducer
   )
 
-  console.log("jobws:", jobWbs)
-
   useEffect(() => {
     if (data) {
       setpaginationItems(Math.ceil(data.length / showEntries))

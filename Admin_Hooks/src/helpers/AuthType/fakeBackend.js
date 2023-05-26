@@ -824,18 +824,18 @@ const fakeBackend = () => {
     })
   })
 
-  mock.onPut(url.UPDATE_JOB_LIST).reply(jobList => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (jobList && jobList.data) {
-          // Passing fake JSON data as response
-          resolve([200, jobList.data])
-        } else {
-          reject([400, "Cannot update job List"])
-        }
-      })
-    })
-  })
+  // mock.onPut(url.UPDATE_JOB_LIST).reply(jobList => {
+  //   return new Promise((resolve, reject) => {
+  //     setTimeout(() => {
+  //       if (jobList && jobList.data) {
+  //         // Passing fake JSON data as response
+  //         resolve([200, jobList.data])
+  //       } else {
+  //         reject([400, "Cannot update job List"])
+  //       }
+  //     })
+  //   })
+  // })
 
   mock.onDelete(url.DELETE_JOB_LIST).reply(config => {
     return new Promise((resolve, reject) => {

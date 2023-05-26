@@ -1,18 +1,30 @@
 import { takeEvery, fork, put, all, call } from "redux-saga/effects"
 
 // Redux States
-import { FETCH_JOB_LIST, ADD_NEW_JOB } from "./actionTypes"
+import {
+  FETCH_JOB_LIST,
+  ADD_NEW_JOB,
+  UPDATE_JOB_LIST,
+  DELETE_JOB_LIST,
+} from "./actionTypes"
 import {
   fetchJobListSuccess,
   fetchJobListFail,
   addJobSuccess,
   addJobFail,
+  updateJobSuccess,
+  updateJobFail,
+  deleteJobSuccess,
+  deleteJobFail,
 } from "./actions"
-import getApplyJob, { getJobList } from "helpers/fakebackend_helper"
-
 import { GET_JOB_LIST_URL } from "../../helpers/url_helper"
 import { getRequestData } from "../../helpers/GlobalUtils"
-import { addNewJobList } from "helpers/fakebackend_helper"
+import {
+  getJobList,
+  addNewJobList,
+  updateJobList,
+  deleteJobList,
+} from "helpers/fakebackend_helper"
 
 // Fetching All Notifications
 // function* fetchAllJobsSaga() {
@@ -39,10 +51,30 @@ function* onAddNewJobList({ payload: data }) {
     yield put(addJobFail(error))
   }
 }
+function* onUpdateJobList({ payload: data }) {
+  try {
+    // console.log("Data:", data)
+    // console.log("type of data id:", typeof data.id)
+    const response = yield call(updateJobList, data.id, data.data)
+    yield put(updateJobSuccess(response))
+  } catch (error) {
+    yield put(updateJobFail(error))
+  }
+}
+function* onDeleteJobList({ payload: id }) {
+  try {
+    const response = yield call(deleteJobList, id)
+    yield put(deleteJobSuccess(response))
+  } catch (error) {
+    yield put(deleteJobFail(error))
+  }
+}
 
 export function* watchFetchAllJobs() {
   yield takeEvery(FETCH_JOB_LIST, fetchJobList)
   yield takeEvery(ADD_NEW_JOB, onAddNewJobList)
+  yield takeEvery(UPDATE_JOB_LIST, onUpdateJobList)
+  yield takeEvery(DELETE_JOB_LIST, onDeleteJobList)
 }
 
 function* AllJobsSaga() {

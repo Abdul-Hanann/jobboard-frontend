@@ -12,7 +12,7 @@ import calendarSaga from "./calendar/saga"
 import chatSaga from "./chat/saga"
 import cryptoSaga from "./crypto/saga"
 import invoiceSaga from "./invoices/saga"
-import jobsSaga from "./jobs/saga"
+// import jobsSaga from "./jobs/saga"
 import projectsSaga from "./projects/saga"
 import tasksSaga from "./tasks/saga"
 import mailsSaga from "./mails/saga"
@@ -42,7 +42,7 @@ export default function* rootSaga() {
     fork(mailsSaga),
     fork(cryptoSaga),
     fork(invoiceSaga),
-    fork(jobsSaga),
+    // fork(jobsSaga),
     fork(projectsSaga),
     fork(tasksSaga),
     fork(contactsSaga),

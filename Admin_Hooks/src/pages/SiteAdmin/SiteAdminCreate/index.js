@@ -64,11 +64,7 @@ const TasksCreate = () => {
   const [selectedCompanyOption, setSelectedCompanyOption] = useState(null)
   const [selectedjobWBSOption, setSelectedjobWBSOption] = useState(null)
   const dispatch = useDispatch()
-  console.log("selectedjobWBSOption?.value:", selectedjobWBSOption?.value)
-
-  // useEffect(() => {
-  //   setIsSuccess(success)
-  // }, [success])
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (state && state.canEdit) {
@@ -120,35 +116,25 @@ const TasksCreate = () => {
     ? "Edit Site Admin | SAIT Job Board"
     : "Create Site Admin  | SAIT Job Board"
 
-  const inpRow = [{ name: "", file: "" }]
-  const [startDate, setstartDate] = useState(new Date())
-  const [endDate, setendDate] = useState(new Date())
-  const [inputFields, setinputFields] = useState(inpRow)
-
-  const handleSelectjobWBSChange = e => {
-    const selectedValue = e.target.value
-    const selectedLabel = e.target.options[e.target.selectedIndex].text
-    setSelectedjobWBSOption({ label: selectedLabel, value: selectedValue })
-  }
-
-  const handleSelectChange = e => {
-    const selectedValue = e.target.value
-    const selectedLabel = e.target.options[e.target.selectedIndex].text
-    setSelectedCompanyOption({ label: selectedLabel, value: selectedValue })
-  }
-  const navigate = useNavigate()
-
   function handleBackClick() {
     navigate("/siteadmin")
   }
-  const startDateChange = date => {
-    setstartDate(date)
-  }
-
-  const endDateChange = date => {
-    setendDate(date)
-  }
-
+  useEffect(() => {
+    if (!isEdit && !isLoading && success) {
+      toast.success("Data Added successfully")
+      navigate("/siteadmin")
+    }
+    if (!isEdit && !isLoading && error) {
+      toast.error("Error occurs during adding data")
+    }
+    if (isEdit && !isLoading && success) {
+      toast.success("Data updated successfully")
+      navigate("/siteadmin")
+    }
+    if (isEdit && !isLoading && error) {
+      toast.error("Error occurs during updating data")
+    }
+  }, [isEdit, isLoading, success, error])
   const validatePage = () => {
     siteId === ""
       ? (document.getElementById("SiteIdError").style.display = "block")
@@ -161,9 +147,9 @@ const TasksCreate = () => {
     addressLine1 === ""
       ? (document.getElementById("AddressLine1Error").style.display = "block")
       : (document.getElementById("AddressLine1Error").style.display = "none")
-    addressLine2 === ""
-      ? (document.getElementById("AddressLine2Error").style.display = "block")
-      : (document.getElementById("AddressLine2Error").style.display = "none")
+    // addressLine2 === ""
+    //   ? (document.getElementById("AddressLine2Error").style.display = "block")
+    //   : (document.getElementById("AddressLine2Error").style.display = "none")
 
     selectedjobWBSOption?.value === "" ||
     selectedjobWBSOption?.value === undefined
@@ -194,7 +180,7 @@ const TasksCreate = () => {
       siteId !== "" &&
       building !== "" &&
       addressLine1 !== "" &&
-      addressLine2 !== "" &&
+      // addressLine2 !== "" &&
       selectedCompanyOption?.value !== "" &&
       selectedjobWBSOption?.value !== "" &&
       city !== "" &&
@@ -206,7 +192,7 @@ const TasksCreate = () => {
         siteId: siteId,
         building: building,
         addressLine1: addressLine1,
-        addressLine2: addressLine2,
+        addressLine2: addressLine2 || "N/A",
         city: city,
         state: stateData,
         zipcode: zipcode,
@@ -218,39 +204,88 @@ const TasksCreate = () => {
       if (isEdit) {
         dispatch(onUpdateSite(input))
       } else {
-        console.log("DAta:", data)
         dispatch(onAddNewSite(data))
       }
     } else {
       console.log("Check fields")
     }
   }
-  useEffect(() => {
-    // if (!isLoading && success) {
-    //   toast.success("Data added successfully")
-    //   navigate("/siteadmin")
-    // }
-    // if (!isLoading && error) {
-    //   toast.error("Error occurs during adding data")
-    // }
-    if (!isEdit && !isLoading && success) {
-      toast.success("Data Added successfully")
-      navigate("/siteadmin")
-    }
-    if (!isEdit && !isLoading && error) {
-      toast.error("Error occurs during adding data")
-    }
-    if (isEdit && !isLoading && success) {
-      toast.success("Data updated successfully")
-      navigate("/siteadmin")
-    }
-    if (isEdit && !isLoading && error) {
-      toast.error("Error occurs during updating data")
-    }
-  }, [isEdit, isLoading, success, error])
   // console.log("success:", isSuccess)
   const submitData = () => {
     validatePage()
+  }
+
+  const handleSiteIdChange = e => {
+    let value = e.target.value
+    setSiteId(e.target.value)
+    if (value !== "") {
+      document.getElementById("SiteIdError").style.display = "none"
+    }
+  }
+  const handleBuildingChange = e => {
+    let value = e.target.value
+    setBuilding(e.target.value)
+    if (value !== "") {
+      document.getElementById("BuildingError").style.display = "none"
+    }
+  }
+  const handleAddressLine1Change = e => {
+    let value = e.target.value
+    setAddressLine1(e.target.value)
+    if (value !== "") {
+      document.getElementById("AddressLine1Error").style.display = "none"
+    }
+  }
+  const handleAddressLine2Change = e => {
+    let value = e.target.value
+    setAddressLine2(e.target.value)
+    if (value !== "") {
+      document.getElementById("AddressLine2Error").style.display = "none"
+    }
+  }
+  const handleSelectjobWBSChange = e => {
+    const selectedValue = e.target.value
+    const selectedLabel = e.target.options[e.target.selectedIndex].text
+    setSelectedjobWBSOption({ label: selectedLabel, value: selectedValue })
+    if (selectedValue !== "" || selectedValue !== undefined) {
+      document.getElementById("jobWbsError").style.display = "none"
+    }
+  }
+  const handleSelectChange = e => {
+    const selectedValue = e.target.value
+    const selectedLabel = e.target.options[e.target.selectedIndex].text
+    setSelectedCompanyOption({ label: selectedLabel, value: selectedValue })
+    if (selectedValue !== "" || selectedValue !== undefined) {
+      document.getElementById("CompanyError").style.display = "none"
+    }
+  }
+  const handleCityChange = e => {
+    let value = e.target.value
+    setCity(e.target.value)
+    if (value !== "") {
+      document.getElementById("CityError").style.display = "none"
+    }
+  }
+  const handleStateChange = e => {
+    let value = e.target.value
+    setStateData(e.target.value)
+    if (value !== "") {
+      document.getElementById("StateError").style.display = "none"
+    }
+  }
+  const handleZipcodeChange = e => {
+    let value = e.target.value
+    setZipcode(e.target.value)
+    if (value !== "") {
+      document.getElementById("ZipcodeError").style.display = "none"
+    }
+  }
+  const handleTimeZoneChange = e => {
+    let value = e.target.value
+    setTimeZone(e.target.value)
+    if (value !== "") {
+      document.getElementById("TimeZoneError").style.display = "none"
+    }
   }
 
   return (
@@ -311,19 +346,7 @@ const TasksCreate = () => {
                               className="form-control"
                               placeholder="Enter Site Id..."
                               value={siteId}
-                              onChange={e => setSiteId(e.target.value)}
-                              // validate={{
-                              //   required: { value: true },
-                              // }}
-                              // onChange={validation.handleChange}
-                              // onBlur={validation.handleBlur}
-                              // value={validation.values.SiteId || ""}
-                              // invalid={
-                              //   validation.touched.SiteId &&
-                              //   validation.errors.SiteId
-                              //     ? true
-                              //     : false
-                              // }
+                              onChange={handleSiteIdChange}
                             />
                             <div
                               style={{
@@ -357,7 +380,7 @@ const TasksCreate = () => {
                               className="form-control"
                               placeholder="Enter Building name..."
                               value={building}
-                              onChange={e => setBuilding(e.target.value)}
+                              onChange={handleBuildingChange}
                               // validate={{
                               //   required: { value: true },
                               // }}
@@ -403,7 +426,7 @@ const TasksCreate = () => {
                               className="form-control"
                               placeholder="Enter Address Line 1..."
                               value={addressLine1}
-                              onChange={e => setAddressLine1(e.target.value)}
+                              onChange={handleAddressLine1Change}
                               // validate={{
                               //   required: { value: true },
                               // }}
@@ -623,7 +646,7 @@ const TasksCreate = () => {
                                     className="form-control"
                                     placeholder="Enter City name..."
                                     value={city}
-                                    onChange={e => setCity(e.target.value)}
+                                    onChange={handleCityChange}
                                     // validate={{
                                     //   required: { value: true },
                                     // }}
@@ -669,7 +692,7 @@ const TasksCreate = () => {
                                     className="form-control"
                                     placeholder="Enter State name..."
                                     value={stateData}
-                                    onChange={e => setStateData(e.target.value)}
+                                    onChange={handleStateChange}
                                     // validate={{
                                     //   required: { value: true },
                                     // }}
@@ -728,7 +751,7 @@ const TasksCreate = () => {
                                     className="form-control"
                                     placeholder="Enter Zip Code..."
                                     value={zipcode}
-                                    onChange={e => setZipcode(e.target.value)}
+                                    onChange={handleZipcodeChange}
                                     // validate={{
                                     //   required: { value: true },
                                     // }}
@@ -774,7 +797,7 @@ const TasksCreate = () => {
                                     className="form-control"
                                     placeholder="Enter Time Zone..."
                                     value={timezone}
-                                    onChange={e => setTimeZone(e.target.value)}
+                                    onChange={handleTimeZoneChange}
                                     // validate={{
                                     //   required: { value: true },
                                     // }}

@@ -3,6 +3,9 @@ import { useNavigate, useLocation } from "react-router-dom"
 import { parseISO } from "date-fns"
 import { parse, format } from "date-fns"
 
+import toast from "toastr"
+import "toastr/build/toastr.min.css"
+
 import { useSelector, useDispatch } from "react-redux"
 import {
   Container,
@@ -20,7 +23,7 @@ import {
 
 import {
   addNewJob as onAddNewJob,
-  updateSite as onUpdateSite,
+  updateJob as onUpdateJob,
   fetchJobWbs,
   fetchSitesFilter,
 } from "store/actions"
@@ -45,45 +48,13 @@ const TasksCreate = () => {
   const [selectedDate, setSelectedDate] = useState(null)
   const [id, setId] = useState(null)
   const [jobName, setJobName] = useState("")
-  const [jobDate, setJobDate] = useState("")
   const [jobNoOfDays, setJobNoOfDays] = useState("")
   const [jobNotes, setJobNotes] = useState("")
 
   const [selectedJobSiteIdOption, setSelectedJobSiteIdOption] = useState(null)
   const [selectedjobWBSOption, setSelectedjobWBSOption] = useState(null)
-  // console.log("jobName:", jobName)
-  // console.log("selectedDate:", selectedDate)
-  // console.log("jobNoOfDays:", jobNoOfDays)
-  // console.log("selectedjobWBSOption?.value:", selectedjobWBSOption?.value)
-  // console.log("selectedJobSiteIdOption?.value:", selectedJobSiteIdOption?.value)
   const dispatch = useDispatch()
-
-  useEffect(() => {
-    dispatch(fetchJobWbs())
-    dispatch(fetchSitesFilter("siteId"))
-  }, [dispatch])
-
-  const { jobWbs } = useSelector(state => state.JobWbsReducer)
-  const { sites } = useSelector(state => state.SitesReducer)
-  const handleSelectjobWBSChange = e => {
-    const selectedValue = e.target.value
-    const selectedLabel = e.target.options[e.target.selectedIndex].text
-    setSelectedjobWBSOption({ label: selectedLabel, value: selectedValue })
-  }
-  const handleSelectChange = e => {
-    const selectedValue = e.target.value
-    const selectedLabel = e.target.options[e.target.selectedIndex].text
-    setSelectedJobSiteIdOption({ label: selectedLabel, value: selectedValue })
-    const [jobWbsId, jobWbsName] = e.target.options[e.target.selectedIndex]
-      .getAttribute("data-job-wbs")
-      .split(",")
-    if (jobWbsId != undefined && jobWbsId != "undefined") {
-      setSelectedjobWBSOption({ label: jobWbsName, value: jobWbsId })
-    } else {
-      setSelectedjobWBSOption({ label: "Select JobWBS", value: "" })
-    }
-  }
-
+  const navigate = useNavigate()
   useEffect(() => {
     if (state && state.jobList) {
       setData(state.jobList)
@@ -92,20 +63,56 @@ const TasksCreate = () => {
       setIsEdit(state.canEdit)
     }
   }, [state])
+
   useEffect(() => {
+    if (data && data.id) {
+      setId(data.id)
+      setJobName(data.jobName)
+      setJobNoOfDays(data.numberOfDays)
+      setSelectedJobSiteIdOption({
+        label: data.site.siteId,
+        value: data.site.id,
+      })
+      setSelectedjobWBSOption({ value: data?.site?.jobWbs })
+      setJobNotes(data.notes)
+    }
     if (data && data.jobDate) {
-      const parsedDate = parse(data.jobDate, "dd MMMM yyyy", new Date())
+      const parsedDate = new Date(data.jobDate)
+      parsedDate.setHours(0, 0, 0, 0) // Set time to 00:00:00
       setSelectedDate(parsedDate)
     }
   }, [data])
-  const handleDateChange = date => {
-    if (date instanceof Date && !isNaN(date)) {
-      setSelectedDate(date)
+
+  const { isLoading, successAdd, successUpdate, error } = useSelector(
+    state => state.JobListReducer
+  )
+  useEffect(() => {
+    if (!isEdit && !isLoading && successAdd) {
+      toast.success("Data Added successfully")
+      navigate("/joblist")
     }
-  }
+    if (!isEdit && !isLoading && error) {
+      toast.error("Error occurs during adding data")
+    }
+    if (isEdit && !isLoading && successUpdate) {
+      toast.success("Data updated successfully")
+      navigate("/joblist")
+    }
+    if (isEdit && !isLoading && error) {
+      toast.error("Error occurs during updating data")
+    }
+  }, [isEdit, isLoading, successAdd, successUpdate, error])
+
+  useEffect(() => {
+    dispatch(fetchJobWbs())
+    dispatch(fetchSitesFilter("siteId"))
+  }, [dispatch])
+
+  const { jobWbs } = useSelector(state => state.JobWbsReducer)
+  const { sites } = useSelector(state => state.SitesReducer)
+
   console.log("isEdit:", isEdit)
   console.log("jobList:", data)
-  console.log("selectedDate:", selectedDate)
   document.title = isEdit
     ? "Edit job List | SAIT Job Board"
     : "Create job List  | SAIT Job Board"
@@ -150,17 +157,15 @@ const TasksCreate = () => {
         jobDate: selectedDate,
         numberOfDays: jobNoOfDays,
         notes: jobNotes,
-        jobwbs: selectedjobWBSOption?.value,
+        jobWbs: selectedjobWBSOption?.value,
         site: selectedJobSiteIdOption?.value,
       }
       let input = { id: id, data: data }
       if (isEdit) {
         console.log("edit")
-        console.log("data:", input)
-        // dispatch(onUpdateSite(input))
+        dispatch(onUpdateJob(input))
       } else {
         console.log("Add")
-        console.log("data:", data)
         dispatch(onAddNewJob(data))
       }
     } else {
@@ -172,35 +177,62 @@ const TasksCreate = () => {
     validatePage()
   }
 
-  const inpRow = [{ name: "", file: "" }]
-  const [startDate, setstartDate] = useState(new Date())
-  const [endDate, setendDate] = useState(new Date())
-  const [inputFields, setinputFields] = useState(inpRow)
-
-  const navigate = useNavigate()
-
   function handleClick() {
     navigate("/joblist")
   }
-  const startDateChange = date => {
-    setstartDate(date)
-  }
 
-  const endDateChange = date => {
-    setendDate(date)
+  const handlejobNameChange = e => {
+    let value = e.target.value
+    setJobName(e.target.value)
+    if (value !== "") {
+      document.getElementById("jobNameError").style.display = "none"
+    }
   }
-
-  // Function for Create Input Fields
-  function handleAddFields() {
-    const item1 = { name: "", file: "" }
-    setinputFields([...inputFields, item1])
+  const handleDateChange = date => {
+    if (date instanceof Date && !isNaN(date)) {
+      setSelectedDate(date)
+      document.getElementById("jobDateError").style.display = "none"
+    }
   }
-
-  // Function for Remove Input Fields
-  function handleRemoveFields(idx) {
-    document.getElementById("nested" + idx).style.display = "none"
+  const handlejobNoOfDaysChange = e => {
+    let value = e.target.value
+    setJobNoOfDays(e.target.value)
+    if (value !== "") {
+      document.getElementById("JobNoOfDaysError").style.display = "none"
+    }
   }
-
+  const handleSelectChange = e => {
+    const selectedValue = e.target.value
+    const selectedLabel = e.target.options[e.target.selectedIndex].text
+    setSelectedJobSiteIdOption({ label: selectedLabel, value: selectedValue })
+    if (selectedValue !== "") {
+      document.getElementById("jobSiteIdError").style.display = "none"
+    }
+    const [jobWbsId, jobWbsName] = e.target.options[e.target.selectedIndex]
+      .getAttribute("data-job-wbs")
+      .split(",")
+    if (jobWbsId != undefined && jobWbsId != "undefined") {
+      setSelectedjobWBSOption({ label: jobWbsName, value: jobWbsId })
+      document.getElementById("jobWbsError").style.display = "none"
+    } else {
+      setSelectedjobWBSOption({ label: "Select JobWBS", value: "" })
+    }
+  }
+  const handlejobNotesChange = e => {
+    let value = e.target.value
+    setJobNotes(e.target.value)
+    if (value !== "") {
+      document.getElementById("jobNotesError").style.display = "none"
+    }
+  }
+  const handleSelectjobWBSChange = e => {
+    const selectedValue = e.target.value
+    const selectedLabel = e.target.options[e.target.selectedIndex].text
+    setSelectedjobWBSOption({ label: selectedLabel, value: selectedValue })
+    if (selectedValue !== "" || selectedValue !== undefined) {
+      document.getElementById("jobWbsError").style.display = "none"
+    }
+  }
   return (
     <>
       <div className="page-content">
@@ -259,7 +291,7 @@ const TasksCreate = () => {
                               className="form-control"
                               placeholder="Enter Job Name..."
                               value={jobName}
-                              onChange={e => setJobName(e.target.value)}
+                              onChange={handlejobNameChange}
                             />
                             <div
                               style={{
@@ -329,9 +361,7 @@ const TasksCreate = () => {
                                       type="number"
                                       className="form-control"
                                       value={jobNoOfDays}
-                                      onChange={e =>
-                                        setJobNoOfDays(e.target.value)
-                                      }
+                                      onChange={handlejobNoOfDaysChange}
                                     />
                                   </div>
                                   <div
@@ -435,7 +465,7 @@ const TasksCreate = () => {
                               placeholder="Enter Job Notes..."
                               style={{ height: "200px" }}
                               value={jobNotes}
-                              onChange={e => setJobNotes(e.target.value)}
+                              onChange={handlejobNotesChange}
                             />
                             <div
                               style={{
@@ -468,13 +498,15 @@ const TasksCreate = () => {
                               <option value="" disabled selected>
                                 Select JobWBS
                               </option>
-                              {jobWbs.map((jobwbs, index) => {
-                                return (
+                              {Array.isArray(jobWbs) ? (
+                                jobWbs.map((jobwbs, index) => (
                                   <option key={index} value={jobwbs.id}>
                                     {jobwbs.name}
                                   </option>
-                                )
-                              })}
+                                ))
+                              ) : (
+                                <option value="">No jobWbs available</option>
+                              )}
                             </Input>
                             {/* {validation.touched.JobWBS &&
                             validation.errors.JobWBS ? (

@@ -134,8 +134,8 @@ const TasksCreate = () => {
   }
   const handleNameChange = e => {
     let value = e.target.value
+    setName(e.target.value)
     if (value !== "") {
-      setName(e.target.value)
       document.getElementById("nameError").style.display = "none"
     }
   }

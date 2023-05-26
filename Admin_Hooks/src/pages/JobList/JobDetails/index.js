@@ -11,10 +11,10 @@ import DetailsSection from "./DetailsSection"
 const JobDetails = () => {
   document.title = "Job Details | SAIT Job Board"
   const { state } = useLocation()
-  const [jobList, setJobList] = useState(state.job)
+  const [job, setJob] = useState(state.job)
   useEffect(() => {
     if (state && state.job) {
-      setJobList(state.job)
+      setJob(state.job)
     }
   }, [state])
 
@@ -26,8 +26,8 @@ const JobDetails = () => {
           <Breadcrumbs title="Jobs" breadcrumbItem="Job Details" />
 
           <Row>
-            <Overview jobList={jobList} />
-            <DetailsSection jobList={jobList} />
+            <Overview jobList={job} />
+            <DetailsSection jobList={job} />
           </Row>
         </Container>
       </div>

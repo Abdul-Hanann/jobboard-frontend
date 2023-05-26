@@ -26,7 +26,7 @@ import crypto from "./crypto/reducer"
 import invoices from "./invoices/reducer"
 
 //jobs
-import JobReducer from "./jobs/reducer"
+// import JobReducer from "./jobs/reducer"
 
 //sotes
 import SitesReducer from "./sites/reducer"
@@ -76,7 +76,7 @@ const rootReducer = combineReducers({
   mails,
   crypto,
   invoices,
-  JobReducer,
+  // JobReducer,
   projects,
   tasks,
   contacts,

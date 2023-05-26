@@ -19,7 +19,7 @@ const TableContainer = ({ data }) => {
   const [paginationItems, setpaginationItems] = useState(1)
   const [selectedPaginationItem, setselectedPaginationItem] = useState(1)
   const [currentTableData, setcurrentTableData] = useState([])
-  const count = data ? data.length: 0
+  const count = data ? data.length : 0
   const [value, setValue] = useState("")
 
   useEffect(() => {
@@ -109,7 +109,7 @@ const TableContainer = ({ data }) => {
             </tr>
           </thead>
           <tbody>
-            {console.log(currentTableData, data)}
+            {/* {console.log(currentTableData, data)} */}
             {currentTableData && currentTableData.length !== 0 ? (
               currentTableData.map(jobWbs => (
                 <tr key={jobWbs.id}>

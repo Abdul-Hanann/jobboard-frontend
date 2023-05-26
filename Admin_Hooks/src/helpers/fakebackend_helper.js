@@ -196,10 +196,11 @@ export const getJobList = () => get(url.JOB_LIST_URL)
 // add jobs
 export const addNewJobList = job => post(url.JOB_LIST_URL, job)
 // update jobs
-export const updateJobList = job => put(url.JOB_LIST_URL, job)
+
+export const updateJobList = (id, job) => put(`${url.JOB_LIST_URL}/${id}`, job)
 
 // delete jobs
-export const deleteJobList = job => del(url.JOB_LIST_URL, { headers: { job } })
+export const deleteJobList = id => del(`${url.JOB_LIST_URL}/${id}`)
 // get Apply Jobs
 
 // get sites
@@ -246,7 +247,7 @@ export const deleteSite = siteId => del(`${url.SITES_URL}/${siteId}`)
 
 export const getJobWbs = () => get(url.JOB_WBS_URL)
 
-export const getJobWbsById = id => get(`${url.SITES_URL}/${id}`)
+export const getJobWbsById = id => get(`${url.JOB_WBS_URL}/${id}`)
 
 // add site
 export const addNewJobWbs = jobWbs => post(url.JOB_WBS_URL, jobWbs)
