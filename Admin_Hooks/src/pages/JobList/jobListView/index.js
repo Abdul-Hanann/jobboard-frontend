@@ -122,12 +122,6 @@ const JobsList = () => {
     }
   }, [jobs])
 
-  useEffect(() => {
-    if (data) {
-      setJobWbsId(data.site?.jobWbs)
-    }
-  }, [data])
-
   const [dataField, setDataField] = useState(jobsList)
   const [searchInput, setSearchInput] = useState("")
   const [filterOption, setFilterOption] = useState("")
