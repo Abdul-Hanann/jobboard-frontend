@@ -112,7 +112,6 @@ const TasksCreate = () => {
   const { sites } = useSelector(state => state.SitesReducer)
 
   console.log("isEdit:", isEdit)
-  console.log("jobList:", data)
   document.title = isEdit
     ? "Edit job List | SAIT Job Board"
     : "Create job List  | SAIT Job Board"

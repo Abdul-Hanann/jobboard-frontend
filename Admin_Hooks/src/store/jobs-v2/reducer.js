@@ -60,7 +60,6 @@ const JobListReducer = (state = INIT_STATE, action) => {
         errorDelete: false,
         error: action.payload,
       }
-
     case ADD_NEW_JOB:
       return {
         ...state,

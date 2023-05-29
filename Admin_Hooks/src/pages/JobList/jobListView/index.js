@@ -30,9 +30,14 @@ import {
   Input,
   FormFeedback,
   Label,
+  Button,
 } from "reactstrap"
 import * as Yup from "yup"
 import { useFormik } from "formik"
+
+//Import Date Picker
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css"
 
 import { fetchJobWbsById } from "store/actions"
 
@@ -62,12 +67,19 @@ import {
 
 //redux
 import { useSelector, useDispatch } from "react-redux"
-
 import Select from "react-select"
 import makeAnimated from "react-select/animated"
+
 const AnimatedMulti = props => {
   const { options, value, setValue } = props
   const animatedComponents = makeAnimated()
+
+  const customStyles = {
+    menu: (provided, state) => ({
+      ...provided,
+      backgroundColor: "white",
+    }),
+  }
 
   return (
     <Select
@@ -77,6 +89,7 @@ const AnimatedMulti = props => {
       onChange={val => setValue(val)}
       value={value}
       options={options}
+      styles={customStyles}
     />
   )
 }
@@ -115,35 +128,31 @@ const JobsList = () => {
   )
   // validation
   const [data, setData] = useState(jobs)
-
+  const [uniqueJobNoOfDays, setUniqueJobNoOfDays] = useState(null)
+  // console.log("Jobs:", jobs)
+  // useEffect(() => {
+  //   if (jobs) {
+  //     setData(jobs)
+  //     const jobNoOfDays = jobs?.map(job => job?.numberOfDays)
+  //     setUniqueJobNoOfDays([...new Set(jobNoOfDays)])
+  //   }
+  // }, [jobs])
+  // console.log("uniqueJobNoOfDays:", uniqueJobNoOfDays)
   useEffect(() => {
-    if (jobs) {
+    if (Array.isArray(jobs)) {
       setData(jobs)
+      const jobNoOfDays = jobs.map(job => job?.numberOfDays)
+      setUniqueJobNoOfDays([...new Set(jobNoOfDays)])
     }
   }, [jobs])
 
   const [dataField, setDataField] = useState(jobsList)
-  const [searchInput, setSearchInput] = useState("")
-  const [filterOption, setFilterOption] = useState("")
   const [modal, setModal] = useState(false)
-  const [isEdit, setIsEdit] = useState(false)
-  const [projectList, setProjectList] = useState([])
-
-  const [filteredStartDate, setFilteredStartDate] = useState("")
-  const [filteredEndDate, setFilteredEndDate] = useState("")
-  const [filteredJobSiteId, setFilteredJobSiteId] = useState("")
-  const [filteredZipcode, setFilteredZipcode] = useState("")
-  const [filteredJobName, setFilteredJobName] = useState("")
-  const [filteredJobNoOfDays, setFilteredJobNoOfDays] = useState("")
-
-  // const toggle = () => {
-  //   if (modal) {
-  //     setModal(false)
-  //     setProject(null)
-  //   } else {
-  //     setModal(true)
-  //   }
-  // }
+  const [filteredJobName, setFilteredJobName] = useState(null)
+  const [filteredJobNoOfDays, setFilteredJobNoOfDays] = useState(null)
+  const [filteredJobWbs, setFilteredJobWbs] = useState(null)
+  const [filteredJobSiteId, setFilteredJobSiteId] = useState(null)
+  const [filteredStartDate, setFilteredStartDate] = useState(null)
 
   const toggle = () => {
     if (modal) {
@@ -169,25 +178,6 @@ const JobsList = () => {
   //delete order
   const [deleteModal, setDeleteModal] = useState(false)
 
-  const JobName = [
-    { value: "SoftwareEngineer", label: "Software Engineer" },
-    { value: "DjngoDeveloper", label: "Djngo Developer" },
-    { value: "PythonDeveloper", label: "Python Developer" },
-    { value: "MERNDeveloper", label: "MERN Developer" },
-    { value: "MagentoDeveloper", label: "Magento Developer" },
-  ]
-  const JobNoOfDays = [
-    { value: 1, label: "1 Days" },
-    { value: 2, label: "2 Days" },
-    { value: 3, label: "3 Days" },
-    { value: 4, label: "4 Days" },
-  ]
-  const JobSiteId = [
-    { value: "siteid1", label: "Site id 1" },
-    { value: "Siteid2", label: "Site id 2" },
-    { value: "Siteid3", label: "1Site id 3" },
-  ]
-
   const onClickDelete = id => {
     dispatch(onDeleteJobList(id))
   }
@@ -212,88 +202,50 @@ const JobsList = () => {
     }
     setDeleteModal(false)
   }
-  // useEffect(() => {
-  //   if (jobsList && !jobsList.length) {
-  //     dispatch(onGetJobList())
-  //   }
-  // }, [dispatch, jobsList])
-  // useEffect(() => {
-  //   dispatch(onGetJobList())
-  // }, [dispatch])
-
-  // useEffect(() => {
-  //   setJobsList(jobsList)
-  // }, [jobsList])
-
-  // useEffect(() => {
-  //   dispatch(onGetProjects())
-  // }, [dispatch])
-
-  // useEffect(() => {
-  //   setProjectList(projects)
-  // }, [projects])
-
-  // useEffect(() => {
-  //   if (!isEmpty(projects)) {
-  //     setProjectList(projects)
-  //   }
-  // }, [projects])
 
   const handleValidDate = date => {
     const date1 = moment(new Date(date)).format("DD MMM Y")
     return date1
   }
-  const handleSearch = (searchInput, filterOption) => {
-    const filteredData = dataField.filter(rowdata => {
-      if (filterOption === "JobName") {
-        return rowdata.JobName.toLowerCase().includes(searchInput.toLowerCase())
-      } else if (filterOption === "JobSiteId") {
-        return rowdata.JobSiteId.toLowerCase().includes(
-          searchInput.toLowerCase()
-        )
-      } else if (filterOption === "jobDate") {
-        const date = new Date(rowdata.jobDate)
-        const searchDate = new Date(searchInput)
-        return date.getTime() === searchDate.getTime()
-        // return rowdata.jobDate.toLowerCase().includes(searchInput)
-      } else if (filterOption === "JobNoOfDays") {
-        return rowdata.JobNoOfDays.toLowerCase().includes(
-          searchInput.toLowerCase()
-        )
-      } else {
-        return (
-          rowdata.JobName.toLowerCase().includes(searchInput.toLowerCase()) ||
-          rowdata.JobSiteId.toLowerCase().includes(searchInput.toLowerCase()) ||
-          rowdata.jobDate.toLowerCase().includes(searchInput.toLowerCase()) ||
-          rowdata.JobNoOfDays.toLowerCase().includes(searchInput.toLowerCase())
-        )
-      }
-    })
-    setDataField(filteredData)
-  }
 
   const handleClick = () => {
-    // setDataField({
-    //   id: jobList ? jobList.id : 0,
-    //   JobName: jobList.JobName,
-    //   JobNoOfDays: jobList.JobNoOfDays,
-    //   JobSiteId: jobList.JobSiteId,
-    //   JobNotes: jobList.JobNotes,
-    //   JobWBS: jobList.JobWBS,
-    // })
+    setFilteredJobName(null)
+    setFilteredJobNoOfDays(null)
+    setFilteredJobWbs(null)
+    setFilteredJobSiteId(null)
+    setFilteredStartDate(null)
     toggle()
   }
-  const clearAllFilters = () => {
-    setFilteredJobNoOfDays("")
-    setFilteredStartDate("")
-    setFilteredJobSiteId("")
-    setFilteredJobName("")
-  }
   const handleRefresh = () => {
-    setSearchInput("")
-    setFilterOption("")
-    setDataField(jobsList)
+    dispatch(fetchJobList())
   }
+  const handleFilterClick = () => {
+    console.log("getting jobs")
+
+    const JobName = Array.isArray(filteredJobName)
+      ? filteredJobName.map(item => item?.value)
+      : []
+    const JobNoOfDays = Array.isArray(filteredJobNoOfDays)
+      ? filteredJobNoOfDays?.map(item => item?.value)
+      : []
+    const JobWbs = Array.isArray(filteredJobWbs)
+      ? filteredJobWbs?.map(item => item?.value)
+      : []
+    const JobSiteId = Array.isArray(filteredJobSiteId)
+      ? filteredJobSiteId?.map(item => item?.value)
+      : []
+
+    dispatch(
+      fetchJobList(JobName, JobNoOfDays, JobWbs, JobSiteId, filteredStartDate)
+    )
+    toggle()
+  }
+  const handleDateChange = date => {
+    if (date instanceof Date && !isNaN(date)) {
+      setFilteredStartDate(date)
+    }
+  }
+
   return (
     <React.Fragment>
       <Modal isOpen={modal} toggle={toggle} className="overflow-visible">
@@ -302,101 +254,83 @@ const JobsList = () => {
           Filter
         </ModalHeader>
         <ModalBody>
-          <form
-            onSubmit={e => {
-              e.preventDefault()
-              validation.handleSubmit()
-              return false
-            }}
-          >
+          <form>
             <Row>
               <Col lg="12">
                 <div id="external-events" className="mt-2">
-                  {/* <p className="text-muted">Filter your jobs </p> */}
-                  {/* {categories &&
-                          categories.map((category, i) => (
-                            <label
-                              key={i}
-                              className={`${category.type} categories text-white d-flex align-items-center`}
-                            >
-                              <div
-                              // key={"cat-" + category.id}
-                              // onClick={() => {
-                              //   filterJob(category.id)
-                              // }}
-                              // draggable
-                              // onDrag={event => onDrag(event, category)}
-                              >
-                                <input
-                                  type="checkbox"
-                                  className="custom-checkbox"
-                                  id={`custom-checkbox-${category.index}`}
-                                  name={category.title}
-                                  value={category.checked}
-                                  checked={category.checked}
-                                  onClick={e =>
-                                    handleCheckboxClick(e, category)
-                                  }
-                                />
-                                <span
-                                  className={`${category.type} categories text-white`}
-                                >
-                                  {category.title}
-                                </span>
-                              </div>
-                            </label>
-                          ))} */}
-                  {/* <div className="d-flex flex-row mb-1 justify-content-between align-items-center">
-                    <p className="text-muted mt-3">Filter by status </p>
-                    <button
-                      className="h-25 bg-primary"
-                      onClick={clearAllFilters}
-                    >
-                      Clear all
-                    </button>
-                  </div> */}
                   <p className="text-muted mt-3">Filter by Job Name </p>
-
                   <AnimatedMulti
-                    options={JobName}
+                    className="custom-dropdown-menu"
+                    options={
+                      Array.isArray(data)
+                        ? data.map((job, index) => ({
+                            label: job?.jobName,
+                            value: job?.jobName,
+                          }))
+                        : []
+                    }
                     value={filteredJobName}
                     setValue={setFilteredJobName}
                   />
                   <p className="text-muted mt-3">Filter by Job Days </p>
 
                   <AnimatedMulti
-                    options={JobNoOfDays}
+                    className="custom-dropdown-menu"
+                    options={uniqueJobNoOfDays?.map((numberOfDays, index) => ({
+                      label: numberOfDays,
+                      value: numberOfDays,
+                    }))}
                     value={filteredJobNoOfDays}
                     setValue={setFilteredJobNoOfDays}
                   />
-
+                  <p className="text-muted mt-3">Job Wbs </p>
+                  <AnimatedMulti
+                    className="custom-dropdown-menu"
+                    options={
+                      Array.isArray(data)
+                        ? data.map((job, index) => ({
+                            label: job?.jobWbs?.name,
+                            value: job?.jobWbs?.id,
+                          }))
+                        : []
+                    }
+                    value={filteredJobWbs}
+                    setValue={setFilteredJobWbs}
+                  />
                   <p className="text-muted mt-3 mb-0">Job date </p>
-                  <Input
-                    type="date"
-                    className="filter-datepicker"
-                    value={filteredStartDate}
-                    onChange={event => setFilteredStartDate(event.target.value)}
+                  <DatePicker
+                    id="jobDate"
+                    name="jobDate"
+                    selected={filteredStartDate}
+                    placeholderText="Insert Job Date"
+                    onChange={handleDateChange}
+                    className="form-control"
                   />
                   <p className="text-muted mt-3">Filter by Job Site Id</p>
-                  <Select
-                    className="basic-single"
-                    classNamePrefix="select"
-                    name="color"
-                    placeholder="Select distance..."
+                  <AnimatedMulti
+                    className="custom-dropdown-menu"
+                    options={
+                      Array.isArray(data)
+                        ? data.map((job, index) => ({
+                            label: job?.site?.siteId,
+                            value: job?.site?.id,
+                          }))
+                        : []
+                    }
                     value={filteredJobSiteId}
-                    onChange={value => setFilteredJobSiteId(value)}
-                    options={JobSiteId}
+                    setValue={setFilteredJobSiteId}
                   />
                 </div>
               </Col>
               <Col>
                 <div className="text-end mt-2">
-                  <button
-                    // type="submit"
+                  <Button
+                    type="button"
                     className="btn btn-success save-user"
+                    onClick={handleFilterClick}
                   >
-                    Assign
-                  </button>
+                    Search
+                  </Button>
                 </div>
               </Col>
             </Row>
@@ -462,67 +396,89 @@ const JobsList = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {map(jobs, (job, index) => (
-                      <tr key={index}>
-                        <td>
-                          {/* {jobList.id} */}
-                          <img src={img} alt="" className="avatar-sm" />
-                          {/* <img src={img} alt="" className="avatar-sm" /> */}
+                    {isLoading ? (
+                      <tr>
+                        <td colSpan="8" className="text-center">
+                          <div className="spinner-border" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                          </div>
                         </td>
-                        <td>
-                          <h5 className="text-truncate font-size-14">
-                            {/* <Link
+                      </tr>
+                    ) : data.length === 0 ? (
+                      <tr>
+                        <td colSpan="8" className="text-center">
+                          <div className="d-flex align-items-center justify-content-center">
+                            {/* <i className="mdi mdi-table-off font-size-24 text-muted" /> */}
+                            <h3>No data available</h3>
+                          </div>
+                        </td>
+                      </tr>
+                    ) : (
+                      map(data, (job, index) => (
+                        <tr key={index}>
+                          <td>
+                            {/* {jobList.id} */}
+                            <img src={img} alt="" className="avatar-sm" />
+                            {/* <img src={img} alt="" className="avatar-sm" /> */}
+                          </td>
+                          <td>
+                            <h5 className="text-truncate font-size-14">
+                              {/* <Link
                               to={`/projects-overview/${project.id}`}
                               className="text-dark"
                             > */}
-                            {/* <img src={img} alt="" className="avatar-sm" /> */}
-                            {job.jobName}
-                            {/* </Link> */}
-                          </h5>
-                        </td>
-                        <td> {handleValidDate(job.jobDate)}</td>
-                        <td>
-                          <p> {job.numberOfDays}</p>
-                        </td>
-                        <td>
-                          <p> {job.site?.siteId}</p>
-                        </td>
-                        <td>
-                          <p> {job.jobWbs?.name || "N/A"}</p>
-                        </td>
-                        <td>
-                          <UncontrolledDropdown>
-                            <DropdownToggle
-                              // href="#"
-                              className="card-drop"
-                              tag="a"
-                            >
-                              <i className="mdi mdi-dots-horizontal font-size-18" />
-                            </DropdownToggle>
-                            <DropdownMenu className="dropdown-menu-end">
-                              <DropdownItem
-                                onClick={() => handleViewClick(job)}
+                              {/* <img src={img} alt="" className="avatar-sm" /> */}
+                              {job.jobName}
+                              {/* </Link> */}
+                            </h5>
+                          </td>
+                          <td>
+                            {" "}
+                            <p>{handleValidDate(job.jobDate)}</p>
+                          </td>
+                          <td>
+                            <p> {job.numberOfDays}</p>
+                          </td>
+                          <td>
+                            <p> {job.site?.siteId}</p>
+                          </td>
+                          <td>
+                            <p> {job.jobWbs?.name || "N/A"}</p>
+                          </td>
+                          <td>
+                            <UncontrolledDropdown>
+                              <DropdownToggle
+                                // href="#"
+                                className="card-drop"
+                                tag="a"
                               >
-                                <i className="mdi mdi-view-dashboard font-size-16 text-success me-1" />{" "}
-                                View
-                              </DropdownItem>
-                              <DropdownItem
-                                onClick={() => handleEditClick(job)}
-                              >
-                                <i className="mdi mdi-pencil font-size-16 text-success me-1" />{" "}
-                                Edit
-                              </DropdownItem>
-                              <DropdownItem
-                                onClick={() => onClickDelete(job.id)}
-                              >
-                                <i className="mdi mdi-trash-can font-size-16 text-danger me-1" />{" "}
-                                Delete
-                              </DropdownItem>
-                            </DropdownMenu>
-                          </UncontrolledDropdown>
-                        </td>
-                      </tr>
-                    )).reverse()}
+                                <i className="mdi mdi-dots-horizontal font-size-18" />
+                              </DropdownToggle>
+                              <DropdownMenu className="dropdown-menu-end">
+                                <DropdownItem
+                                  onClick={() => handleViewClick(job)}
+                                >
+                                  <i className="mdi mdi-view-dashboard font-size-16 text-success me-1" />{" "}
+                                  View
+                                </DropdownItem>
+                                <DropdownItem
+                                  onClick={() => handleEditClick(job)}
+                                >
+                                  <i className="mdi mdi-pencil font-size-16 text-success me-1" />{" "}
+                                  Edit
+                                </DropdownItem>
+                                <DropdownItem
+                                  onClick={() => onClickDelete(job.id)}
+                                >
+                                  <i className="mdi mdi-trash-can font-size-16 text-danger me-1" />{" "}
+                                  Delete
+                                </DropdownItem>
+                              </DropdownMenu>
+                            </UncontrolledDropdown>
+                          </td>
+                        </tr>
+                      )).reverse()
+                    )}
                   </tbody>
                 </Table>
               </div>

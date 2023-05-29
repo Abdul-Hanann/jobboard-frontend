@@ -26,18 +26,18 @@ import {
   deleteJobList,
 } from "helpers/fakebackend_helper"
 
-// Fetching All Notifications
-// function* fetchAllJobsSaga() {
-//   try {
-//     const allJobs = yield call(getRequestData, GET_JOB_LIST_URL)
-//     yield put(fetchJobListSuccess(allJobs))
-//   } catch (error) {
-//     yield put(fetchJobListFail(error))
-//   }
-// }
-function* fetchJobList() {
+function* fetchJobList(action) {
   try {
-    const allJobs = yield call(getJobList)
+    const { JobName, JobNoOfDays, JobWbs, JobSiteId, filteredStartDate } =
+      action
+    const allJobs = yield call(
+      getJobList,
+      JobName,
+      JobNoOfDays,
+      JobWbs,
+      JobSiteId,
+      filteredStartDate
+    )
     yield put(fetchJobListSuccess(allJobs))
   } catch (error) {
     yield put(fetchJobListFail(error))
@@ -45,6 +45,7 @@ function* fetchJobList() {
 }
 function* onAddNewJobList({ payload: data }) {
   try {
+    console.log("Data in saga:", data)
     const response = yield call(addNewJobList, data)
     yield put(addJobSuccess(response))
   } catch (error) {
@@ -72,6 +73,7 @@ function* onDeleteJobList({ payload: id }) {
 
 export function* watchFetchAllJobs() {
   yield takeEvery(FETCH_JOB_LIST, fetchJobList)
+  // yield takeEvery(FETCH_JOB_LIST_FILTERED, fetchJobListFiltered)
   yield takeEvery(ADD_NEW_JOB, onAddNewJobList)
   yield takeEvery(UPDATE_JOB_LIST, onUpdateJobList)
   yield takeEvery(DELETE_JOB_LIST, onDeleteJobList)

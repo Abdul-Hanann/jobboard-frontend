@@ -13,8 +13,23 @@ import {
   DELETE_JOB_LIST_FAIL,
 } from "./actionTypes"
 
-export const fetchJobList = () => ({
+// export const fetchJobList = () => ({
+//   type: FETCH_JOB_LIST,
+
+// })
+export const fetchJobList = (
+  JobName,
+  JobNoOfDays,
+  JobWbs,
+  JobSiteId,
+  filteredStartDate
+) => ({
   type: FETCH_JOB_LIST,
+  JobName,
+  JobNoOfDays,
+  JobWbs,
+  JobSiteId,
+  filteredStartDate,
 })
 
 export const fetchJobListSuccess = jobs => ({

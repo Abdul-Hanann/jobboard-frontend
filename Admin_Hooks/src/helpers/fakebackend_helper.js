@@ -1,6 +1,7 @@
 import axios from "axios"
 import { del, get, post, put, getDep } from "./api_helper"
 import * as url from "./url_helper"
+import queryString from "query-string"
 
 // Gets the logged in user data from local session
 const getLoggedInUser = () => {
@@ -191,7 +192,47 @@ export const getInvoices = () => get(url.GET_INVOICES)
 export const getInvoiceDetail = id =>
   get(`${url.GET_INVOICE_DETAIL}/${id}`, { params: { id } })
 
-export const getJobList = () => get(url.JOB_LIST_URL)
+// export const getJobList = () => get(url.JOB_LIST_URL)
+
+// export const getJobList = (jobName, numberOfDays, jobWbs, site, jobDate) => {
+//   const queryParams = queryString.stringify({
+//     jobName,
+//     numberOfDays,
+//     jobWbs,
+//     site,
+//     jobDate,
+//   })
+//   const urlWithQueryParams = `${url.JOB_LIST_URL}?${queryParams}`
+//   return get(urlWithQueryParams)
+// }
+
+// export const getJobList = (jobName, numberOfDays, jobWbs, site, jobDate) =>
+//   get(
+//     `${url.JOB_LIST_URL}?jobName=${jobName}&numberOfDays=${numberOfDays}&jobWbs=${jobWbs}&site=${site}&jobDate${jobDate}`
+//   )
+export const getJobList = (jobName, numberOfDays, jobWbs, site, jobDate) => {
+  let queryParams = ""
+
+  if (jobName) {
+    queryParams += `&jobName=${jobName}`
+  }
+  if (numberOfDays) {
+    queryParams += `&numberOfDays=${numberOfDays}`
+  }
+  if (jobWbs) {
+    queryParams += `&jobWbs=${jobWbs}`
+  }
+  if (site) {
+    queryParams += `&site=${site}`
+  }
+  if (jobDate) {
+    queryParams += `&jobDate=${jobDate}`
+  }
+
+  const urlWithParams =
+    url.JOB_LIST_URL + (queryParams ? `?${queryParams.slice(1)}` : "")
+  return get(urlWithParams)
+}
 
 // add jobs
 export const addNewJobList = job => post(url.JOB_LIST_URL, job)
