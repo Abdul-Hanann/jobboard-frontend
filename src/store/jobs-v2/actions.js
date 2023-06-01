@@ -15,15 +15,16 @@ import {
 
 // export const fetchJobList = () => ({
 //   type: FETCH_JOB_LIST,
-
 // })
+
 export const fetchJobList = (
   JobName,
   JobNoOfDays,
   JobWbs,
   JobSiteId,
   filteredStartDate,
-  limit
+  limit,
+  page
 ) => ({
   type: FETCH_JOB_LIST,
   JobName,
@@ -32,6 +33,7 @@ export const fetchJobList = (
   JobSiteId,
   filteredStartDate,
   limit,
+  page,
 })
 
 export const fetchJobListSuccess = jobs => ({

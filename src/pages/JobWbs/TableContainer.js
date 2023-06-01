@@ -66,48 +66,48 @@ import { Filter, DefaultColumnFilter } from "components/Common/filters"
 import JobListGlobalFilter from "components/Common/GlobalSearchFilter"
 import { useNavigate } from "react-router-dom"
 
-// Define a default UI for filtering
-function GlobalFilter({
-  preGlobalFilteredRows,
-  globalFilter,
-  setGlobalFilter,
-  isJobListGlobalFilter,
-}) {
-  const count = preGlobalFilteredRows.length
-  const [value, setValue] = React.useState(globalFilter)
-  const onChange = useAsyncDebounce(value => {
-    setGlobalFilter(value || undefined)
-  }, 200)
+// // Define a default UI for filtering
+// function GlobalFilter({
+//   preGlobalFilteredRows,
+//   globalFilter,
+//   setGlobalFilter,
+//   isJobListGlobalFilter,
+// }) {
+//   // const count = preGlobalFilteredRows.length
+//   const [value, setValue] = React.useState(globalFilter)
+//   const onChange = useAsyncDebounce(value => {
+//     setGlobalFilter(value || undefined)
+//   }, 200)
 
-  return (
-    <React.Fragment>
-      <Col md={4}>
-        <div className="search-box me-xxl-2 my-3 my-xxl-0 d-inline-block">
-          <div className="position-relative">
-            <label htmlFor="search-bar-0" className="search-label">
-              <span id="search-bar-0-label" className="sr-only">
-                Search this table
-              </span>
-              <input
-                onChange={e => {
-                  setValue(e.target.value)
-                  onChange(e.target.value)
-                }}
-                id="search-bar-0"
-                type="text"
-                className="form-control"
-                placeholder={`${count} records...`}
-                value={value || ""}
-              />
-            </label>
-            <i className="bx bx-search-alt search-icon"></i>
-          </div>
-        </div>
-      </Col>
-      {isJobListGlobalFilter && <JobListGlobalFilter />}
-    </React.Fragment>
-  )
-}
+//   return (
+//     <React.Fragment>
+//       <Col md={4}>
+//         <div className="search-box me-xxl-2 my-3 my-xxl-0 d-inline-block">
+//           <div className="position-relative">
+//             <label htmlFor="search-bar-0" className="search-label">
+//               <span id="search-bar-0-label" className="sr-only">
+//                 Search this table
+//               </span>
+//               <input
+//                 onChange={e => {
+//                   setValue(e.target.value)
+//                   onChange(e.target.value)
+//                 }}
+//                 id="search-bar-0"
+//                 type="text"
+//                 className="form-control"
+//                 placeholder={`${count} records...`}
+//                 value={value || ""}
+//               />
+//             </label>
+//             <i className="bx bx-search-alt search-icon"></i>
+//           </div>
+//         </div>
+//       </Col>
+//       {isJobListGlobalFilter && <JobListGlobalFilter />}
+//     </React.Fragment>
+//   )
+// }
 
 const TableContainer = ({
   columns,
@@ -128,7 +128,7 @@ const TableContainer = ({
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    page,
+    // page,
     prepareRow,
     canPreviousPage,
     canNextPage,
@@ -170,7 +170,7 @@ const TableContainer = ({
   const [searchInput, setSearchInput] = useState("")
   const [filterOption, setFilterOption] = useState("")
 
-  const count = data.length
+  // const count = data.length
   const [value, setValue] = useState("")
   const [jobWbsList, setJobWbsList] = useState("")
 
@@ -185,17 +185,27 @@ const TableContainer = ({
   )
   const [uniqueJobWbs, setUniqueJobWbs] = useState(null)
 
+  const [count, setCount] = useState(jobWbs?.totalCount)
+
+  const [selectedShowOption, setSelectedShowOption] = useState({
+    label: "Show 10",
+    value: 10,
+  })
+
   useEffect(() => {
-    if (Array.isArray(jobWbs)) {
-      setJobWbsList(jobWbs)
+    if (Array.isArray(jobWbs?.jobWbs)) {
+      setJobWbsList(jobWbs?.jobWbs)
 
       const uniqueJobWbs = new Map()
 
-      jobWbs.forEach(job => {
+      jobWbs?.jobWbs.forEach(job => {
         uniqueJobWbs.set(job?.id, job?.name)
       })
 
       setUniqueJobWbs([...uniqueJobWbs])
+    }
+    if (jobWbs?.totalCount) {
+      setCount(jobWbs?.totalCount)
     }
   }, [jobWbs])
 
@@ -301,6 +311,53 @@ const TableContainer = ({
     toggle()
   }
 
+  const [page, setPage] = useState(1)
+
+  const [totalPages, setTotalPages] = useState(1)
+
+  const [pageDataLimit, setPageDataLimit] = useState(selectedShowOption?.value)
+
+  useEffect(() => {
+    const Pages = Math.ceil(count / pageDataLimit)
+    setTotalPages(Pages)
+  }, [count, pageDataLimit])
+
+  const ShowOptions = [
+    { value: 10, label: "Show 10" },
+    { value: 20, label: "Show 20" },
+    { value: 30, label: "Show 30" },
+    { value: 40, label: "Show 40" },
+    { value: 50, label: "Show 50" },
+  ]
+
+  const handleChange = e => {
+    const selectedValue = e.target.value
+    const limit = e.target.value
+    const selectedLabel = e.target.options[e.target.selectedIndex].text
+    setSelectedShowOption({ label: selectedLabel, value: limit })
+    dispatch(fetchJobWbs("", limit))
+    setPageDataLimit(limit)
+  }
+
+  const onChangeInPage = e => {
+    const page = parseInt(e.target.value)
+    const limit = selectedShowOption.value
+    setPageDataLimit(limit)
+    dispatch(fetchJobWbs("", limit, page))
+  }
+
+  const handlePrevPage = () => {
+    const updatedPage = page - 1
+    setPage(updatedPage)
+    onChangeInPage({ target: { value: updatedPage } })
+  }
+
+  const handleNextPage = () => {
+    const updatedPage = page + 1
+    setPage(updatedPage)
+    onChangeInPage({ target: { value: updatedPage } })
+  }
+
   return (
     <Fragment>
       <Modal isOpen={modal} toggle={toggle} className="overflow-visible">
@@ -346,6 +403,34 @@ const TableContainer = ({
 
       <Row className="mb-0">
         <div className="d-flex d-flex justify-content-end mt-2">
+          <div className="mb-0 card-title flex-grow-1">
+            <h3 style={{ paddingLeft: 20 }}>
+              <Input
+                name="JobSiteId"
+                type="select"
+                className="form-select"
+                placeholder="Select..."
+                onChange={handleChange}
+                value={selectedShowOption?.value}
+                style={{ maxWidth: "20%", fontSize: 16 }}
+              >
+                {/* <option value="" disabled selected>
+                    Select Entity...
+                  </option> */}
+                {ShowOptions.map((ShowOption, index) => {
+                  return (
+                    <option
+                      key={index}
+                      value={ShowOption.value}
+                      selected={index === 0}
+                    >
+                      {ShowOption.label}
+                    </option>
+                  )
+                })}
+              </Input>
+            </h3>
+          </div>
           <div className="flex-shrink-0" style={{ marginRight: 20 }}>
             <button
               // className="btn btn-primary mdi mdi-filter ms-2"
@@ -470,54 +555,51 @@ const TableContainer = ({
         </Table>
       </div>
 
-      <Row className="justify-content-md-end justify-content-center align-items-center">
-        <Col className="col-md-auto">
-          <div className="d-flex gap-1">
-            <Button
-              // style={{ backgroundColor: "#003768" }}
-              color="primary"
-              onClick={() => gotoPage(0)}
-              disabled={!canPreviousPage}
-            >
-              {"<<"}
-            </Button>
+      <Row
+        className="justify-content-md-end justify-content-center align-items-center mb-3"
+        style={{ marginRight: 20 }}
+      >
+        <Col className="col-md-auto p-0">
+          <div className="d-flex gap-1" style={{ padding: 0 }}>
             <Button
               color="primary"
-              onClick={previousPage}
-              disabled={!canPreviousPage}
+              style={{ backgroundColor: "green" }}
+              onClick={handlePrevPage}
+              disabled={page === 1}
             >
               {"<"}
             </Button>
           </div>
         </Col>
-        <Col className="col-md-auto d-none d-md-block">
+        <Col
+          className="col-md-auto d-none d-md-block"
+          style={{ paddingRight: 0 }}
+        >
           Page{" "}
           <strong>
-            {pageIndex + 1} of {pageOptions.length}
+            {page} of {totalPages}
           </strong>
         </Col>
         <Col className="col-md-auto">
           <Input
             type="number"
-            min={1}
             style={{ width: 70 }}
-            max={pageOptions.length}
-            defaultValue={pageIndex + 1}
-            onChange={onChangeInInput}
+            defaultValue={page}
+            value={page}
+            onChange={onChangeInPage}
+            readOnly
           />
         </Col>
 
-        <Col className="col-md-auto">
+        <Col className="col-md-auto p-0">
           <div className="d-flex gap-1">
-            <Button color="primary" onClick={nextPage} disabled={!canNextPage}>
-              {">"}
-            </Button>
             <Button
               color="primary"
-              onClick={() => gotoPage(pageCount - 1)}
-              disabled={!canNextPage}
+              style={{ backgroundColor: "green" }}
+              onClick={handleNextPage}
+              disabled={page === totalPages}
             >
-              {">>"}
+              {">"}
             </Button>
           </div>
         </Col>

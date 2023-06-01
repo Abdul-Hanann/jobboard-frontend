@@ -216,11 +216,10 @@ export const getJobList = (
   JobWbs,
   JobSiteId,
   filteredStartDate,
-  limit
+  limit,
+  page
 ) => {
   let queryParams = ""
-  console.log("jonName:", JobName)
-  console.log("limit:", limit)
   if (JobName) {
     queryParams += `&jobName=${JobName}`
   }
@@ -238,6 +237,9 @@ export const getJobList = (
   }
   if (limit) {
     queryParams += `&limit=${limit}`
+  }
+  if (page) {
+    queryParams += `&page=${page}`
   }
 
   const urlWithParams =
@@ -264,7 +266,9 @@ export const getSites = (
   zipCode,
   timeZone,
   JobWbs,
-  company
+  company,
+  limit,
+  page
 ) => {
   let queryParams = ""
 
@@ -291,6 +295,12 @@ export const getSites = (
   }
   if (company) {
     queryParams += `&company=${company}`
+  }
+  if (limit) {
+    queryParams += `&limit=${limit}`
+  }
+  if (page) {
+    queryParams += `&page=${page}`
   }
 
   const urlWithParams =
@@ -337,10 +347,16 @@ export const updateSite = (siteId, site) =>
 // delete site
 export const deleteSite = siteId => del(`${url.SITES_URL}/${siteId}`)
 
-export const getJobWbs = JobWbs => {
+export const getJobWbs = (JobWbs, limit, page) => {
   let queryParams = ""
   if (JobWbs) {
     queryParams += `&jobWbs=${JobWbs}`
+  }
+  if (limit) {
+    queryParams += `&limit=${limit}`
+  }
+  if (page) {
+    queryParams += `&page=${page}`
   }
 
   const urlWithParams =

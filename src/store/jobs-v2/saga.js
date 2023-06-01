@@ -35,6 +35,7 @@ function* fetchJobList(action) {
       JobSiteId,
       filteredStartDate,
       limit,
+      page,
     } = action
     const allJobs = yield call(
       getJobList,
@@ -43,7 +44,8 @@ function* fetchJobList(action) {
       JobWbs,
       JobSiteId,
       filteredStartDate,
-      limit
+      limit,
+      page
     )
     yield put(fetchJobListSuccess(allJobs))
   } catch (error) {

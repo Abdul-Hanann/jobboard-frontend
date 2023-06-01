@@ -537,13 +537,17 @@ const TasksCreate = () => {
                               <option value="" disabled selected>
                                 Select JobWBS
                               </option>
-                              {jobWbs.map((jobwbs, index) => {
-                                return (
-                                  <option key={index} value={jobwbs.id}>
-                                    {jobwbs.name}
-                                  </option>
-                                )
-                              })}
+                              {jobWbs && jobWbs.jobWbs ? (
+                                jobWbs.jobWbs.map((jobwbsData, index) => {
+                                  return (
+                                    <option key={index} value={jobwbsData.id}>
+                                      {jobwbsData.name}
+                                    </option>
+                                  )
+                                })
+                              ) : (
+                                <option value="">No jobWbs available</option>
+                              )}
                             </Input>
                             <div
                               style={{

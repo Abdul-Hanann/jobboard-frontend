@@ -47,6 +47,8 @@ function* fetchAllSitesSaga(action) {
       timeZone,
       JobWbs,
       company,
+      limit,
+      page,
     } = action
     const allSites = yield call(
       getSites,
@@ -57,7 +59,9 @@ function* fetchAllSitesSaga(action) {
       zipCode,
       timeZone,
       JobWbs,
-      company
+      company,
+      limit,
+      page
     )
     yield put(fetchSitesSuccess(allSites))
   } catch (error) {

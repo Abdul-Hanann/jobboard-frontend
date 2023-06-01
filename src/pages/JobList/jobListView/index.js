@@ -127,25 +127,23 @@ const JobsList = () => {
     state => state.JobListReducer
   )
   // validation
-  const [data, setData] = useState(jobs)
+  const [data, setData] = useState(jobs?.jobs)
+  const [count, setCount] = useState(jobs?.totalCount)
   const [uniqueJobNoOfDays, setUniqueJobNoOfDays] = useState(null)
   const [uniqueJobNames, setUniqueJobName] = useState(null)
   const [uniqueJobWbs, setUniqueJobWbs] = useState(null)
   const [uniqueJobSites, setUniqueJobSites] = useState(null)
 
-  console.log("uniqueJobWbs:", uniqueJobWbs)
-  console.log("uniqueJobSites:", uniqueJobSites)
-
   useEffect(() => {
-    if (Array.isArray(jobs)) {
-      setData(jobs)
+    if (Array.isArray(jobs?.jobs)) {
+      setData(jobs?.jobs)
 
       const uniqueJobNoOfDays = new Set()
       const uniqueJobName = new Set()
       const uniqueJobWbsMap = new Map()
       const uniqueJobSitesMap = new Map()
 
-      jobs.forEach(job => {
+      jobs?.jobs.forEach(job => {
         uniqueJobNoOfDays.add(job?.numberOfDays)
         uniqueJobName.add(job?.jobName)
         uniqueJobWbsMap.set(job?.jobWbs.id, job?.jobWbs.name)
@@ -156,6 +154,9 @@ const JobsList = () => {
       setUniqueJobName([...uniqueJobName])
       setUniqueJobWbs(Array.from(uniqueJobWbsMap.entries()))
       setUniqueJobSites(Array.from(uniqueJobSitesMap.entries()))
+    }
+    if (jobs?.totalCount) {
+      setCount(jobs?.totalCount)
     }
   }, [jobs])
 
@@ -170,9 +171,6 @@ const JobsList = () => {
     label: "Show 10",
     value: 10,
   })
-
-  console.log("selectedJobSiteIdOption:", selectedShowOption.value)
-  console.log("tableEntityValue:", selectedShowOption.label)
   const toggle = () => {
     if (modal) {
       setModal(false)
@@ -236,11 +234,12 @@ const JobsList = () => {
   ]
 
   const handleChange = e => {
-    const selectedValue = e.target.value
+    // const selectedValue = e.target.value
     const limit = e.target.value
     const selectedLabel = e.target.options[e.target.selectedIndex].text
-    setSelectedShowOption({ label: selectedLabel, value: selectedValue })
+    setSelectedShowOption({ label: selectedLabel, value: limit })
     dispatch(fetchJobList("", "", "", "", "", limit))
+    setPageDataLimit(limit)
   }
   const handleClick = () => {
     setFilteredJobName(null)
@@ -268,9 +267,18 @@ const JobsList = () => {
     const JobSiteId = Array.isArray(filteredJobSiteId)
       ? filteredJobSiteId?.map(item => item?.value)
       : []
+    // const limit = selectedShowOption.value
 
     dispatch(
-      fetchJobList(JobName, JobNoOfDays, JobWbs, JobSiteId, filteredStartDate)
+      fetchJobList(
+        JobName,
+        JobNoOfDays,
+        JobWbs,
+        JobSiteId,
+        filteredStartDate
+        // limit,
+        // page
+      )
     )
     toggle()
   }
@@ -278,6 +286,53 @@ const JobsList = () => {
     if (date instanceof Date && !isNaN(date)) {
       setFilteredStartDate(date)
     }
+  }
+
+  const [page, setPage] = useState(1)
+
+  const [totalPages, setTotalPages] = useState(1)
+
+  const [pageDataLimit, setPageDataLimit] = useState(selectedShowOption?.value)
+
+  useEffect(() => {
+    const Pages = Math.ceil(count / pageDataLimit)
+    setTotalPages(Pages)
+  }, [count, pageDataLimit])
+
+  // const handlePrevPage = () => {
+  //   console.log("handlePrevPage")
+  //   setPage(prevLength => prevLength - 1)
+  // }
+
+  // const handleNextPage = () => {
+  //   console.log("handleNextPage")
+  //   setPage(prevLength => prevLength + 1)
+  // }
+
+  // const onChangeInPage = e => {
+  //   const page = e.target.value
+  //   const limit = selectedShowOption.value
+  //   console.log("limit:", limit)
+  //   console.log("page:", page)
+  //   dispatch(fetchJobList("", "", "", "", "", limit, page))
+  // }
+  const onChangeInPage = e => {
+    const page = parseInt(e.target.value)
+    const limit = selectedShowOption.value
+    setPageDataLimit(limit)
+    dispatch(fetchJobList("", "", "", "", "", limit, page))
+  }
+
+  const handlePrevPage = () => {
+    const updatedPage = page - 1
+    setPage(updatedPage)
+    onChangeInPage({ target: { value: updatedPage } })
+  }
+
+  const handleNextPage = () => {
+    const updatedPage = page + 1
+    setPage(updatedPage)
+    onChangeInPage({ target: { value: updatedPage } })
   }
 
   return (
@@ -323,34 +378,7 @@ const JobsList = () => {
                     value={filteredJobNoOfDays}
                     setValue={setFilteredJobNoOfDays}
                   />
-
-                  {/* <AnimatedMulti
-                    className="custom-dropdown-menu"
-                    options={
-                      Array.isArray(uniqueJobNoOfDays)
-                        ? uniqueJobNoOfDays.map((numberOfDays, index) => ({
-                            label: numberOfDays,
-                            value: numberOfDays,
-                          }))
-                        : []
-                    }
-                    value={filteredJobNoOfDays}
-                    setValue={setFilteredJobNoOfDays}
-                  /> */}
                   <p className="text-muted mt-3">Job Wbs </p>
-                  {/* <AnimatedMulti
-                    className="custom-dropdown-menu"
-                    options={
-                      Array.isArray(uniqueJobWbs)
-                        ? uniqueJobWbs.map((jobWbs, index) => ({
-                            label: jobWbs.name,
-                            value: jobWbs.id,
-                          }))
-                        : []
-                    }
-                    value={filteredJobWbs}
-                    setValue={setFilteredJobWbs}
-                  /> */}
                   <AnimatedMulti
                     className="custom-dropdown-menu"
                     options={
@@ -374,19 +402,6 @@ const JobsList = () => {
                     className="form-control"
                   />
                   <p className="text-muted mt-3">Filter by Job Site Id</p>
-                  {/* <AnimatedMulti
-                    className="custom-dropdown-menu"
-                    options={
-                      Array.isArray(uniqueJobSites)
-                        ? uniqueJobSites.map((uniqueJobSite, index) => ({
-                            label: uniqueJobSite.siteId,
-                            value: uniqueJobSite.id,
-                          }))
-                        : []
-                    }
-                    value={filteredJobSiteId}
-                    setValue={setFilteredJobSiteId}
-                  /> */}
                   <AnimatedMulti
                     className="custom-dropdown-menu"
                     options={
@@ -452,18 +467,6 @@ const JobsList = () => {
                     )
                   })}
                 </Input>
-                {/* <Select
-                  // className="select"
-                  placeholder="Select entity..."
-                  name="tableEntity"
-                  value={tableEntityLabel}
-                  onChange={handleChange}
-                  options={ShowOptions?.map((option, index) => ({
-                    value: option.value,
-                    label: option.label,
-                  }))}
-                  styles={{ width: 50 }}
-                /> */}
               </h3>
             </div>
             <div className="flex-shrink-0" style={{ marginRight: 20 }}>
@@ -491,7 +494,7 @@ const JobsList = () => {
             <div>
               <div className="table-responsive">
                 <Table
-                  className="project-list-table table-nowrap align-middle table-borderless"
+                  className="project-list-table table-nowrap align-middle table-borderless mb-0"
                   style={{ textAlign: "center" }}
                 >
                   <thead>
@@ -527,7 +530,7 @@ const JobsList = () => {
                           </div>
                         </td>
                       </tr>
-                    ) : data.length === 0 ? (
+                    ) : !data || data.length === 0 ? (
                       <tr>
                         <td colSpan="8" className="text-center">
                           <div className="d-flex align-items-center justify-content-center">
@@ -608,18 +611,55 @@ const JobsList = () => {
             </div>
           </Col>
         </Row>
-
-        {/* <Row>
-          <Col xs="12">
-            <div className="text-center my-3">
-              <Link to="#" className="text-success">
-                <i className="bx bx-loader bx-spin font-size-18 align-middle me-2" />
-                Load more
-              </Link>
+        <Row
+          className="justify-content-md-end justify-content-center align-items-center mb-3"
+          style={{ marginRight: 20 }}
+        >
+          <Col className="col-md-auto p-0">
+            <div className="d-flex gap-1" style={{ padding: 0 }}>
+              <Button
+                color="primary"
+                style={{ backgroundColor: "green" }}
+                onClick={handlePrevPage}
+                disabled={page === 1}
+              >
+                {"<"}
+              </Button>
             </div>
           </Col>
-        </Row> */}
-        {/* </Container> */}
+          <Col
+            className="col-md-auto d-none d-md-block"
+            style={{ paddingRight: 0 }}
+          >
+            Page{" "}
+            <strong>
+              {page} of {totalPages}
+            </strong>
+          </Col>
+          <Col className="col-md-auto">
+            <Input
+              type="number"
+              style={{ width: 70 }}
+              defaultValue={page}
+              value={page}
+              onChange={onChangeInPage}
+              readOnly
+            />
+          </Col>
+
+          <Col className="col-md-auto p-0">
+            <div className="d-flex gap-1">
+              <Button
+                color="primary"
+                style={{ backgroundColor: "green" }}
+                onClick={handleNextPage}
+                disabled={page === totalPages}
+              >
+                {">"}
+              </Button>
+            </div>
+          </Col>
+        </Row>
       </div>
     </React.Fragment>
   )

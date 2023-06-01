@@ -25,7 +25,9 @@ export const fetchSites = (
   zipCode,
   timeZone,
   JobWbs,
-  company
+  company,
+  limit,
+  page
 ) => ({
   type: FETCH_SITES,
   siteId,
@@ -36,6 +38,8 @@ export const fetchSites = (
   timeZone,
   JobWbs,
   company,
+  limit,
+  page,
 })
 
 export const fetchSitesFilter = data => ({

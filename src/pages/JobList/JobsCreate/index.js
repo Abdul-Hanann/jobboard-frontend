@@ -25,7 +25,7 @@ import {
   addNewJob as onAddNewJob,
   updateJob as onUpdateJob,
   fetchJobWbs,
-  fetchSitesFilter,
+  fetchSites,
 } from "store/actions"
 
 import * as Yup from "yup"
@@ -105,7 +105,7 @@ const TasksCreate = () => {
 
   useEffect(() => {
     dispatch(fetchJobWbs())
-    dispatch(fetchSitesFilter("siteId"))
+    dispatch(fetchSites())
   }, [dispatch])
 
   const { jobWbs } = useSelector(state => state.JobWbsReducer)
@@ -405,17 +405,19 @@ const TasksCreate = () => {
                               <option value="" disabled selected>
                                 Select Job Site Id
                               </option>
-                              {sites.map((site, index) => {
-                                return (
-                                  <option
-                                    key={index}
-                                    data-job-wbs={`${site?.jobWbs?.id},${site?.jobWbs?.name}`}
-                                    value={site?.id}
-                                  >
-                                    {site.siteId}
-                                  </option>
-                                )
-                              })}
+                              {sites &&
+                                sites.sites &&
+                                sites.sites.map((site, index) => {
+                                  return (
+                                    <option
+                                      key={index}
+                                      data-job-wbs={`${site?.jobWbs?.id},${site?.jobWbs?.name}`}
+                                      value={site?.id}
+                                    >
+                                      {site.siteId}
+                                    </option>
+                                  )
+                                })}
                             </Input>
                             <div
                               style={{
@@ -497,12 +499,14 @@ const TasksCreate = () => {
                               <option value="" disabled selected>
                                 Select JobWBS
                               </option>
-                              {Array.isArray(jobWbs) ? (
-                                jobWbs.map((jobwbs, index) => (
-                                  <option key={index} value={jobwbs.id}>
-                                    {jobwbs.name}
-                                  </option>
-                                ))
+                              {jobWbs && jobWbs.jobWbs ? (
+                                jobWbs.jobWbs.map((jobwbsData, index) => {
+                                  return (
+                                    <option key={index} value={jobwbsData.id}>
+                                      {jobwbsData.name}
+                                    </option>
+                                  )
+                                })
                               ) : (
                                 <option value="">No jobWbs available</option>
                               )}
