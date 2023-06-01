@@ -22,7 +22,8 @@ export const fetchJobList = (
   JobNoOfDays,
   JobWbs,
   JobSiteId,
-  filteredStartDate
+  filteredStartDate,
+  limit
 ) => ({
   type: FETCH_JOB_LIST,
   JobName,
@@ -30,6 +31,7 @@ export const fetchJobList = (
   JobWbs,
   JobSiteId,
   filteredStartDate,
+  limit,
 })
 
 export const fetchJobListSuccess = jobs => ({

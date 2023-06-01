@@ -15,6 +15,9 @@ import {
   Col,
   Button,
   Input,
+  Modal,
+  ModalHeader,
+  ModalBody,
   CardBody,
   DropdownItem,
   UncontrolledDropdown,
@@ -24,6 +27,33 @@ import {
 
 import toast from "toastr"
 import "toastr/build/toastr.min.css"
+
+import Select from "react-select"
+import makeAnimated from "react-select/animated"
+
+const AnimatedMulti = props => {
+  const { options, value, setValue } = props
+  const animatedComponents = makeAnimated()
+
+  const customStyles = {
+    menu: (provided, state) => ({
+      ...provided,
+      backgroundColor: "white",
+    }),
+  }
+
+  return (
+    <Select
+      closeMenuOnSelect={false}
+      components={animatedComponents}
+      isMulti
+      onChange={val => setValue(val)}
+      value={value}
+      options={options}
+      styles={customStyles}
+    />
+  )
+}
 
 import { fetchJobWbs, deleteJobWbs as onDeleteJobWbs } from "store/actions"
 //redux
@@ -142,6 +172,7 @@ const TableContainer = ({
 
   const count = data.length
   const [value, setValue] = useState("")
+  const [jobWbsList, setJobWbsList] = useState("")
 
   const dispatch = useDispatch()
 
@@ -152,6 +183,32 @@ const TableContainer = ({
   const { jobWbs, isLoading, successDelete, errorDelete, error } = useSelector(
     state => state.JobWbsReducer
   )
+  const [uniqueJobWbs, setUniqueJobWbs] = useState(null)
+
+  useEffect(() => {
+    if (Array.isArray(jobWbs)) {
+      setJobWbsList(jobWbs)
+
+      const uniqueJobWbs = new Map()
+
+      jobWbs.forEach(job => {
+        uniqueJobWbs.set(job?.id, job?.name)
+      })
+
+      setUniqueJobWbs([...uniqueJobWbs])
+    }
+  }, [jobWbs])
+
+  const [modal, setModal] = useState(false)
+  const [filteredjobWbsName, setFilteredjobWbsName] = useState(null)
+
+  const toggle = () => {
+    if (modal) {
+      setModal(false)
+    } else {
+      setModal(true)
+    }
+  }
 
   useEffect(() => {
     if (data) {
@@ -224,28 +281,93 @@ const TableContainer = ({
     }
   }, [isLoading, errorDelete, error])
 
+  const handleClick = () => {
+    setFilteredjobWbsName(null)
+    toggle()
+  }
+
   const handleRefresh = () => {
-    setSearchInput("")
-    setFilterOption("")
-    setDataField(jobsList)
+    dispatch(fetchJobWbs())
+  }
+
+  const handleFilterClick = () => {
+    console.log("getting jobs")
+
+    const JobWbs = Array.isArray(filteredjobWbsName)
+      ? filteredjobWbsName?.map(item => item?.value)
+      : []
+
+    dispatch(fetchJobWbs(JobWbs))
+    toggle()
   }
 
   return (
     <Fragment>
-      <div className="d-flex mb-2">
-        <input
-          id="search"
-          name="search"
-          type="text"
-          className="form-control me-2"
-          placeholder="Search"
-          value={searchInput}
-          onChange={e => setSearchInput(e.target.value)}
-        />
-      </div>
-      <div
-      // className="table-responsive react-table"
-      >
+      <Modal isOpen={modal} toggle={toggle} className="overflow-visible">
+        <ModalHeader toggle={toggle} tag="h4">
+          Filter
+        </ModalHeader>
+        <ModalBody>
+          <form>
+            <Row>
+              <Col lg="12">
+                <div id="external-events" className="mt-0">
+                  <p className="text-muted mt-3">Site Id </p>
+
+                  <AnimatedMulti
+                    options={
+                      Array.isArray(uniqueJobWbs)
+                        ? uniqueJobWbs.map(([id, name]) => ({
+                            label: name,
+                            value: name,
+                          }))
+                        : []
+                    }
+                    value={filteredjobWbsName}
+                    setValue={setFilteredjobWbsName}
+                  />
+                </div>
+              </Col>
+              <Col>
+                <div className="text-end mt-3">
+                  <Button
+                    type="button"
+                    className="btn btn-success save-user"
+                    onClick={handleFilterClick}
+                  >
+                    Search
+                  </Button>
+                </div>
+              </Col>
+            </Row>
+          </form>
+        </ModalBody>
+      </Modal>
+
+      <Row className="mb-0">
+        <div className="d-flex d-flex justify-content-end mt-2">
+          <div className="flex-shrink-0" style={{ marginRight: 20 }}>
+            <button
+              // className="btn btn-primary mdi mdi-filter ms-2"
+              className="btn btn-primary mdi mdi-filter me-1"
+              style={{ backgroundColor: "green" }}
+              // onClick={() => handleSearch(searchInput, filterOption)}
+              onClick={() => handleClick()}
+            >
+              {/* Search */}
+            </button>
+            <button
+              // className="btn btn-primary mdi mdi-refresh ms-2"
+              className="btn btn-primary mdi mdi-refresh me-1"
+              style={{ backgroundColor: "green" }}
+              onClick={() => handleRefresh()}
+            >
+              {/* Refresh */}
+            </button>
+          </div>
+        </div>
+      </Row>
+      <div>
         <Table className="project-list-table table-nowrap align-middle table-borderless">
           <thead>
             <tr
@@ -266,7 +388,19 @@ const TableContainer = ({
           </thead>
 
           <tbody>
-            {jobWbs.length === 0 ? (
+            {isLoading ? (
+              <tr>
+                <td colSpan="8" className="text-center">
+                  {/* <div className="spinner-border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </div> */}
+                  <div className="text-center my-3">
+                    <i className="bx bx-loader bx-spin font-size-18 align-middle text-success me-2" />
+                    Loading...
+                  </div>
+                </td>
+              </tr>
+            ) : jobWbs.length === 0 ? (
               <tr>
                 <td colSpan="4" className="text-center">
                   <i className="mdi mdi-table-off font-size-24 text-muted" />
@@ -274,7 +408,7 @@ const TableContainer = ({
                 </td>
               </tr>
             ) : (
-              map(jobWbs, (rowdata, index) => (
+              map(jobWbsList, (rowdata, index) => (
                 <tr key={index}>
                   {/* <td>
                     <h5 className="text-truncate text-center font-size-14">

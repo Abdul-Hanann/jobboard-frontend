@@ -34,9 +34,10 @@ import {
 import { getRequestData } from "../../helpers/GlobalUtils"
 
 // Fetching All Notifications
-function* fetchJobWbsSaga() {
+function* fetchJobWbsSaga(action) {
   try {
-    const allJobs = yield call(getJobWbs)
+    const { JobWbs } = action
+    const allJobs = yield call(getJobWbs, JobWbs)
     yield put(fetchJobWbsSuccess(allJobs))
   } catch (error) {
     yield put(fetchJobWbsFail(error))

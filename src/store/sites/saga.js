@@ -36,17 +36,29 @@ import { addNewSite, updateSite, deleteSite } from "helpers/fakebackend_helper"
 //     yield put(fetchJobListFail(error))
 //   }
 // }
-function* fetchAllSitesSaga() {
+function* fetchAllSitesSaga(action) {
   try {
-    const allSites = yield call(getSites)
-    yield put(fetchSitesSuccess(allSites))
-  } catch (error) {
-    yield put(fetchSitesFail(error))
-  }
-}
-function* fetchAllSitesFilterSaga({ payload: data }) {
-  try {
-    const allSites = yield call(getSitesFilter, data)
+    const {
+      siteId,
+      building,
+      city,
+      state,
+      zipCode,
+      timeZone,
+      JobWbs,
+      company,
+    } = action
+    const allSites = yield call(
+      getSites,
+      siteId,
+      building,
+      city,
+      state,
+      zipCode,
+      timeZone,
+      JobWbs,
+      company
+    )
     yield put(fetchSitesSuccess(allSites))
   } catch (error) {
     yield put(fetchSitesFail(error))
@@ -90,7 +102,6 @@ function* onDeleteSite({ payload: siteId }) {
 
 export function* watchFetchAllSites() {
   yield takeEvery(FETCH_SITES, fetchAllSitesSaga)
-  yield takeEvery(FETCH_SITES_BY_PARAMS, fetchAllSitesFilterSaga)
   yield takeEvery(FETCH_SITE, fetchAllSiteSaga)
   yield takeEvery(ADD_NEW_SITE, onAddNewSite)
   yield takeEvery(UPDATE_SITE, onUpdateSite)

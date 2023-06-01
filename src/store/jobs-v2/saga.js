@@ -28,15 +28,22 @@ import {
 
 function* fetchJobList(action) {
   try {
-    const { JobName, JobNoOfDays, JobWbs, JobSiteId, filteredStartDate } =
-      action
+    const {
+      JobName,
+      JobNoOfDays,
+      JobWbs,
+      JobSiteId,
+      filteredStartDate,
+      limit,
+    } = action
     const allJobs = yield call(
       getJobList,
       JobName,
       JobNoOfDays,
       JobWbs,
       JobSiteId,
-      filteredStartDate
+      filteredStartDate,
+      limit
     )
     yield put(fetchJobListSuccess(allJobs))
   } catch (error) {

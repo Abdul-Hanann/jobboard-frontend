@@ -16,8 +16,9 @@ import {
   DELETE_JOB_WBS_FAIL,
 } from "./actionTypes"
 
-export const fetchJobWbs = () => ({
+export const fetchJobWbs = JobWbs => ({
   type: FETCH_JOB_WBS,
+  JobWbs,
 })
 
 export const fetchJobWbsSuccess = jobWbs => ({

@@ -45,6 +45,13 @@ const AnimatedMulti = props => {
   const { options, value, setValue } = props
   const animatedComponents = makeAnimated()
 
+  const customStyles = {
+    menu: (provided, state) => ({
+      ...provided,
+      backgroundColor: "white",
+    }),
+  }
+
   return (
     <Select
       closeMenuOnSelect={false}
@@ -53,6 +60,7 @@ const AnimatedMulti = props => {
       onChange={val => setValue(val)}
       value={value}
       options={options}
+      styles={customStyles}
     />
   )
 }
@@ -116,9 +124,61 @@ const TableContainer = ({
     state => state.SitesReducer
   )
 
+  const [uniqueSiteIds, setUniqueSiteIds] = useState(null)
+  const [uniqueBuildings, setUniqueBuildings] = useState(null)
+  const [uniqueCitys, setniqueCitys] = useState(null)
+  const [uniqueStates, setUniqueStates] = useState(null)
+  const [uniqueZipCodes, setUniqueZipCodes] = useState(null)
+  const [uniqueTimeZones, setUniqueTimeZones] = useState(null)
+  const [uniqueCompany, setUniqueCompany] = useState(null)
+  const [uniqueJobWbs, setUniqueJobWbs] = useState(null)
+
+  console.log("uniqueCompany:", uniqueCompany)
+  console.log("uniqueJobWbs:", uniqueJobWbs)
   useEffect(() => {
-    setSitesList(sites)
+    if (Array.isArray(sites)) {
+      setSitesList(sites)
+
+      const uniqueSiteId = new Set()
+      const uniqueBuilding = new Set()
+      const uniqueCity = new Set()
+      const uniqueState = new Set()
+      const uniqueZipCode = new Set()
+      const uniqueTimeZone = new Set()
+      const uniqueCompany = new Map()
+      const uniqueJobWbs = new Map()
+
+      sites.forEach(site => {
+        uniqueSiteId.add(site?.siteId)
+        uniqueBuilding.add(site?.building)
+        uniqueCity.add(site?.city)
+        uniqueState.add(site?.state)
+        uniqueZipCode.add(site?.zipcode)
+        uniqueTimeZone.add(site?.timezone)
+        uniqueCompany.set(site?.company.id, site?.company.name)
+        uniqueJobWbs.set(site?.jobWbs.id, site?.jobWbs.name)
+      })
+
+      setUniqueSiteIds([...uniqueSiteId])
+      setUniqueBuildings([...uniqueBuilding])
+      setniqueCitys([...uniqueCity])
+      setUniqueStates([...uniqueState])
+      setUniqueZipCodes([...uniqueZipCode])
+      setUniqueTimeZones([...uniqueTimeZone])
+      setUniqueCompany(Array.from(uniqueCompany.entries()))
+      setUniqueJobWbs(Array.from(uniqueJobWbs.entries()))
+    }
   }, [sites])
+
+  const [modal, setModal] = useState(false)
+  const [filteredSiteId, setFilteredSiteId] = useState(null)
+  const [filteredBuilding, setFilteredBuilding] = useState(null)
+  const [filteredCity, setFilteredCity] = useState(null)
+  const [filteredJobWbs, setFilteredJobWbs] = useState(null)
+  const [filteredCompany, setFilteredCompany] = useState(null)
+  const [filteredState, setFilteredState] = useState(null)
+  const [filteredZipCode, setFilteredZipCode] = useState(null)
+  const [filteredTimeZone, setFilteredTimeZone] = useState(null)
 
   const onClickDelete = siteId => {
     dispatch(onDeleteSite(siteId))
@@ -130,15 +190,84 @@ const TableContainer = ({
     }
   }, [isLoading, success_delete])
 
-  const [modal, setModal] = useState(false)
+  const handleRefresh = () => {
+    dispatch(fetchSites())
+  }
 
-  // const [filteredStartDate, setFilteredStartDate] = useState("")
-  // const [filteredEndDate, setFilteredEndDate] = useState("")
-  const [filteredCity, setFilteredCity] = useState("")
-  // const [filteredZipcode, setFilteredZipcode] = useState("")
-  const [filteredSiteId, setFilteredSiteId] = useState("")
-  const [filteredBuilding, setFilteredBuilding] = useState("")
+  const handleFilterClick = () => {
+    console.log("getting jobs")
 
+    const siteId = Array.isArray(filteredSiteId)
+      ? filteredSiteId.map(item => item?.value)
+      : []
+    const building = Array.isArray(filteredBuilding)
+      ? filteredBuilding?.map(item => item?.value)
+      : []
+    const city = Array.isArray(filteredCity)
+      ? filteredCity?.map(item => item?.value)
+      : []
+    const state = Array.isArray(filteredState)
+      ? filteredState?.map(item => item?.value)
+      : []
+    const zipCode = Array.isArray(filteredZipCode)
+      ? filteredZipCode?.map(item => item?.value)
+      : []
+    const timeZone = Array.isArray(filteredTimeZone)
+      ? filteredTimeZone?.map(item => item?.value)
+      : []
+    const JobWbs = Array.isArray(filteredJobWbs)
+      ? filteredJobWbs?.map(item => item?.value)
+      : []
+    const company = Array.isArray(filteredCompany)
+      ? filteredCompany?.map(item => item?.value)
+      : []
+
+    dispatch(
+      fetchSites(
+        siteId,
+        building,
+        city,
+        state,
+        zipCode,
+        timeZone,
+        JobWbs,
+        company
+      )
+    )
+    toggle()
+  }
+
+  // const [data, setData] = useState(jobs)
+  // const [uniqueJobNoOfDays, setUniqueJobNoOfDays] = useState(null)
+  // const [uniqueJobNames, setUniqueJobName] = useState(null)
+  // const [uniqueJobWbs, setUniqueJobWbs] = useState(null)
+  // const [uniqueJobSites, setUniqueJobSites] = useState(null)
+
+  // console.log("uniqueJobWbs:", uniqueJobWbs)
+  // console.log("uniqueJobSites:", uniqueJobSites)
+
+  // useEffect(() => {
+  //   if (Array.isArray(jobs)) {
+  //     setData(jobs)
+
+  //     const uniqueJobNoOfDays = new Set()
+  //     const uniqueJobName = new Set()
+  //     const uniqueJobWbsMap = new Map()
+  //     const uniqueJobSitesMap = new Map()
+
+  //     jobs.forEach(job => {
+  //       uniqueJobNoOfDays.add(job?.numberOfDays)
+  //       uniqueJobName.add(job?.jobName)
+  //       uniqueJobWbsMap.set(job?.jobWbs.id, job?.jobWbs.name)
+  //       uniqueJobSitesMap.set(job?.site.id, job?.site.siteId)
+  //     })
+
+  //     setUniqueJobNoOfDays([...uniqueJobNoOfDays])
+  //     setUniqueJobName([...uniqueJobName])
+  //     setUniqueJobWbs(Array.from(uniqueJobWbsMap.entries()))
+  //     setUniqueJobSites(Array.from(uniqueJobSitesMap.entries()))
+  //   }
+  // }, [jobs])
   const SiteId = [
     { value: "SK2540", label: "SK2540" },
     { value: "SK2541", label: "SK2541" },
@@ -198,19 +327,15 @@ const TableContainer = ({
   // }
 
   const handleClick = () => {
+    setFilteredSiteId(null)
+    setFilteredBuilding(null)
+    setFilteredCity(null)
+    setFilteredJobWbs(null)
+    setFilteredCompany(null)
+    setFilteredState(null)
+    setFilteredZipCode(null)
+    setFilteredTimeZone(null)
     toggle()
-  }
-  // const clearAllFilters = () => {
-  //   setFilteredJobNoOfDays("")
-  //   setFilteredStartDate("")
-  //   setFilteredJobSiteId("")
-  //   setFilteredJobName("")
-  // }
-
-  const handleRefresh = () => {
-    setSearchInput("")
-    setFilterOption("")
-    setDataField(Data)
   }
 
   // const [showEntries, setshowEntries] = useState(10)
@@ -256,21 +381,6 @@ const TableContainer = ({
     gotoPage(page)
   }
 
-  // const handleSearch = e => {
-  //   setValue(e.target.value)
-  //   // if (e.target.value === "") {
-  //   //   setshowEntries(25)
-  //   // }
-  //   let currentList = sites.filter(jobWbs => {
-  //     return e.target.value === ""
-  //       ? true
-  //       : jobWbs.projectName
-  //           .toLowerCase()
-  //           .includes(e.target.value.toLowerCase())
-  //   })
-
-  //   setcurrentTableData(currentList)
-  // }
   return (
     <Fragment>
       <Modal isOpen={modal} toggle={toggle} className="overflow-visible">
@@ -279,32 +389,40 @@ const TableContainer = ({
           Filter
         </ModalHeader>
         <ModalBody>
-          <form
-            onSubmit={e => {
-              e.preventDefault()
-              validation.handleSubmit()
-              return false
-            }}
-          >
+          <form>
             <Row>
-              <Col lg="12">
+              <Col lg="6">
                 <div id="external-events" className="mt-2">
-                  <p className="text-muted mt-3">Filter by Site Id </p>
+                  <p className="text-muted mt-3">Site Id </p>
 
                   <AnimatedMulti
-                    options={SiteId}
+                    options={
+                      Array.isArray(uniqueSiteIds)
+                        ? uniqueSiteIds.map((uniqueSiteId, index) => ({
+                            label: uniqueSiteId,
+                            value: uniqueSiteId,
+                          }))
+                        : []
+                    }
                     value={filteredSiteId}
                     setValue={setFilteredSiteId}
                   />
-                  <p className="text-muted mt-3">Filter by Building </p>
+                  <p className="text-muted mt-3">Building </p>
 
                   <AnimatedMulti
-                    options={Building}
+                    options={
+                      Array.isArray(uniqueBuildings)
+                        ? uniqueBuildings.map((uniqueBuilding, index) => ({
+                            label: uniqueBuilding,
+                            value: uniqueBuilding,
+                          }))
+                        : []
+                    }
                     value={filteredBuilding}
                     setValue={setFilteredBuilding}
                   />
-                  <p className="text-muted mt-3">Filter by City</p>
-                  <Select
+                  <p className="text-muted mt-3">City</p>
+                  {/* <Select
                     className="basic-single"
                     classNamePrefix="select"
                     name="color"
@@ -312,17 +430,104 @@ const TableContainer = ({
                     value={filteredCity}
                     onChange={value => setFilteredCity(value)}
                     options={City}
+                  /> */}
+                  <AnimatedMulti
+                    options={
+                      Array.isArray(uniqueCitys)
+                        ? uniqueCitys.map((uniqueCity, index) => ({
+                            label: uniqueCity,
+                            value: uniqueCity,
+                          }))
+                        : []
+                    }
+                    value={filteredCity}
+                    setValue={setFilteredCity}
+                  />
+                  <p className="text-muted mt-3">JobWbs </p>
+
+                  <AnimatedMulti
+                    options={
+                      Array.isArray(uniqueJobWbs)
+                        ? uniqueJobWbs.map(([id, name]) => ({
+                            label: name,
+                            value: id,
+                          }))
+                        : []
+                    }
+                    value={filteredJobWbs}
+                    setValue={setFilteredJobWbs}
+                  />
+                </div>
+              </Col>
+              <Col lg="6">
+                <div id="external-events" className="mt-2">
+                  <p className="text-muted mt-3">Company </p>
+
+                  <AnimatedMulti
+                    options={
+                      Array.isArray(uniqueCompany)
+                        ? uniqueCompany.map(([id, name]) => ({
+                            label: name,
+                            value: id,
+                          }))
+                        : []
+                    }
+                    value={filteredCompany}
+                    setValue={setFilteredCompany}
+                  />
+                  <p className="text-muted mt-3">State </p>
+
+                  <AnimatedMulti
+                    options={
+                      Array.isArray(uniqueStates)
+                        ? uniqueStates.map((uniqueState, index) => ({
+                            label: uniqueState,
+                            value: uniqueState,
+                          }))
+                        : []
+                    }
+                    value={filteredState}
+                    setValue={setFilteredState}
+                  />
+                  <p className="text-muted mt-3">Zip Code </p>
+
+                  <AnimatedMulti
+                    options={
+                      Array.isArray(uniqueZipCodes)
+                        ? uniqueZipCodes.map((uniqueZipCode, index) => ({
+                            label: uniqueZipCode,
+                            value: uniqueZipCode,
+                          }))
+                        : []
+                    }
+                    value={filteredZipCode}
+                    setValue={setFilteredZipCode}
+                  />
+                  <p className="text-muted mt-3">TimeZone </p>
+
+                  <AnimatedMulti
+                    options={
+                      Array.isArray(uniqueTimeZones)
+                        ? uniqueTimeZones.map((uniqueTimeZone, index) => ({
+                            label: uniqueTimeZone,
+                            value: uniqueTimeZone,
+                          }))
+                        : []
+                    }
+                    value={filteredTimeZone}
+                    setValue={setFilteredTimeZone}
                   />
                 </div>
               </Col>
               <Col>
-                <div className="text-end mt-2">
-                  <button
-                    // type="submit"
+                <div className="text-end mt-3">
+                  <Button
+                    type="button"
                     className="btn btn-success save-user"
+                    onClick={handleFilterClick}
                   >
-                    Filter
-                  </button>
+                    Search
+                  </Button>
                 </div>
               </Col>
             </Row>
@@ -332,30 +537,6 @@ const TableContainer = ({
 
       <Row className="mb-0">
         <div className="d-flex d-flex justify-content-end mt-2">
-          {/* <input
-            id="search"
-            name="search"
-            type="text"
-            className="form-control me-2"
-            placeholder="Search"
-            value={searchInput}
-            onChange={e => setSearchInput(e.target.value)}
-          />
-          <select
-            id="filter"
-            name="filter"
-            className="form-select"
-            value={filterOption}
-            onChange={e => setFilterOption(e.target.value)}
-          >
-            <option value="">Filter</option>
-            <option value="siteId">Site Id</option>
-            <option value="building">Building</option>
-            <option value="state">State</option>
-            <option value="city">City</option>
-            // <option value="zipCode">Zip Code</option>
-            <option value="timeZone">Time Zone</option>
-          </select> */}
           <div className="flex-shrink-0" style={{ marginRight: 20 }}>
             <button
               // className="btn btn-primary mdi mdi-filter ms-2"
@@ -407,9 +588,21 @@ const TableContainer = ({
           </thead>
 
           <tbody>
-            {sitesList.length === 0 ? (
+            {isLoading ? (
               <tr>
-                <td colSpan="4" className="text-center">
+                <td colSpan="10" className="text-center">
+                  {/* <div className="spinner-border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </div> */}
+                  <div className="text-center my-3">
+                    <i className="bx bx-loader bx-spin font-size-18 align-middle text-success me-2" />
+                    Loading...
+                  </div>
+                </td>
+              </tr>
+            ) : sitesList.length === 0 ? (
+              <tr>
+                <td colSpan="10" className="text-center">
                   <i className="mdi mdi-table-off font-size-24 text-muted" />
                   <p>No data available</p>
                 </td>
@@ -431,7 +624,7 @@ const TableContainer = ({
                   </td>
                   <td>{rowdata?.building}</td>
                   <td>{rowdata?.addressLine1}</td>
-                  <td>{rowdata?.addressLine2}</td>
+                  <td>{rowdata?.addressLine2 || "-"}</td>
                   <td>{rowdata?.city}</td>
                   <td>{rowdata?.jobWbs?.name}</td>
                   <td>{rowdata?.company?.name}</td>

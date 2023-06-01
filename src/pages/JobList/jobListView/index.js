@@ -129,20 +129,33 @@ const JobsList = () => {
   // validation
   const [data, setData] = useState(jobs)
   const [uniqueJobNoOfDays, setUniqueJobNoOfDays] = useState(null)
-  // console.log("Jobs:", jobs)
-  // useEffect(() => {
-  //   if (jobs) {
-  //     setData(jobs)
-  //     const jobNoOfDays = jobs?.map(job => job?.numberOfDays)
-  //     setUniqueJobNoOfDays([...new Set(jobNoOfDays)])
-  //   }
-  // }, [jobs])
-  // console.log("uniqueJobNoOfDays:", uniqueJobNoOfDays)
+  const [uniqueJobNames, setUniqueJobName] = useState(null)
+  const [uniqueJobWbs, setUniqueJobWbs] = useState(null)
+  const [uniqueJobSites, setUniqueJobSites] = useState(null)
+
+  console.log("uniqueJobWbs:", uniqueJobWbs)
+  console.log("uniqueJobSites:", uniqueJobSites)
+
   useEffect(() => {
     if (Array.isArray(jobs)) {
       setData(jobs)
-      const jobNoOfDays = jobs.map(job => job?.numberOfDays)
-      setUniqueJobNoOfDays([...new Set(jobNoOfDays)])
+
+      const uniqueJobNoOfDays = new Set()
+      const uniqueJobName = new Set()
+      const uniqueJobWbsMap = new Map()
+      const uniqueJobSitesMap = new Map()
+
+      jobs.forEach(job => {
+        uniqueJobNoOfDays.add(job?.numberOfDays)
+        uniqueJobName.add(job?.jobName)
+        uniqueJobWbsMap.set(job?.jobWbs.id, job?.jobWbs.name)
+        uniqueJobSitesMap.set(job?.site.id, job?.site.siteId)
+      })
+
+      setUniqueJobNoOfDays([...uniqueJobNoOfDays])
+      setUniqueJobName([...uniqueJobName])
+      setUniqueJobWbs(Array.from(uniqueJobWbsMap.entries()))
+      setUniqueJobSites(Array.from(uniqueJobSitesMap.entries()))
     }
   }, [jobs])
 
@@ -153,7 +166,13 @@ const JobsList = () => {
   const [filteredJobWbs, setFilteredJobWbs] = useState(null)
   const [filteredJobSiteId, setFilteredJobSiteId] = useState(null)
   const [filteredStartDate, setFilteredStartDate] = useState(null)
+  const [selectedShowOption, setSelectedShowOption] = useState({
+    label: "Show 10",
+    value: 10,
+  })
 
+  console.log("selectedJobSiteIdOption:", selectedShowOption.value)
+  console.log("tableEntityValue:", selectedShowOption.label)
   const toggle = () => {
     if (modal) {
       setModal(false)
@@ -208,6 +227,21 @@ const JobsList = () => {
     return date1
   }
 
+  const ShowOptions = [
+    { value: 10, label: "Show 10" },
+    { value: 20, label: "Show 20" },
+    { value: 30, label: "Show 30" },
+    { value: 40, label: "Show 40" },
+    { value: 50, label: "Show 50" },
+  ]
+
+  const handleChange = e => {
+    const selectedValue = e.target.value
+    const limit = e.target.value
+    const selectedLabel = e.target.options[e.target.selectedIndex].text
+    setSelectedShowOption({ label: selectedLabel, value: selectedValue })
+    dispatch(fetchJobList("", "", "", "", "", limit))
+  }
   const handleClick = () => {
     setFilteredJobName(null)
     setFilteredJobNoOfDays(null)
@@ -262,10 +296,10 @@ const JobsList = () => {
                   <AnimatedMulti
                     className="custom-dropdown-menu"
                     options={
-                      Array.isArray(data)
-                        ? data.map((job, index) => ({
-                            label: job?.jobName,
-                            value: job?.jobName,
+                      Array.isArray(uniqueJobNames)
+                        ? uniqueJobNames.map((uniqueJobName, index) => ({
+                            label: uniqueJobName,
+                            value: uniqueJobName,
                           }))
                         : []
                     }
@@ -276,28 +310,61 @@ const JobsList = () => {
 
                   <AnimatedMulti
                     className="custom-dropdown-menu"
-                    options={uniqueJobNoOfDays?.map((numberOfDays, index) => ({
-                      label: numberOfDays,
-                      value: numberOfDays,
-                    }))}
+                    options={
+                      Array.isArray(uniqueJobNoOfDays)
+                        ? [...uniqueJobNoOfDays]
+                            .sort((a, b) => a - b)
+                            .map(jobNoOfDays => ({
+                              label: jobNoOfDays.toString(),
+                              value: jobNoOfDays,
+                            }))
+                        : []
+                    }
                     value={filteredJobNoOfDays}
                     setValue={setFilteredJobNoOfDays}
                   />
+
+                  {/* <AnimatedMulti
+                    className="custom-dropdown-menu"
+                    options={
+                      Array.isArray(uniqueJobNoOfDays)
+                        ? uniqueJobNoOfDays.map((numberOfDays, index) => ({
+                            label: numberOfDays,
+                            value: numberOfDays,
+                          }))
+                        : []
+                    }
+                    value={filteredJobNoOfDays}
+                    setValue={setFilteredJobNoOfDays}
+                  /> */}
                   <p className="text-muted mt-3">Job Wbs </p>
+                  {/* <AnimatedMulti
+                    className="custom-dropdown-menu"
+                    options={
+                      Array.isArray(uniqueJobWbs)
+                        ? uniqueJobWbs.map((jobWbs, index) => ({
+                            label: jobWbs.name,
+                            value: jobWbs.id,
+                          }))
+                        : []
+                    }
+                    value={filteredJobWbs}
+                    setValue={setFilteredJobWbs}
+                  /> */}
                   <AnimatedMulti
                     className="custom-dropdown-menu"
                     options={
-                      Array.isArray(data)
-                        ? data.map((job, index) => ({
-                            label: job?.jobWbs?.name,
-                            value: job?.jobWbs?.id,
+                      Array.isArray(uniqueJobWbs)
+                        ? uniqueJobWbs.map(([id, name]) => ({
+                            label: name,
+                            value: id,
                           }))
                         : []
                     }
                     value={filteredJobWbs}
                     setValue={setFilteredJobWbs}
                   />
-                  <p className="text-muted mt-3 mb-0">Job date </p>
+                  <p className="text-muted mt-3">Job date </p>
                   <DatePicker
                     id="jobDate"
                     name="jobDate"
@@ -307,13 +374,26 @@ const JobsList = () => {
                     className="form-control"
                   />
                   <p className="text-muted mt-3">Filter by Job Site Id</p>
+                  {/* <AnimatedMulti
+                    className="custom-dropdown-menu"
+                    options={
+                      Array.isArray(uniqueJobSites)
+                        ? uniqueJobSites.map((uniqueJobSite, index) => ({
+                            label: uniqueJobSite.siteId,
+                            value: uniqueJobSite.id,
+                          }))
+                        : []
+                    }
+                    value={filteredJobSiteId}
+                    setValue={setFilteredJobSiteId}
+                  /> */}
                   <AnimatedMulti
                     className="custom-dropdown-menu"
                     options={
-                      Array.isArray(data)
-                        ? data.map((job, index) => ({
-                            label: job?.site?.siteId,
-                            value: job?.site?.id,
+                      Array.isArray(uniqueJobSites)
+                        ? uniqueJobSites.map(([id, name]) => ({
+                            label: name,
+                            value: id,
                           }))
                         : []
                     }
@@ -323,7 +403,7 @@ const JobsList = () => {
                 </div>
               </Col>
               <Col>
-                <div className="text-end mt-2">
+                <div className="text-end mt-3">
                   <Button
                     type="button"
                     className="btn btn-success save-user"
@@ -346,6 +426,46 @@ const JobsList = () => {
       <div>
         <Row>
           <div className="d-flex d-flex justify-content-end mt-1">
+            <div className="mb-0 card-title flex-grow-1">
+              <h3 style={{ paddingLeft: 20 }}>
+                <Input
+                  name="JobSiteId"
+                  type="select"
+                  className="form-select"
+                  placeholder="Select..."
+                  onChange={handleChange}
+                  value={selectedShowOption?.value}
+                  style={{ maxWidth: "20%", fontSize: 16 }}
+                >
+                  {/* <option value="" disabled selected>
+                    Select Entity...
+                  </option> */}
+                  {ShowOptions.map((ShowOption, index) => {
+                    return (
+                      <option
+                        key={index}
+                        value={ShowOption.value}
+                        selected={index === 0}
+                      >
+                        {ShowOption.label}
+                      </option>
+                    )
+                  })}
+                </Input>
+                {/* <Select
+                  // className="select"
+                  placeholder="Select entity..."
+                  name="tableEntity"
+                  value={tableEntityLabel}
+                  onChange={handleChange}
+                  options={ShowOptions?.map((option, index) => ({
+                    value: option.value,
+                    label: option.label,
+                  }))}
+                  styles={{ width: 50 }}
+                /> */}
+              </h3>
+            </div>
             <div className="flex-shrink-0" style={{ marginRight: 20 }}>
               <button
                 // className="btn btn-primary mdi mdi-filter ms-2"
@@ -390,7 +510,6 @@ const JobsList = () => {
                       <th scope="col">Job Date</th>
                       <th scope="col">Job No Of Days</th>
                       <th scope="col">Job Site Id</th>
-                      {/* <th scope="col">Job Notes</th> */}
                       <th scope="col">Job WBS</th>
                       <th scope="col">Action</th>
                     </tr>
@@ -399,8 +518,12 @@ const JobsList = () => {
                     {isLoading ? (
                       <tr>
                         <td colSpan="8" className="text-center">
-                          <div className="spinner-border" role="status">
+                          {/* <div className="spinner-border" role="status">
                             <span className="visually-hidden">Loading...</span>
+                          </div> */}
+                          <div className="text-center my-3">
+                            <i className="bx bx-loader bx-spin font-size-18 align-middle text-success me-2" />
+                            Loading...
                           </div>
                         </td>
                       </tr>

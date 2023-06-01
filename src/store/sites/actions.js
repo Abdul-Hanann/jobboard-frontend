@@ -17,8 +17,25 @@ import {
   UPDATE_SITE_SUCCESS,
 } from "./actionTypes"
 
-export const fetchSites = () => ({
+export const fetchSites = (
+  siteId,
+  building,
+  city,
+  state,
+  zipCode,
+  timeZone,
+  JobWbs,
+  company
+) => ({
   type: FETCH_SITES,
+  siteId,
+  building,
+  city,
+  state,
+  zipCode,
+  timeZone,
+  JobWbs,
+  company,
 })
 
 export const fetchSitesFilter = data => ({

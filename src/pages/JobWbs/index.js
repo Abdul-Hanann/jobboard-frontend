@@ -146,16 +146,14 @@ function JobWbs() {
                     </div>
                   </div>
                 </CardBody>
-                <CardBody>
-                  <TableContainer
-                    columns={[]}
-                    data={jobWbsData}
-                    isGlobalFilter={true}
-                    isAddOptions={false}
-                    isJobListGlobalFilter={true}
-                    customPageSize={1}
-                  />
-                </CardBody>
+                <TableContainer
+                  columns={[]}
+                  data={jobWbsData}
+                  isGlobalFilter={true}
+                  isAddOptions={false}
+                  isJobListGlobalFilter={true}
+                  customPageSize={1}
+                />
               </Card>
             </Col>
           </Row>

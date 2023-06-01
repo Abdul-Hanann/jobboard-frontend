@@ -210,23 +210,34 @@ export const getInvoiceDetail = id =>
 //   get(
 //     `${url.JOB_LIST_URL}?jobName=${jobName}&numberOfDays=${numberOfDays}&jobWbs=${jobWbs}&site=${site}&jobDate${jobDate}`
 //   )
-export const getJobList = (jobName, numberOfDays, jobWbs, site, jobDate) => {
+export const getJobList = (
+  JobName,
+  JobNoOfDays,
+  JobWbs,
+  JobSiteId,
+  filteredStartDate,
+  limit
+) => {
   let queryParams = ""
-
-  if (jobName) {
-    queryParams += `&jobName=${jobName}`
+  console.log("jonName:", JobName)
+  console.log("limit:", limit)
+  if (JobName) {
+    queryParams += `&jobName=${JobName}`
   }
-  if (numberOfDays) {
-    queryParams += `&numberOfDays=${numberOfDays}`
+  if (JobNoOfDays) {
+    queryParams += `&numberOfDays=${JobNoOfDays}`
   }
-  if (jobWbs) {
-    queryParams += `&jobWbs=${jobWbs}`
+  if (JobWbs) {
+    queryParams += `&jobWbs=${JobWbs}`
   }
-  if (site) {
-    queryParams += `&site=${site}`
+  if (JobSiteId) {
+    queryParams += `&site=${JobSiteId}`
   }
-  if (jobDate) {
-    queryParams += `&jobDate=${jobDate}`
+  if (filteredStartDate) {
+    queryParams += `&jobDate=${filteredStartDate}`
+  }
+  if (limit) {
+    queryParams += `&limit=${limit}`
   }
 
   const urlWithParams =
@@ -245,7 +256,47 @@ export const deleteJobList = id => del(`${url.JOB_LIST_URL}/${id}`)
 // get Apply Jobs
 
 // get sites
-export const getSites = () => get(url.SITES_URL)
+export const getSites = (
+  siteId,
+  building,
+  city,
+  state,
+  zipCode,
+  timeZone,
+  JobWbs,
+  company
+) => {
+  let queryParams = ""
+
+  if (siteId) {
+    queryParams += `&siteId=${siteId}`
+  }
+  if (building) {
+    queryParams += `&building=${building}`
+  }
+  if (city) {
+    queryParams += `&city=${city}`
+  }
+  if (state) {
+    queryParams += `&state=${state}`
+  }
+  if (zipCode) {
+    queryParams += `&zipcode=${zipCode}`
+  }
+  if (timeZone) {
+    queryParams += `&timezone=${timeZone}`
+  }
+  if (JobWbs) {
+    queryParams += `&jobWbs=${JobWbs}`
+  }
+  if (company) {
+    queryParams += `&company=${company}`
+  }
+
+  const urlWithParams =
+    url.SITES_URL + (queryParams ? `?${queryParams.slice(1)}` : "")
+  return get(urlWithParams)
+}
 
 export const getSitesFilter = data => get(`${url.SITES_URL}?select=${data}`)
 
@@ -286,8 +337,16 @@ export const updateSite = (siteId, site) =>
 // delete site
 export const deleteSite = siteId => del(`${url.SITES_URL}/${siteId}`)
 
-export const getJobWbs = () => get(url.JOB_WBS_URL)
+export const getJobWbs = JobWbs => {
+  let queryParams = ""
+  if (JobWbs) {
+    queryParams += `&jobWbs=${JobWbs}`
+  }
 
+  const urlWithParams =
+    url.JOB_WBS_URL + (queryParams ? `?${queryParams.slice(1)}` : "")
+  return get(urlWithParams)
+}
 export const getJobWbsById = id => get(`${url.JOB_WBS_URL}/${id}`)
 
 // add site
