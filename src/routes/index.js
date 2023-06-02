@@ -49,6 +49,7 @@ import InvoiceDetail from "../pages/Invoices/invoices-detail"
 // Authentication related pages
 import Login from "../pages/Authentication/Login"
 import Logout from "../pages/Authentication/Logout"
+import UserRoleNotAssigned from "pages/Authentication/UserRoleNotAssigned"
 import Register from "../pages/Authentication/Register"
 import ForgetPwd from "../pages/Authentication/ForgetPassword"
 
@@ -447,6 +448,7 @@ const authProtectedRoutes = [
 ]
 
 const publicRoutes = [
+  { path: "/user-role-not-assigned", component: <UserRoleNotAssigned /> },
   { path: "/logout", component: <Logout /> },
   { path: "/login", component: <Login /> },
   { path: "/forgot-password", component: <ForgetPwd /> },

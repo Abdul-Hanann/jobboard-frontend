@@ -73,8 +73,8 @@ const CarouselPage = () => {
               <button
                 className="bsk-btn bsk-btn-default"
                 style={{
-                  padding: "15px",
-                  borderRadius: "25px",
+                  padding: "20px",
+                  borderRadius: "30px",
                   backgroundColor: "green",
                   color: "white",
                   fontSize: 16,
@@ -85,7 +85,7 @@ const CarouselPage = () => {
                   type="image/svg+xml"
                   data="https://s3-eu-west-1.amazonaws.com/cdn-testing.web.bas.ac.uk/scratch/bas-style-kit/ms-pictogram/ms-pictogram.svg"
                   className="x-icon"
-                ></object>
+                ></object>{" "}
                 Sign in with Microsoft
               </button>
             </div>

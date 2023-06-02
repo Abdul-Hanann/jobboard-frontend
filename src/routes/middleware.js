@@ -5,15 +5,16 @@ import { FC } from "react"
 import { Navigate } from "react-router"
 import { userTypes } from "pages/Authentication/userTypes"
 
+import { GET_LOGOUT } from "helpers/url_helper"
 // import { useAppSelector } from "./store/hooks"
 
 // import { RoutesPath } from "./utils/constants/common"
 
 export const Middleware: FC = () => {
   const isAuthenticated = localStorage.getItem("isAuthenticated")
-
+  console.log("isAuthenticated:", isAuthenticated)
   const userRole = localStorage.getItem("userRole")
-
+  console.log("userRole:", userRole)
   if (
     isAuthenticated === "true" &&
     (userRole === userTypes.ROLE_ADMIN ||
@@ -23,6 +24,11 @@ export const Middleware: FC = () => {
       userRole === userTypes.ROLE_TECHNICIAN)
   ) {
     return <Navigate to={{ pathname: "/dashboard" }} />
+  } else if (isAuthenticated === "true" && userRole) {
+    localStorage.removeItem("isAuthenticated")
+    console.log("isAuthenticated === true && userRole === undefined")
+    // window.open(GET_LOGOUT, "_blank")
+    return <Navigate to={{ pathname: "/user-role-not-assigned" }} />
   } else {
     return <Navigate to={{ pathname: "/login" }} />
   }

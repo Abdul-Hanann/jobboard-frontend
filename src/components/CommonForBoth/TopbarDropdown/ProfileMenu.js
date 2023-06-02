@@ -40,11 +40,10 @@ const ProfileMenu = props => {
 
     console.log("loging out")
     window.open(GET_LOGOUT, "_blank")
-
     window.location.reload()
     // window.location.href = GET_LOGOUT
 
-//     history("/login")
+    //     history("/login")
     // dispatch(logoutUser())
   }
 
