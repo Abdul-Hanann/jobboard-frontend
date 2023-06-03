@@ -13,6 +13,7 @@ import {
   jobCreatorRoutes,
   technicianRoutes,
   schedulerRoutes,
+  noRoleRoutes,
 } from "./routes"
 
 // Import all middleware
@@ -44,8 +45,11 @@ const App = () => {
   }
 
   const cookies = getCookies()
-
-  localStorage.setItem("userRole", cookies.userRole)
+  if (cookies.userRole) {
+    localStorage.setItem("userRole", cookies.userRole)
+  } else {
+    localStorage.setItem("userRole", "undefinedd")
+  }
 
   localStorage.setItem("isAuthenticated", cookies.isAuthenticated)
   // localStorage.setItem("isAuthenticated", true)
@@ -65,7 +69,8 @@ const App = () => {
           userRole === userTypes.ROLE_SITE_ADMIN ||
           userRole === userTypes.ROLE_JOB_CREATOR ||
           userRole === userTypes.ROLE_SCHEDULER ||
-          userRole === userTypes.ROLE_TECHNICIAN) ? (
+          userRole === userTypes.ROLE_TECHNICIAN ||
+          userRole === "undefinedd") ? (
           <>
             {userRole === userTypes.ROLE_ADMIN &&
               adminRoutes.map((route, idx) => (
@@ -122,6 +127,19 @@ const App = () => {
               ))}
             {userRole === userTypes.ROLE_SCHEDULER &&
               schedulerRoutes.map((route, idx) => (
+                <Route
+                  path={route.path}
+                  element={
+                    // <Authmiddleware>
+                    <Layout>{route.component}</Layout>
+                    // </Authmiddleware>
+                  }
+                  key={idx}
+                  exact={true}
+                />
+              ))}
+            {userRole === "undefinedd" &&
+              noRoleRoutes.map((route, idx) => (
                 <Route
                   path={route.path}
                   element={

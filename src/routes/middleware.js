@@ -25,9 +25,6 @@ export const Middleware: FC = () => {
   ) {
     return <Navigate to={{ pathname: "/dashboard" }} />
   } else if (isAuthenticated === "true" && userRole) {
-    localStorage.removeItem("isAuthenticated")
-    console.log("isAuthenticated === true && userRole === undefined")
-    // window.open(GET_LOGOUT, "_blank")
     return <Navigate to={{ pathname: "/user-role-not-assigned" }} />
   } else {
     return <Navigate to={{ pathname: "/login" }} />

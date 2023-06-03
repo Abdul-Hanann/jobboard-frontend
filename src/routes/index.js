@@ -315,6 +315,14 @@ const schedulerRoutes = [
     component: <Navigate to="/dashboard" />,
   },
 ]
+const noRoleRoutes = [
+  { path: "/user-role-not-assigned", component: <UserRoleNotAssigned /> },
+  {
+    path: "/",
+    exact: true,
+    component: <Navigate to="/user-role-not-assigned" />,
+  },
+]
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
   { path: "/joblist", component: <JobList /> },
@@ -448,7 +456,7 @@ const authProtectedRoutes = [
 ]
 
 const publicRoutes = [
-  { path: "/user-role-not-assigned", component: <UserRoleNotAssigned /> },
+  // { path: "/user-role-not-assigned", component: <UserRoleNotAssigned /> },
   { path: "/logout", component: <Logout /> },
   { path: "/login", component: <Login /> },
   { path: "/forgot-password", component: <ForgetPwd /> },
@@ -495,4 +503,5 @@ export {
   jobCreatorRoutes,
   technicianRoutes,
   schedulerRoutes,
+  noRoleRoutes,
 }

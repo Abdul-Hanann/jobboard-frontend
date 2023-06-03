@@ -18,6 +18,7 @@ const UserRoleNotAssigned = () => {
     console.log("loging out")
     window.open(GET_LOGOUT, "_blank")
     history("/login")
+    window.location.reload()
   }
 
   return (
