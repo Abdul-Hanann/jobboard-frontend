@@ -12,6 +12,9 @@ export const SOCIAL_LOGIN = baseUrl + "/auth/signin"
 //LOGOUT
 export const GET_LOGOUT = baseUrl + "/auth/signout"
 
+//
+export const GET_AZURE_USERS = baseUrl + "/auth/userlist"
+
 //PROFILE
 export const POST_EDIT_JWT_PROFILE = "/post-jwt-profile"
 export const POST_EDIT_PROFILE = "/post-fake-profile"
@@ -84,6 +87,9 @@ export const SITES_URL = baseUrl + "/sites"
 // export const UPDATE_SITE = "/update/site"
 // export const DELETE_SITE = "/delete/site"
 
+//
+export const JOBLIST_USERS_URL = baseUrl + "/userJobs/users"
+export const POST_JOBLIST_TECHNICIAN_URL = baseUrl + "/userJobs/"
 //Job Wbs
 export const JOB_WBS_URL = baseUrl + "/jobwbs"
 

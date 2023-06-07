@@ -27,6 +27,7 @@ import AllSitesSaga from "./sites/saga"
 import AllJobWbsSaga from "./jobWbs/saga"
 // import AllCompanySaga from "./company/saga"
 import AllCompanySaga from "./company/saga"
+import AllJobListUsersSaga from "./JobListUser/saga"
 export default function* rootSaga() {
   yield all([
     //public
@@ -55,6 +56,7 @@ export default function* rootSaga() {
     fork(AllSitesSaga),
     fork(AllJobWbsSaga),
     fork(AllCompanySaga),
-    // forK(AllCompanySaga),
+    fork(AllJobListUsersSaga),
+    // forK(AllJobListUsersSaga),
   ])
 }

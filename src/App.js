@@ -1,9 +1,10 @@
 import PropTypes from "prop-types"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { Routes, Route } from "react-router-dom"
 import Login from "pages/Authentication/Login"
 import { userTypes } from "pages/Authentication/userTypes"
+import "react-tooltip/dist/react-tooltip.css"
 // Import Routes all
 import {
   authProtectedRoutes,
@@ -29,7 +30,7 @@ import "./assets/scss/theme.scss"
 import fakeBackend from "./helpers/AuthType/fakeBackend"
 
 // Activating fake backend
-fakeBackend()
+// fakeBackend()
 
 const App = () => {
   const getCookies = () => {
@@ -45,14 +46,22 @@ const App = () => {
   }
 
   const cookies = getCookies()
+
+  localStorage.setItem("isAuthenticated", cookies.isAuthenticated)
+
   if (cookies.userRole) {
-    localStorage.setItem("userRole", cookies.userRole)
+    if (cookies.userRole !== "undefined") {
+      localStorage.setItem("userRole", cookies.userRole)
+    } else {
+      localStorage.setItem("userRole", "undefinedd")
+    }
   } else {
     localStorage.setItem("userRole", "undefinedd")
   }
 
-  localStorage.setItem("isAuthenticated", cookies.isAuthenticated)
-  // localStorage.setItem("isAuthenticated", true)
+  if (cookies.accessToken) {
+    localStorage.setItem("accessToken", cookies.accessToken)
+  }
 
   let isAuthenticated = localStorage.getItem("isAuthenticated")
 

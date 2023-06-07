@@ -278,9 +278,6 @@ const TableContainer = ({
     dispatch(onDeleteJobWbs(id))
   }
   useEffect(() => {
-    if (!isLoading && !successDelete && !errorDelete && error) {
-      toast.error("Error occurs during ferching Data")
-    }
     if (!isLoading && successDelete) {
       toast.success("Data deleted successfully")
       dispatch(fetchJobWbs())
@@ -404,7 +401,7 @@ const TableContainer = ({
       <Row className="mb-0">
         <div className="d-flex d-flex justify-content-end mt-2">
           <div className="mb-0 card-title flex-grow-1">
-            <h3 style={{ paddingLeft: 20 }}>
+            <h3 style={{ paddingLeft: 20, marginBottom: 0 }}>
               <Input
                 name="JobSiteId"
                 type="select"

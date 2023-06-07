@@ -1,6 +1,7 @@
-import React, { useRef, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-
+import { Tooltip } from "react-tooltip"
+import "react-tooltip/dist/react-tooltip.css"
 import * as Yup from "yup"
 // import Select from "react-select"
 // import TextField from "@material-ui/core/TextField"
@@ -9,6 +10,8 @@ import * as Yup from "yup"
 import { useFormik } from "formik"
 import { userTypes } from "pages/Authentication/userTypes"
 
+//redux
+import { useSelector, useDispatch } from "react-redux"
 import * as moment from "moment"
 //Import Images
 import avatar4 from "../../../assets/images/users/avatar-4.jpg"
@@ -19,6 +22,12 @@ import avatar6 from "../../../assets/images/users/avatar-6.jpg"
 import avatar3 from "../../../assets/images/users/avatar-3.jpg"
 // import avatar7 from "../../../assets"
 import Select from "react-select"
+import {
+  fetchJobListUsers,
+  fetchAllTechnicians,
+  addNewJobTechnician,
+} from "store/actions"
+
 import {
   Col,
   Row,
@@ -31,6 +40,7 @@ import {
   Label,
   Card,
   CardBody,
+  Button,
 } from "reactstrap"
 //import images
 import adobephotoshop from "../../../assets/images/companies/adobe-photoshop.svg"
@@ -39,7 +49,67 @@ const Overview = ({ jobList }) => {
   const userType = localStorage.getItem("userType")
   const [modal, setModal] = useState(false)
   const [dataField, setDataField] = useState(null)
+
+  const [jobListId, setJobListId] = useState(null)
+  const [jobDay, setJobDay] = useState(null)
   const [selectedGroup, setselectedGroup] = useState(null)
+  const [selectedTechniciansOption, setSelectedtechniciansOption] =
+    useState(null)
+  const [jobWbs, setJobWbs] = useState(null)
+  // Inside your component
+  const [userData, setUserData] = useState([])
+  const [techniciansData, setTechniciansData] = useState([])
+
+  const userRoleType = localStorage.getItem("userRole")
+  const [userRole, setUserRole] = useState(null)
+
+  useEffect(() => {
+    setUserRole(userRoleType)
+  }, [userRoleType])
+
+  const { jobListUsers, technicians, isLoadingUser, successAdd } = useSelector(
+    state => state.JobListUsersReducer
+  )
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    setJobListId(jobList.id)
+  }, [jobList])
+
+  useEffect(() => {
+    if (jobListId) {
+      console.log("getting jobsList users")
+      dispatch(fetchJobListUsers(jobListId))
+    }
+  }, [dispatch, jobListId])
+
+  useEffect(() => {
+    if (successAdd) {
+      dispatch(fetchJobListUsers(jobListId))
+    }
+  }, [dispatch, jobListId, successAdd])
+
+  useEffect(() => {
+    if (jobListUsers && jobListUsers.length > 0) {
+      const userDataArray = jobListUsers.map(item => ({
+        jobId: item.jobId,
+        jobDay: item.jobDay,
+        userData: item.userData,
+      }))
+      setUserData(userDataArray)
+    } else {
+      // Handle the case when jobListUsers is empty
+      setUserData([])
+    }
+  }, [jobListUsers])
+
+  useEffect(() => {
+    if (technicians) {
+      setTechniciansData(technicians)
+    }
+  }, [technicians])
+
   const toggle = () => {
     if (modal) {
       setModal(false)
@@ -50,62 +120,41 @@ const Overview = ({ jobList }) => {
     }
   }
 
-  // const optionGroup = [
-  //   {
-  //     label: "Picnic",
-  //     options: [
-  //       { label: "Mustard", value: "Mustard" },
-  //       { label: "Ketchup", value: "Ketchup" },
-  //       { label: "Relish", value: "Relish" },
-  //     ],
-  //   },
-  //   {
-  //     label: "Camping",
-  //     options: [
-  //       { label: "Tent", value: "Tent" },
-  //       { label: "Flashlight", value: "Flashlight" },
-  //       { label: "Toilet Paper", value: "Toilet Paper" },
-  //     ],
-  //   },
-  // ]
-  const options = [
-    { value: "Technician1", label: "Technician1" },
-    { value: "Technician2", label: "Technician2" },
-    { value: "Technician3", label: "Technician3" },
-    { value: "Technician4", label: "Technician4" },
-  ]
-
-  function handleSelectGroup(selectedGroup) {
-    setselectedGroup(selectedGroup)
+  const handleSelectTechniciansChange = e => {
+    const selectedValue = e.target.value
+    const selectedLabel = e.target.options[e.target.selectedIndex].text
+    setSelectedtechniciansOption({ label: selectedLabel, value: selectedValue })
+    if (selectedValue !== "" || selectedValue !== undefined) {
+      document.getElementById("techniciansError").style.display = "none"
+    }
   }
-  const handleClick = jobList => {
-    setDataField({
-      id: jobList ? jobList.id : 0,
-      JobName: jobList.JobName,
-      JobNoOfDays: jobList.JobNoOfDays,
-      JobSiteId: jobList.JobSiteId,
-      JobNotes: jobList.JobNotes,
-      JobWBS: jobList.JobWBS,
-    })
+
+  const handleClick = (jobList, jobDay) => {
+    setJobDay(jobDay)
+    dispatch(fetchAllTechnicians())
     toggle()
   }
-  const inpRow = [{ technician: "" }]
-  const [inputFields, setinputFields] = useState(inpRow)
 
-  // Function for Create Input Fields
-  function handleAddFields() {
-    const newItem = { technician: "" }
-    setinputFields([...inputFields, newItem])
-  }
-
-  // Function for Remove Input Fields
-  // function handleRemoveFields(idx) {
-  //   document.getElementById("nested" + idx).style.display = "none"
-  // }
-  const handleRemoveFields = key => {
-    const newInputFields = [...inputFields]
-    newInputFields.splice(key, 1)
-    setinputFields(newInputFields)
+  const handleAssignClick = () => {
+    selectedTechniciansOption?.value === "" ||
+    selectedTechniciansOption?.value === undefined ||
+    selectedTechniciansOption?.value === "undefined"
+      ? (document.getElementById("techniciansError").style.display = "block")
+      : (document.getElementById("techniciansError").style.display = "none")
+    let isApproved = userRole === userTypes.ROLE_ADMIN ? true : false
+    if (selectedTechniciansOption?.value !== "") {
+      let data = {
+        userId: selectedTechniciansOption?.value,
+        jobId: jobListId,
+        jobDay: jobDay,
+        isApproved: isApproved,
+      }
+      console.log("Adding tech to Day")
+      dispatch(addNewJobTechnician(data))
+      toggle()
+    } else {
+      console.log("Check fields")
+    }
   }
 
   const handleValidDate = date => {
@@ -117,43 +166,72 @@ const Overview = ({ jobList }) => {
     <React.Fragment>
       <Modal isOpen={modal} toggle={toggle} className="overflow-visible">
         <ModalHeader toggle={toggle} tag="h4">
-          {/* {!!isEdit ? "Edit Job" : "Add Job"} */}
           Assign Technician
         </ModalHeader>
         <ModalBody>
-          <form
-            onSubmit={e => {
-              e.preventDefault()
-              validation.handleSubmit()
-              return false
-            }}
-          >
+          <form>
             <Row>
               <Col lg="12">
                 <div className="mb-3">
-                  <Label>Technician</Label>
-                  <Select
-                    isSearchable
-                    menuPosition="fixed"
-                    menuPortalTarget={document.body}
-                    styles={{
-                      menuPortal: base => ({ ...base, zIndex: 9999999 }),
-                    }}
-                    menuShouldScrollIntoView={false}
-                    options={options}
+                  <Label>Job Day</Label>
+                  <Input
+                    id="JobName"
+                    name="JobName"
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter Job Name..."
+                    value={jobDay}
+                    readOnly
                   />
                 </div>
               </Col>
+              <Col lg="12">
+                <div className="mb-3">
+                  <Label>Technician</Label>
+                  <Input
+                    name="Technician"
+                    type="select"
+                    className="form-select"
+                    placeholder="Insert Technician"
+                    onChange={handleSelectTechniciansChange}
+                    value={selectedTechniciansOption?.value}
+                  >
+                    <option value="" disabled selected>
+                      Select Technician
+                    </option>
+                    {Array.isArray(techniciansData) &&
+                    techniciansData.length > 0 ? (
+                      techniciansData.map((technician, index) => (
+                        <option key={index} value={technician?.id}>
+                          {technician.displayName}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="">No technicians available</option>
+                    )}
+                  </Input>
+                </div>
+              </Col>
+              <div
+                style={{
+                  color: "red",
+                  display: "none",
+                }}
+                id={"techniciansError"}
+              >
+                Please Enter Technician
+              </div>
             </Row>
             <Row>
               <Col>
                 <div className="text-end">
-                  <button
+                  <Button
                     // type="submit"
                     className="btn btn-success save-user"
+                    onClick={handleAssignClick}
                   >
                     Assign
-                  </button>
+                  </Button>
                 </div>
               </Col>
             </Row>
@@ -204,32 +282,120 @@ const Overview = ({ jobList }) => {
             <div className="table-responsive">
               <table className="table table-nowrap align-middle mb-0">
                 <tbody>
-                  <tr>
+                  {isLoadingUser ? (
+                    <tr>
+                      <td colSpan="8" className="text-center">
+                        {/* <div className="spinner-border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                      </div> */}
+                        <div className="text-center my-3">
+                          <i className="bx bx-loader bx-spin font-size-18 align-middle text-success me-2" />
+                          Loading...
+                        </div>
+                      </td>
+                    </tr>
+                  ) : (
+                    [...Array(jobList.numberOfDays)].map((_, index) => {
+                      const dayData = userData.find(
+                        data => data.jobDay === index + 1
+                      )
+
+                      return (
+                        <tr key={index}>
+                          <td></td>
+                          <td>
+                            <h5 className="text-truncate font-size-14 m-0">
+                              Day {index + 1}
+                            </h5>
+                          </td>
+                          <td>
+                            <div className="avatar-group">
+                              {dayData && dayData.userData.length > 0 ? (
+                                <>
+                                  {dayData.userData.map((user, userIndex) => {
+                                    let initials = ""
+                                    if (user.name) {
+                                      const nameWithoutUnderscore =
+                                        user.name.replace(/^_+/, "") // Remove leading underscores
+                                      initials = nameWithoutUnderscore
+                                        .split(" ")
+                                        .map(word => word.charAt(0))
+                                        .join("")
+                                    }
+
+                                    return (
+                                      <div
+                                        className="avatar-group"
+                                        key={userIndex}
+                                      >
+                                        <div className="avatar-group-item">
+                                          <div className="avatar-xs">
+                                            <span
+                                              className="avatar-title rounded-circle bg-success text-white font-size-16"
+                                              style={{ padding: "19px" }}
+                                              data-tooltip-id={`tooltip-${userIndex}`}
+                                              data-tooltip-content={user.name}
+                                            >
+                                              {initials}
+                                            </span>
+                                          </div>
+                                        </div>
+                                        <Tooltip
+                                          effect="solid"
+                                          id={`tooltip-${userIndex}`}
+                                        />
+                                      </div>
+                                    )
+                                  })}
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      handleClick(jobList, dayData.jobDay)
+                                    }}
+                                    className="btn btn-success btn-rounded ms-2"
+                                  >
+                                    <i className="fas fa-plus align-middle"></i>
+                                  </button>
+                                </>
+                              ) : (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    handleClick(jobList)
+                                  }}
+                                  className="btn btn-success btn-rounded ms-2"
+                                >
+                                  <i className="fas fa-plus align-middle"></i>
+                                </button>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      )
+                    })
+                  )}
+
+                  {/* ///////////////////////////////////////////////// */}
+                  {/* <tr>
                     <td style={{ width: "40px" }}></td>
                     <td>
-                      <h5 className="text-truncate font-size-14 m-0">
-                        Day 1{/* </Link> */}
-                      </h5>
+                      <h5 className="text-truncate font-size-14 m-0">Day 1</h5>
                     </td>
                     <td>
                       <div className="avatar-group">
                         <div className="avatar-group-item">
-                          {/* <Link to="/" className="d-inline-block"> */}
                           <img
                             src={avatar4}
                             alt=""
                             className="rounded-circle avatar-xs"
                           />
-                          {/* </Link> */}
                         </div>
                         <div className="avatar-group-item">
-                          {/* <Link to="/" className="d-inline-block"> */}
                           <img
                             src={avatar5}
                             alt=""
                             className="rounded-circle avatar-xs"
                           />
-                          {/* </Link> */}
                         </div>
                         <button
                           type="button"
@@ -242,87 +408,50 @@ const Overview = ({ jobList }) => {
                         </button>
                       </div>
                     </td>
-                    {/* <td>
-                        <div className="text-center">
-                          <span className="badge rounded-pill badge-soft-secondary font-size-11">
-                            Waiting
-                          </span>
-                        </div>
-                      </td> */}
-                  </tr>
-                  <tr>
+                  </tr> */}
+                  {/* <tr>
                     <td></td>
                     <td>
-                      <h5 className="text-truncate font-size-14 m-0">
-                        {/* <Link to="#" className="text-dark"> */}
-                        Day 2{/* </Link> */}
-                      </h5>
+                      <h5 className="text-truncate font-size-14 m-0">Day 2</h5>
                     </td>
                     <td>
                       <div className="avatar-group">
                         <div className="avatar-group-item">
-                          {/* <Link to="#" className="d-inline-block"> */}
                           <img
                             src={avatar1}
                             alt=""
                             className="rounded-circle avatar-xs"
                           />
-                          {/* </Link> */}
                         </div>
                         <div className="avatar-group-item">
-                          {/* <Link to="#" className="d-inline-block"> */}
                           <img
                             src={avatar2}
                             alt=""
                             className="rounded-circle avatar-xs"
                           />
-                          {/* </Link> */}
                         </div>
                         <div className="avatar-group-item">
-                          {/* <Link to="#" className="d-inline-block"> */}
                           <div className="avatar-xs">
                             <span className="avatar-title rounded-circle bg-success text-white font-size-16">
                               A
                             </span>
                           </div>
-                          {/* </Link> */}
                         </div>
-                        <div className="avatar-group-item">
-                          <Link to="#" className="d-inline-block">
-                            <img
-                              src={avatar6}
-                              alt=""
-                              className="rounded-circle avatar-xs"
-                            />
-                          </Link>
-                        </div>
-
-                        <button
-                          type="button"
-                          onClick={() => {
-                            handleClick(jobList)
-                          }}
-                          className="btn btn-success btn-rounded ms-2"
-                        >
-                          <i className="fas fa-plus align-middle"></i>
-                        </button>
                       </div>
                     </td>
-                    {/* <td>
-                        <div className="text-center">
-                          <span className="badge rounded-pill badge-soft-primary font-size-11">
-                            Approved
-                          </span>
-                        </div>
-                      </td> */}
-                  </tr>
-
-                  <tr>
+                    <td>
+                      <div className="text-center">
+                        <span className="badge rounded-pill badge-soft-primary font-size-11">
+                          Approved
+                        </span>
+                      </div>
+                    </td>
+                  </tr> */}
+                  {/* <tr>
                     <td></td>
                     <td>
                       <h5 className="text-truncate font-size-14 m-0">
-                        {/* <Link to="#" className="text-dark"> */}
-                        Day 3{/* </Link> */}
+                        Day 3
                       </h5>
                     </td>
                     <td>
@@ -338,14 +467,7 @@ const Overview = ({ jobList }) => {
                         </button>
                       </div>
                     </td>
-                    {/* <td>
-                        <div className="text-center">
-                          <span className="badge rounded-pill badge-soft-secondary font-size-11">
-                            Waiting
-                          </span>
-                        </div>
-                      </td> */}
-                  </tr>
+                  </tr> */}
                 </tbody>
               </table>
             </div>

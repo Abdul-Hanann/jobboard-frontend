@@ -442,7 +442,7 @@ const JobsList = () => {
         <Row>
           <div className="d-flex d-flex justify-content-end mt-1">
             <div className="mb-0 card-title flex-grow-1">
-              <h3 style={{ paddingLeft: 20 }}>
+              <h3 style={{ paddingLeft: 20, marginBottom: 0 }}>
                 <Input
                   name="JobSiteId"
                   type="select"

@@ -62,6 +62,8 @@ import JobWbsReducer from "./jobWbs/reducer"
 
 import CompanyReducer from "./company/reducer"
 
+import JobListUsersReducer from "./JobListUser/reducer"
+
 const rootReducer = combineReducers({
   // public
   Layout,
@@ -89,6 +91,7 @@ const rootReducer = combineReducers({
   SitesReducer,
   JobWbsReducer,
   CompanyReducer,
+  JobListUsersReducer,
 })
 
 export default rootReducer

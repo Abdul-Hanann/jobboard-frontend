@@ -313,6 +313,28 @@ export const getSitesFilter = data => get(`${url.SITES_URL}?select=${data}`)
 // get site
 export const getSite = id => get(`${url.SITES_URL}/${id}`)
 
+let accessToken = localStorage.getItem("accessToken")
+// get JobList users
+export const getJobListUsers = id =>
+  get(`${url.JOBLIST_USERS_URL}/${id}`, {
+    headers: {
+      Authorization: "Bearer " + accessToken,
+      "Content-Type": "application/json",
+    },
+  })
+
+export const getAllTechnicians = () =>
+  get(`${url.GET_AZURE_USERS}`, {
+    headers: {
+      Authorization: "Bearer " + accessToken,
+      "Content-Type": "application/json",
+    },
+  })
+
+// add JobList user
+export const addNewJobTechnician = user =>
+  post(url.POST_JOBLIST_TECHNICIAN_URL, user)
+
 export default () => get(url.GET_APPLY_JOB)
 
 // get project

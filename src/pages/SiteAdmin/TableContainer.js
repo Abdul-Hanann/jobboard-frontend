@@ -593,7 +593,7 @@ const TableContainer = ({
       <Row className="mb-0">
         <div className="d-flex d-flex justify-content-end mt-2">
           <div className="mb-0 card-title flex-grow-1">
-            <h3 style={{ paddingLeft: 20 }}>
+            <h3 style={{ paddingLeft: 20, marginBottom: 0 }}>
               <Input
                 name="JobSiteId"
                 type="select"
@@ -652,6 +652,7 @@ const TableContainer = ({
                 fontSize: 14,
                 backgroundColor: "#003768",
                 color: "white",
+                textAlign: "center",
               }}
             >
               <th scope="col" style={{ width: "100px" }}>
@@ -674,9 +675,6 @@ const TableContainer = ({
             {isLoading ? (
               <tr>
                 <td colSpan="10" className="text-center">
-                  {/* <div className="spinner-border" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                  </div> */}
                   <div className="text-center my-3">
                     <i className="bx bx-loader bx-spin font-size-18 align-middle text-success me-2" />
                     Loading...
@@ -693,21 +691,18 @@ const TableContainer = ({
             ) : (
               map(sitesList, (rowdata, index) => (
                 <tr key={index}>
-                  {/* {console.log(rowdata)} */}
-                  <td>
-                    {/* <h5 className="text-truncate font-size-14"> */}
-                    {/* <Link
-                              to={`/projects-overview/${project.id}`}
-                              className="text-dark"
-                            > */}
-                    {/* <img src={img} alt="" className="avatar-sm" /> */}
-                    {rowdata?.siteId}
-                    {/* </Link> */}
-                    {/* </h5> */}
-                  </td>
+                  <td>{rowdata?.siteId}</td>
                   <td>{rowdata?.building}</td>
-                  <td>{rowdata?.addressLine1}</td>
-                  <td>{rowdata?.addressLine2 || "-"}</td>
+                  <td>
+                    <p style={{ whiteSpace: "pre-wrap" }}>
+                      {rowdata?.addressLine1}
+                    </p>
+                  </td>
+                  <td>
+                    <p style={{ whiteSpace: "pre-wrap" }}>
+                      {rowdata?.addressLine2 || "-"}
+                    </p>
+                  </td>
                   <td>{rowdata?.city}</td>
                   <td>{rowdata?.jobWbs?.name}</td>
                   <td>{rowdata?.company?.name}</td>
@@ -720,10 +715,6 @@ const TableContainer = ({
                         <i className="mdi mdi-dots-horizontal font-size-18" />
                       </DropdownToggle>
                       <DropdownMenu className="dropdown-menu-end">
-                        {/* <DropdownItem onClick={() => handleViewClick()}>
-                        <i className="mdi mdi-view-dashboard font-size-16 text-success me-1" />{" "}
-                        View
-                      </DropdownItem> */}
                         <DropdownItem
                           onClick={() => handleEditClick(rowdata.id)}
                         >
