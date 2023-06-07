@@ -96,7 +96,7 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "node_modules/react-scripts/bin/react-scripts.js start",
     "start:dev": "react-scripts start --watch",
     "start:debug": "nest start --debug --watch",
     "build": "react-scripts build --max_old_space_size=8000 build",
