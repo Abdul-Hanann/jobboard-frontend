@@ -23,18 +23,15 @@ jobs:
 
       - name: npm install, build, and test
         run: |
-          npm install --legacy-peer-deps
+          npm install
           npm run build --if-present
-#          npm run test --if-present
-      - name: Zip artifact for deployment
-        run: zip -r release.zip * .env
+          npm run test --if-present
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: node-app
-          path: release.zip
-          retention-days: 1
+          path: .
 
   deploy:
     runs-on: ubuntu-latest
@@ -49,17 +46,11 @@ jobs:
         with:
           name: node-app
 
-      - name: Unzip artifact for deployment
-        run: unzip release.zip
-
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'jobboardstagefrontendapp'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_1AE62AFB42D042B386F87EA13CA5EF28 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_19C527A8CD284D75A9801D63887193F6 }}
           package: .
-
-      - name: Delete release.zip folder
-        run: rm -rf release.zip
