@@ -13,7 +13,7 @@ import "react-rangeslider/lib/index.css"
 import { useFormik } from "formik"
 import { userTypes } from "pages/Authentication/userTypes"
 import DeleteModal from "components/Common/DeleteModalCustom"
-// import UpdateModal from "components/Common/UpdateModalCustom "
+import AddModal from "components/Common/AddModalCustom"
 
 //redux
 import { useSelector, useDispatch } from "react-redux"
@@ -57,6 +57,7 @@ const Overview = ({ jobList }) => {
   const userType = localStorage.getItem("userType")
   const [modal, setModal] = useState(false)
   const [userinfo, setUserinfo] = useState(null)
+  const [addModal, setAddModal] = useState(false)
   const [deleteModal, setDeleteModal] = useState(false)
   const [updateModal, setUpdateModal] = useState(false)
   const [technicianId, setTechnicianId] = useState(false)
@@ -125,7 +126,6 @@ const Overview = ({ jobList }) => {
 
   useEffect(() => {
     if (token) {
-      console.log("setAccessToken :", token)
       setAccessToken(token)
     }
     // }
@@ -140,12 +140,13 @@ const Overview = ({ jobList }) => {
   }, [dispatch, jobListId, accessToken])
 
   useEffect(() => {
-    if (successAdd || successDelete || successUpdate) {
-      dispatch(fetchJobListUsers(jobListId, accessToken))
+    if (jobListId && accessToken) {
+      if (successAdd || successDelete || successUpdate) {
+        dispatch(fetchJobListUsers(jobListId, accessToken))
+      }
+      // if (successDelete) {
+      //   dispatch(fetchJobListUsers(jobListId))
     }
-    // if (successDelete) {
-    //   dispatch(fetchJobListUsers(jobListId))
-    // }
   }, [
     dispatch,
     jobListId,
@@ -218,24 +219,21 @@ const Overview = ({ jobList }) => {
 
   const handleApplyClick = (jobList, jobDays) => {
     setJobDay(jobDays)
-    if (userId) {
-      dispatch(fetchTechnician(userId))
-    }
-    console.log("jobDays:", jobDays)
-    console.log("jobDays type:", typeof jobDays)
-    toggle()
+    // if (userId) {
+    //   dispatch(fetchTechnician(userId))
+    // }
+    // AddModal
+    // toggle()
+    setAddModal(true)
   }
 
   const handleClick = (jobList, jobDay) => {
     setJobDay(jobDay)
-    console.log("+++++++++++++++++++++++++++++++++++++++++++")
     dispatch(fetchAllTechnicians())
     toggle()
   }
 
   const handleUpdatSpanClick = user => {
-    console.log("user:", user)
-    console.log("user:", user.id)
     setUserinfo(user)
     const status = user.status
     let label = ""
@@ -255,16 +253,6 @@ const Overview = ({ jobList }) => {
     let status = ""
 
     if (userRole === userTypes.ROLE_TECHNICIAN) {
-      // console.log("jobDayValue:", jobDayValue)
-      // if (jobDayValue === null) {
-      //   document.getElementById("JobDayError").style.display = "block"
-      //   valid = false // Set valid as false if validation fails
-      //   status = "pending"
-      // } else {
-      //   document.getElementById("JobDayError").style.display = "none"
-      //   valid = true // Set valid as true if validation passes
-      //   status = "pending"
-      // }
       valid = true
       status = "pending"
     } else {
@@ -288,8 +276,6 @@ const Overview = ({ jobList }) => {
 
   const handleAssignClick = () => {
     const [validated, status] = validateSubmit()
-    console.log("validated:", validated)
-    console.log("status:", status)
     if (validated) {
       let data = {
         userId:
@@ -302,16 +288,17 @@ const Overview = ({ jobList }) => {
       }
       console.log("Adding tech to Day:", data)
       dispatch(addNewJobTechnician(data))
-      toggle()
+      if (userRole === userTypes.ROLE_TECHNICIAN) {
+        setAddModal(false)
+      } else {
+        toggle()
+      }
     } else {
       console.log("Check fields")
     }
   }
 
   const handleUpdateClick = () => {
-    // const [validated, status] = validateSubmit()
-    // console.log("validated:", validated)
-    console.log("status:", selectedStatusOption?.value)
     // let id = userinfo.id
     let data = {
       id: userinfo.id,
@@ -343,7 +330,6 @@ const Overview = ({ jobList }) => {
   // Function to handle user deletion
   const handleDeleteUser = () => {
     if (technicianId) {
-      console.log("user:", technicianId)
       dispatch(deleteJobTechnician(technicianId))
       setDeleteModal(false)
     }
@@ -356,6 +342,12 @@ const Overview = ({ jobList }) => {
 
   return (
     <React.Fragment>
+      <AddModal
+        show={addModal}
+        jobDay={jobDay}
+        onAddClick={handleAssignClick}
+        onCloseClick={() => setAddModal(false)}
+      />
       <DeleteModal
         show={deleteModal}
         onDeleteClick={handleDeleteUser}
@@ -440,36 +432,11 @@ const Overview = ({ jobList }) => {
         <ModalBody>
           {userRole === userTypes.ROLE_TECHNICIAN ? (
             <>
-              <p>ABDUL HANAN</p>
               <form>
                 <Row>
                   <Col lg="12">
                     <div className="mb-3">
                       <Label>Job Day</Label>
-                      {/* <Input
-                        id="JobDay"
-                        name="JobDay"
-                        type="number"
-                        className="form-control"
-                        min={1}
-                        max={totalJobDays}
-                        onChange={event => {
-                          const value = event.target.value
-                          console.log(value) // Check the value parameter in the console
-                          setJobDayValue(value)
-                        }}
-                        value={jobDayValue}
-                      />
-                      <div
-                        style={{
-                          color: "red",
-                          display: "none",
-                        }}
-                        id={"JobDayError"}
-                      >
-                        Please Enter Job Day
-                      </div> */}
-
                       <Input
                         id="JobName"
                         name="JobName"
@@ -504,7 +471,7 @@ const Overview = ({ jobList }) => {
                         className="btn btn-success save-user"
                         onClick={handleAssignClick}
                       >
-                        "Apply"
+                        Apply
                       </Button>
                     </div>
                   </Col>
@@ -716,17 +683,17 @@ const Overview = ({ jobList }) => {
                                     }
                                     // on hover:backgroundColor = "#358c4b"
                                     let backgroundColor = ""
+                                    let statusValue = ""
                                     if (user?.status === "approved") {
+                                      statusValue = "Approved"
                                       backgroundColor = "#30ab4f" // Set background color to green for approved status
                                     } else if (user.status === "pending") {
+                                      statusValue = "Pending"
                                       backgroundColor = "#f7748c" // Set background color to red for pending status
                                     } else if (user.status === "declined") {
+                                      statusValue = "Declined"
                                       backgroundColor = "#807877" // Set background color to red for pending status
                                     }
-                                    console.log(
-                                      "backgroundColor:",
-                                      backgroundColor
-                                    )
 
                                     if (
                                       (userRole === userTypes.ROLE_TECHNICIAN &&
@@ -781,7 +748,7 @@ const Overview = ({ jobList }) => {
                                                   }}
                                                   className="btn btn-success ms-2"
                                                 >
-                                                  {user.status}
+                                                  {statusValue}
                                                 </button>
                                                 {hoveredIndex === userIndex &&
                                                   user.status !== "approved" &&
@@ -890,7 +857,7 @@ const Overview = ({ jobList }) => {
                                               id={`tooltip-${userIndex}`}
                                             />
 
-                                            <button
+                                            {/* <button
                                               type="button"
                                               style={{
                                                 width: "40px", // Increase the width of the avatar-group-item
@@ -908,7 +875,7 @@ const Overview = ({ jobList }) => {
                                               className="btn btn-success btn-rounded ms-2"
                                             >
                                               <i className="fas fa-plus align-middle"></i>
-                                            </button>
+                                            </button> */}
                                           </div>
                                         )
                                       }
@@ -921,36 +888,32 @@ const Overview = ({ jobList }) => {
                                     dayData.userData.filter(
                                       user => user.userId === userId
                                     ).length === 0 && (
-                                      <button
-                                        type="button"
-                                        id="btn-add"
-                                        style={{
-                                          width: "45px", // Increase the width of the avatar-group-item
-                                          height: "45px",
-                                        }}
-                                        onClick={() => {
-                                          console.log(
-                                            "7777777777777777777777777777777777777777"
-                                          )
-                                          handleApplyClick(jobList, index + 1)
-                                        }}
-                                        className="btn btn-success btn-rounded ms-2"
-                                      >
-                                        <i className="fas fa-plus align-middle"></i>
-                                      </button>
+                                      <div style={{ margin: "0 auto" }}>
+                                        <button
+                                          type="button"
+                                          id="btn-add"
+                                          style={{
+                                            width: "42px", // Increase the width of the avatar-group-item
+                                            height: "42px",
+                                          }}
+                                          onClick={() => {
+                                            handleApplyClick(jobList, index + 1)
+                                          }}
+                                          className="btn btn-success btn-rounded ms-2"
+                                        >
+                                          <i className="fas fa-plus align-middle"></i>
+                                        </button>
+                                      </div>
                                     )}
                                   {userRole !== userTypes.ROLE_TECHNICIAN && (
                                     <button
                                       type="button"
                                       id="btn-add"
                                       style={{
-                                        width: "45px", // Increase the width of the avatar-group-item
-                                        height: "45px",
+                                        width: "42px", // Increase the width of the avatar-group-item
+                                        height: "42px",
                                       }}
                                       onClick={() => {
-                                        console.log(
-                                          "5555555555555555555555555555555555555"
-                                        )
                                         handleClick(jobList, index + 1)
                                       }}
                                       className="btn btn-success btn-rounded ms-2"
@@ -961,28 +924,22 @@ const Overview = ({ jobList }) => {
                                 </>
                               ) : (
                                 <>
-                                  {userRole === userTypes.ROLE_TECHNICIAN &&
-                                    dayData.userData.filter(
-                                      user => user.userId === userId
-                                    ).length === 0 && (
-                                      <button
-                                        type="button"
-                                        id="btn-add"
-                                        style={{
-                                          width: "45px", // Increase the width of the avatar-group-item
-                                          height: "45px",
-                                        }}
-                                        onClick={() => {
-                                          console.log(
-                                            "7777777777777777777777777777777777777777"
-                                          )
-                                          handleApplyClick(jobList, index + 1)
-                                        }}
-                                        className="btn btn-success btn-rounded ms-2"
-                                      >
-                                        <i className="fas fa-plus align-middle"></i>
-                                      </button>
-                                    )}
+                                  {userRole === userTypes.ROLE_TECHNICIAN && (
+                                    <button
+                                      type="button"
+                                      id="btn-add"
+                                      style={{
+                                        width: "45px", // Increase the width of the avatar-group-item
+                                        height: "45px",
+                                      }}
+                                      onClick={() => {
+                                        handleApplyClick(jobList, index + 1)
+                                      }}
+                                      className="btn btn-success btn-rounded ms-2"
+                                    >
+                                      <i className="fas fa-plus align-middle"></i>
+                                    </button>
+                                  )}
 
                                   {userRole !== userTypes.ROLE_TECHNICIAN && (
                                     <button
@@ -993,9 +950,6 @@ const Overview = ({ jobList }) => {
                                         height: "45px",
                                       }}
                                       onClick={() => {
-                                        console.log(
-                                          "5555555555555555555555555555555555555"
-                                        )
                                         handleClick(jobList, index + 1)
                                       }}
                                       className="btn btn-success btn-rounded ms-2"
@@ -1004,22 +958,6 @@ const Overview = ({ jobList }) => {
                                     </button>
                                   )}
                                 </>
-                                // <button
-                                //   type="button"
-                                //   style={{
-                                //     width: "45px", // Increase the width of the avatar-group-item
-                                //     height: "45px",
-                                //   }}
-                                //   onClick={() => {
-                                //     console.log(
-                                //       "9999999999999999999999999999999999999999999"
-                                //     )
-                                //     handleClick(jobList, index + 1)
-                                //   }}
-                                //   className="btn btn-success btn-rounded ms-2"
-                                // >
-                                //   <i className="fas fa-plus align-middle"></i>
-                                // </button>
                               )}
                             </div>
                           </td>

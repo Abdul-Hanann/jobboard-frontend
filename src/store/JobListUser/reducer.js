@@ -24,7 +24,7 @@ import {
 
 const INIT_STATE = {
   jobListUsers: [],
-  technicians: [],
+  technician: [],
   technicians: [],
   // jobUser: [],
   error: {},
@@ -168,7 +168,7 @@ const JobListUsersReducer = (state = INIT_STATE, action) => {
         success: true,
         successUpdate: true,
         error: false,
-        sites: action.payload,
+        technician: action.payload,
       }
 
     case UPDATE_JOB_TECHNICIAN_FAIL:
@@ -194,7 +194,7 @@ const JobListUsersReducer = (state = INIT_STATE, action) => {
         isLoading: false,
         successDelete: true,
         error: false,
-        sites: action.payload,
+        technician: action.payload,
       }
 
     case DELETE_JOB_TECHNICIAN_FAIL:
