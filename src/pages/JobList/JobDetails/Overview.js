@@ -217,7 +217,7 @@ const Overview = ({ jobList }) => {
   }
 
   const handleApplyClick = (jobList, jobDays) => {
-    setTotalJobDays(jobDays)
+    setJobDay(jobDays)
     if (userId) {
       dispatch(fetchTechnician(userId))
     }
@@ -228,6 +228,7 @@ const Overview = ({ jobList }) => {
 
   const handleClick = (jobList, jobDay) => {
     setJobDay(jobDay)
+    console.log("+++++++++++++++++++++++++++++++++++++++++++")
     dispatch(fetchAllTechnicians())
     toggle()
   }
@@ -254,16 +255,18 @@ const Overview = ({ jobList }) => {
     let status = ""
 
     if (userRole === userTypes.ROLE_TECHNICIAN) {
-      console.log("jobDayValue:", jobDayValue)
-      if (jobDayValue === null) {
-        document.getElementById("JobDayError").style.display = "block"
-        valid = false // Set valid as false if validation fails
-        status = "pending"
-      } else {
-        document.getElementById("JobDayError").style.display = "none"
-        valid = true // Set valid as true if validation passes
-        status = "pending"
-      }
+      // console.log("jobDayValue:", jobDayValue)
+      // if (jobDayValue === null) {
+      //   document.getElementById("JobDayError").style.display = "block"
+      //   valid = false // Set valid as false if validation fails
+      //   status = "pending"
+      // } else {
+      //   document.getElementById("JobDayError").style.display = "none"
+      //   valid = true // Set valid as true if validation passes
+      //   status = "pending"
+      // }
+      valid = true
+      status = "pending"
     } else {
       if (
         selectedTechniciansOption?.value === "" ||
@@ -294,7 +297,7 @@ const Overview = ({ jobList }) => {
             ? userId
             : selectedTechniciansOption?.value,
         jobId: jobListId,
-        jobDay: userRole === userTypes.ROLE_TECHNICIAN ? jobDayValue : jobDay,
+        jobDay: jobDay,
         status: status,
       }
       console.log("Adding tech to Day:", data)
@@ -443,7 +446,7 @@ const Overview = ({ jobList }) => {
                   <Col lg="12">
                     <div className="mb-3">
                       <Label>Job Day</Label>
-                      <Input
+                      {/* <Input
                         id="JobDay"
                         name="JobDay"
                         type="number"
@@ -465,7 +468,17 @@ const Overview = ({ jobList }) => {
                         id={"JobDayError"}
                       >
                         Please Enter Job Day
-                      </div>
+                      </div> */}
+
+                      <Input
+                        id="JobName"
+                        name="JobName"
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter Job Name..."
+                        value={jobDay}
+                        readOnly
+                      />
                     </div>
                   </Col>
                   <Col lg="12">
@@ -491,9 +504,7 @@ const Overview = ({ jobList }) => {
                         className="btn btn-success save-user"
                         onClick={handleAssignClick}
                       >
-                        {userRole === userTypes.ROLE_TECHNICIAN
-                          ? "Apply"
-                          : "Assign"}
+                        "Apply"
                       </Button>
                     </div>
                   </Col>
@@ -886,6 +897,9 @@ const Overview = ({ jobList }) => {
                                                 height: "40px",
                                               }}
                                               onClick={() => {
+                                                console.log(
+                                                  "66666666666666666666666666666666666666666666666"
+                                                )
                                                 handleClick(
                                                   jobList,
                                                   dayData.jobDay
@@ -907,7 +921,6 @@ const Overview = ({ jobList }) => {
                                     dayData.userData.filter(
                                       user => user.userId === userId
                                     ).length === 0 && (
-                                      // Show the "Add" button if the user is a technician and there is no data for that day
                                       <button
                                         type="button"
                                         id="btn-add"
@@ -916,28 +929,97 @@ const Overview = ({ jobList }) => {
                                           height: "45px",
                                         }}
                                         onClick={() => {
-                                          handleClick(jobList, index + 1)
+                                          console.log(
+                                            "7777777777777777777777777777777777777777"
+                                          )
+                                          handleApplyClick(jobList, index + 1)
                                         }}
                                         className="btn btn-success btn-rounded ms-2"
                                       >
                                         <i className="fas fa-plus align-middle"></i>
                                       </button>
                                     )}
+                                  {userRole !== userTypes.ROLE_TECHNICIAN && (
+                                    <button
+                                      type="button"
+                                      id="btn-add"
+                                      style={{
+                                        width: "45px", // Increase the width of the avatar-group-item
+                                        height: "45px",
+                                      }}
+                                      onClick={() => {
+                                        console.log(
+                                          "5555555555555555555555555555555555555"
+                                        )
+                                        handleClick(jobList, index + 1)
+                                      }}
+                                      className="btn btn-success btn-rounded ms-2"
+                                    >
+                                      <i className="fas fa-plus align-middle"></i>
+                                    </button>
+                                  )}
                                 </>
                               ) : (
-                                <button
-                                  type="button"
-                                  style={{
-                                    width: "45px", // Increase the width of the avatar-group-item
-                                    height: "45px",
-                                  }}
-                                  onClick={() => {
-                                    handleClick(jobList, index + 1)
-                                  }}
-                                  className="btn btn-success btn-rounded ms-2"
-                                >
-                                  <i className="fas fa-plus align-middle"></i>
-                                </button>
+                                <>
+                                  {userRole === userTypes.ROLE_TECHNICIAN &&
+                                    dayData.userData.filter(
+                                      user => user.userId === userId
+                                    ).length === 0 && (
+                                      <button
+                                        type="button"
+                                        id="btn-add"
+                                        style={{
+                                          width: "45px", // Increase the width of the avatar-group-item
+                                          height: "45px",
+                                        }}
+                                        onClick={() => {
+                                          console.log(
+                                            "7777777777777777777777777777777777777777"
+                                          )
+                                          handleApplyClick(jobList, index + 1)
+                                        }}
+                                        className="btn btn-success btn-rounded ms-2"
+                                      >
+                                        <i className="fas fa-plus align-middle"></i>
+                                      </button>
+                                    )}
+
+                                  {userRole !== userTypes.ROLE_TECHNICIAN && (
+                                    <button
+                                      type="button"
+                                      id="btn-add"
+                                      style={{
+                                        width: "45px", // Increase the width of the avatar-group-item
+                                        height: "45px",
+                                      }}
+                                      onClick={() => {
+                                        console.log(
+                                          "5555555555555555555555555555555555555"
+                                        )
+                                        handleClick(jobList, index + 1)
+                                      }}
+                                      className="btn btn-success btn-rounded ms-2"
+                                    >
+                                      <i className="fas fa-plus align-middle"></i>
+                                    </button>
+                                  )}
+                                </>
+                                // <button
+                                //   type="button"
+                                //   style={{
+                                //     width: "45px", // Increase the width of the avatar-group-item
+                                //     height: "45px",
+                                //   }}
+                                //   onClick={() => {
+                                //     console.log(
+                                //       "9999999999999999999999999999999999999999999"
+                                //     )
+                                //     handleClick(jobList, index + 1)
+                                //   }}
+                                //   className="btn btn-success btn-rounded ms-2"
+                                // >
+                                //   <i className="fas fa-plus align-middle"></i>
+                                // </button>
                               )}
                             </div>
                           </td>
