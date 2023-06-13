@@ -13,6 +13,10 @@ const UserRoleNotAssigned = () => {
   const history = useNavigate()
 
   const handlerFunc = () => {
+    localStorage.removeItem("authUser")
+    localStorage.removeItem("userRole")
+    localStorage.removeItem("accessToken")
+    localStorage.removeItem("tokenId")
     localStorage.removeItem("isAuthenticated")
 
     console.log("loging out")

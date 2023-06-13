@@ -5,28 +5,33 @@ import {
   FETCH_ALL_TECHNICIANS,
   FETCH_ALL_TECHNICIANS_SUCCESS,
   FETCH_ALL_TECHNICIANS_FAIL,
+  FETCH_TECHNICIAN,
+  FETCH_TECHNICIAN_FAIL,
+  FETCH_TECHNICIAN_SUCCESS,
   FETCH_JOB_USER,
   FETCH_JOB_USER_FAIL,
   FETCH_JOB_USER_SUCCESS,
   ADD_NEW_TECHNICIAN,
   ADD_JOB_TECHNICIAN_SUCCESS,
   ADD_JOB_TECHNICIAN_FAIL,
-  DELETE_JOB_USER,
-  DELETE_JOB_USER_FAIL,
-  DELETE_JOB_USER_SUCCESS,
-  UPDATE_JOB_USER,
-  UPDATE_JOB_USER_FAIL,
-  UPDATE_JOB_USER_SUCCESS,
+  DELETE_JOB_TECHNICIAN,
+  DELETE_JOB_TECHNICIAN_SUCCESS,
+  DELETE_JOB_TECHNICIAN_FAIL,
+  UPDATE_JOB_TECHNICIAN,
+  UPDATE_JOB_TECHNICIAN_SUCCESS,
+  UPDATE_JOB_TECHNICIAN_FAIL,
 } from "./actionTypes"
 
 const INIT_STATE = {
   jobListUsers: [],
   technicians: [],
+  technicians: [],
   // jobUser: [],
   error: {},
   success: false,
   successAdd: false,
-  success_delete: false,
+  successUpdate: false,
+  successDelete: false,
   isLoading: false,
   isLoadingUser: false,
 }
@@ -89,32 +94,32 @@ const JobListUsersReducer = (state = INIT_STATE, action) => {
         error: action.payload,
       }
 
-    // case FETCH_SITE:
-    //   return {
-    //     ...state,
-    //     isLoading: true,
-    //     success: false,
-    //     success_delete: false,
-    //     error: false,
-    //   }
-    // case FETCH_SITE_SUCCESS:
-    //   return {
-    //     ...state,
-    //     isLoading: false,
-    //     // success: true,
-    //     error: false,
-    //     success_delete: false,
-    //     site: action.payload,
-    //   }
+    case FETCH_TECHNICIAN:
+      return {
+        ...state,
+        isLoading: true,
+        success: false,
+        success_delete: false,
+        error: false,
+      }
+    case FETCH_TECHNICIAN_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        // success: true,
+        error: false,
+        success_delete: false,
+        technician: action.payload,
+      }
 
-    // case FETCH_SITE_FAIL:
-    //   return {
-    //     ...state,
-    //     isLoading: false,
-    //     success: false,
-    //     success_delete: false,
-    //     error: action.payload,
-    //   }
+    case FETCH_TECHNICIAN_FAIL:
+      return {
+        ...state,
+        isLoading: false,
+        success: false,
+        success_delete: false,
+        error: action.payload,
+      }
 
     case ADD_NEW_TECHNICIAN:
       return {
@@ -147,58 +152,58 @@ const JobListUsersReducer = (state = INIT_STATE, action) => {
         error: action.payload,
       }
 
-    // case UPDATE_SITE:
-    //   return {
-    //     ...state,
-    //     isLoading: true,
-    //     success: false,
-    //     success_delete: false,
-    //     error: false,
-    //   }
+    case UPDATE_JOB_TECHNICIAN:
+      return {
+        ...state,
+        isLoading: true,
+        success: false,
+        successUpdate: false,
+        error: false,
+      }
 
-    // case UPDATE_SITE_SUCCESS:
-    //   return {
-    //     ...state,
-    //     isLoading: false,
-    //     success: true,
-    //     success_delete: false,
-    //     error: false,
-    //     sites: action.payload,
-    //   }
+    case UPDATE_JOB_TECHNICIAN_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        success: true,
+        successUpdate: true,
+        error: false,
+        sites: action.payload,
+      }
 
-    // case UPDATE_SITE_FAIL:
-    //   return {
-    //     ...state,
-    //     isLoading: false,
-    //     success: false,
-    //     success_delete: false,
-    //     error: action.payload,
-    //   }
+    case UPDATE_JOB_TECHNICIAN_FAIL:
+      return {
+        ...state,
+        isLoading: false,
+        success: false,
+        successUpdate: false,
+        error: action.payload,
+      }
 
-    // case DELETE_SITE:
-    //   return {
-    //     ...state,
-    //     isLoading: true,
-    //     success_delete: false,
-    //     error: false,
-    //   }
+    case DELETE_JOB_TECHNICIAN:
+      return {
+        ...state,
+        isLoading: true,
+        successDelete: false,
+        error: false,
+      }
 
-    // case DELETE_SITE_SUCCESS:
-    //   return {
-    //     ...state,
-    //     isLoading: false,
-    //     success_delete: true,
-    //     error: false,
-    //     sites: action.payload,
-    //   }
+    case DELETE_JOB_TECHNICIAN_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        successDelete: true,
+        error: false,
+        sites: action.payload,
+      }
 
-    // case DELETE_SITE_FAIL:
-    //   return {
-    //     ...state,
-    //     isLoading: false,
-    //     success_delete: false,
-    //     error: action.payload,
-    //   }
+    case DELETE_JOB_TECHNICIAN_FAIL:
+      return {
+        ...state,
+        isLoading: false,
+        successDelete: false,
+        error: action.payload,
+      }
 
     default:
       return state

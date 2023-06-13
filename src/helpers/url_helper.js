@@ -14,6 +14,7 @@ export const GET_LOGOUT = baseUrl + "/auth/signout"
 
 //
 export const GET_AZURE_USERS = baseUrl + "/auth/userlist"
+export const FIND_AZURE_USERS = baseUrl + "/auth/finduser"
 
 //PROFILE
 export const POST_EDIT_JWT_PROFILE = "/post-jwt-profile"
@@ -89,7 +90,7 @@ export const SITES_URL = baseUrl + "/sites"
 
 //
 export const JOBLIST_USERS_URL = baseUrl + "/userJobs/users"
-export const POST_JOBLIST_TECHNICIAN_URL = baseUrl + "/userJobs/"
+export const JOBLIST_TECHNICIAN_URL = baseUrl + "/userJobs/"
 //Job Wbs
 export const JOB_WBS_URL = baseUrl + "/jobwbs"
 

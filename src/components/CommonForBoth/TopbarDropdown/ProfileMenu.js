@@ -36,6 +36,8 @@ const ProfileMenu = props => {
     console.log("logout clicked")
     localStorage.removeItem("authUser")
     localStorage.removeItem("userRole")
+    localStorage.removeItem("accessToken")
+    localStorage.removeItem("tokenId")
     localStorage.removeItem("isAuthenticated")
 
     console.log("loging out")

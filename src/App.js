@@ -48,7 +48,7 @@ const App = () => {
   const cookies = getCookies()
 
   localStorage.setItem("isAuthenticated", cookies.isAuthenticated)
-
+  localStorage.setItem("userId", cookies.uniqueId)
   if (cookies.userRole) {
     if (cookies.userRole !== "undefined") {
       localStorage.setItem("userRole", cookies.userRole)
