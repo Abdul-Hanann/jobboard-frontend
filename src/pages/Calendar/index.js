@@ -38,6 +38,9 @@ import {
   getCategories as onGetCategories,
   getEvents as onGetEvents,
   updateEvent as onUpdateEvent,
+  fetchCompany,
+  fetchJobList,
+  fetchAllTechnicians,
 } from "../../store/actions"
 
 import DeleteModal from "./DeleteModal"
@@ -78,7 +81,9 @@ const Calender = props => {
   const [filteredZipcode, setFilteredZipcode] = useState("")
   const [filteredStatus, setFilteredStatus] = useState("")
   const [filteredCompany, setFilteredCompany] = useState("")
-
+  const [techniciansData, setTechniciansData] = useState([])
+  const [selectedTechniciansOption, setSelectedtechniciansOption] =
+    useState(null)
   // events validation
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -162,21 +167,20 @@ const Calender = props => {
     { value: "Company 3", label: "Company 3" },
   ]
   const jobStatus = [
-    { value: 1, label: "Completed" },
-    { value: 2, label: "Approved" },
-    { value: 3, label: "Pending Approval" },
-    { value: 4, label: "Cancelled" },
+    { value: "approved", label: "Approved" },
+    { value: "pending", label: "Pending Approval" },
+    { value: "declined", label: "Declined" },
   ]
   const mileOptions = [
     { value: "5", label: "5 miles" },
     { value: "10", label: "10 miles" },
-    { value: "15", label: "15 miles" },
+    // { value: "15", label: "15 miles" },
     { value: "20", label: "20 miles" },
-    { value: "25", label: "25 miles" },
+    // { value: "25", label: "25 miles" },
     { value: "30", label: "30 miles" },
-    { value: "35", label: "35 miles" },
+    // { value: "35", label: "35 miles" },
     { value: "40", label: "40 miles" },
-    { value: "45", label: "45 miles" },
+    // { value: "45", label: "45 miles" },
     { value: "50", label: "50 miles" },
   ]
   const [modal, setModal] = useState(false)
@@ -185,14 +189,70 @@ const Calender = props => {
   const [checkedCategories, setCheckedCategories] = useState([])
   const [selectedDay, setSelectedDay] = useState(0)
   const [isEdit, setIsEdit] = useState(false)
+  const [data, setData] = useState(null)
+
+  const {
+    jobListUsers,
+    technicians,
+    technician,
+    isLoadingUser,
+    successAdd,
+    successUpdate,
+  } = useSelector(state => state.JobListUsersReducer)
+
+  const { jobs, isLoading, successDelete, errorDelete, error } = useSelector(
+    state => state.JobListReducer
+  )
 
   useEffect(() => {
-    dispatch(onGetCategories())
-    dispatch(onGetEvents())
+    console.log("getting jobs")
+    dispatch(fetchJobList())
+    dispatch(fetchAllTechnicians())
+  }, [dispatch])
+
+  useEffect(() => {
+    if (technicians) {
+      setTechniciansData(technicians)
+    }
+  }, [technicians])
+
+  // Function to calculate the end date based on the start date and number of days
+  const calculateEndDate = (startDate, numberOfDays) => {
+    const start = new Date(startDate)
+    const end = new Date(
+      start.getTime() + (numberOfDays - 1) * 24 * 60 * 60 * 1000
+    ) // Subtract 1 day from numberOfDays
+    return end.toISOString()
+  }
+
+  useEffect(() => {
+    if (Array.isArray(jobs?.jobs)) {
+      const mappedData = jobs?.jobs.map(job => ({
+        id: job.id,
+        title: job.jobName,
+        start: convertToISOString(job.jobDate.split("T")[0]),
+        end: convertToISOString(
+          calculateEndDate(job.jobDate, job.numberOfDays)
+        ),
+        numberOfDays: job.numberOfDays,
+        jobWbs: job.jobWbs,
+        site: job.site,
+        // Add any additional properties as needed
+      }))
+      setData(mappedData)
+    }
+  }, [jobs])
+
+  useEffect(() => {
+    // dispatch(onGetCategories())
+    // dispatch(onGetEvents())
+    dispatch(fetchCompany())
     // new Draggable(document.getElementById("external-events"), {
     //   itemSelector: ".external-event",
     // })
   }, [dispatch])
+
+  const { company } = useSelector(state => state.CompanyReducer)
 
   useEffect(() => {
     if (!modal && !isEmpty(event) && !!isEdit) {
@@ -212,6 +272,16 @@ const Calender = props => {
       setEvent(null)
     } else {
       setModal(true)
+    }
+  }
+
+  const handleSelectTechniciansChange = e => {
+    const selectedValue = e.target.initialValues
+    const selectedLabel = e.target.options[e.target.selectedIndex].text
+    setSelectedtechniciansOption({ label: selectedLabel, value: selectedValue })
+    if (selectedValue !== "" || selectedValue !== undefined) {
+      document.getElementById("statusLabel").style.display = "block"
+      document.getElementById("statusBox").style.display = "block"
     }
   }
 
@@ -251,7 +321,7 @@ const Calender = props => {
    */
   const handleEventClick = arg => {
     const event = arg.event
-    console.log(event)
+    console.log("event:", event)
     setEvent({
       id: event.id,
       title: event.title,
@@ -355,13 +425,33 @@ const Calender = props => {
   }, [checkedCategories, events])
 
   const clearAllFilters = () => {
+    // setSelectedtechniciansOption({ label: null, value: null })
+    setSelectedtechniciansOption(null)
+    const selectElement = document.querySelector('select[name="Technician"]')
+    selectElement.selectedIndex = 0
     setFilteredCompany("")
     setFilteredStartDate("")
     setFilteredEndDate("")
     setFilteredMiles("")
     setFilteredZipcode("")
     setFilteredStatus("")
+    document.getElementById("statusLabel").style.display = "none"
+    document.getElementById("statusBox").style.display = "none"
   }
+
+  const convertToISOString = date => {
+    date = new Date(date)
+    const padNumber = num => {
+      return num.toString().padStart(2, "0")
+    }
+
+    const year = date.getFullYear()
+    const month = padNumber(date.getMonth() + 1)
+    const day = padNumber(date.getDate())
+
+    return `${year}-${month}-${day}`
+  }
+
   return (
     <React.Fragment>
       <DeleteModal
@@ -426,8 +516,11 @@ const Calender = props => {
                               </div>
                             </label>
                           ))} */}
+                        {/* <Label>Technician</Label> */}
                         <div className="d-flex flex-row mb-1 justify-content-between align-items-center">
-                          <p className="text-muted mt-3">Filter by status </p>
+                          <p className="text-muted mt-3">
+                            Filter by Technician
+                          </p>
                           <Button
                             className="h-25 bg-primary"
                             onClick={clearAllFilters}
@@ -435,21 +528,79 @@ const Calender = props => {
                             Clear all
                           </Button>
                         </div>
-                        <AnimatedMulti
+                        <Input
+                          name="Technician"
+                          type="select"
+                          className="form-select"
+                          placeholder="Insert Technician"
+                          onChange={handleSelectTechniciansChange}
+                          value={selectedTechniciansOption?.value}
+                        >
+                          <option value="" disabled selected>
+                            Select Technician
+                          </option>
+                          {Array.isArray(techniciansData) &&
+                          techniciansData.length > 0 ? (
+                            techniciansData.map((technician, index) => (
+                              <option key={index} value={technician?.id}>
+                                {technician.displayName}
+                              </option>
+                            ))
+                          ) : (
+                            <option value="">No technicians available</option>
+                          )}
+                        </Input>
+                        {/* </div> */}
+                        <p
+                          className="text-muted mt-3"
+                          id="statusLabel"
+                          style={{ display: "none" }}
+                        >
+                          Filter by status{" "}
+                        </p>
+                        <Input
+                          id="statusBox"
+                          style={{ display: "none" }}
+                          type="select"
+                          className="form-select"
+                          placeholder="Insert Technician"
+                          // onChange={handleSelectTechniciansChange}
+                          value={filteredStatus}
+                          setValue={setFilteredStatus}
+                        >
+                          <option value="" disabled selected>
+                            Select Technician
+                          </option>
+                          {jobStatus.map((technician, index) => (
+                            <option key={index} value={technician?.value}>
+                              {technician.label}
+                            </option>
+                          ))}
+                        </Input>
+                        {/* <AnimatedMulti
+                          id="status"
+                          style={{ display: "block" }}
                           options={jobStatus}
                           value={filteredStatus}
                           setValue={setFilteredStatus}
-                        />
+                        /> */}
 
-                        <p className="text-muted mt-3">Filter by company </p>
+                        {/* <p className="text-muted mt-3">Filter by company </p>
                         <AnimatedMulti
-                          options={companies}
+                          options={
+                            Array.isArray(company)
+                              ? company.map(([id, name]) => ({
+                                  label: name,
+                                  value: id,
+                                }))
+                              : []
+                          }
                           value={filteredCompany}
                           setValue={setFilteredCompany}
-                        />
+                        /> */}
 
                         <p className="text-muted mt-3">Filter by date </p>
-                        <p className="text-muted mt-1 mb-0">Start date </p>
+                        {/* <p className="text-muted mt-1 mb-0">Start date </p> */}
                         <Input
                           type="date"
                           className="filter-datepicker"
@@ -458,7 +609,7 @@ const Calender = props => {
                             setFilteredStartDate(event.target.value)
                           }
                         />
-                        <p className="text-muted mt-1 mb-0">End date</p>
+                        {/* <p className="text-muted mt-1 mb-0">End date</p>
                         <Input
                           type="date"
                           className="filter-datepicker"
@@ -466,7 +617,7 @@ const Calender = props => {
                           onChange={event =>
                             setFilteredEndDate(event.target.value)
                           }
-                        />
+                        /> */}
                         <p className="text-muted mt-3">Filter by location</p>
                         <Select
                           className="basic-single"
@@ -477,13 +628,29 @@ const Calender = props => {
                           onChange={value => setFilteredMiles(value)}
                           options={mileOptions}
                         />
+                        <p className="text-muted mt-3">Filter by Zip code</p>
                         <Input
                           type="text"
                           className="mt-1"
                           placeholder="Enter zipcode"
                           value={filteredZipcode}
-                          onChange={value => setFilteredZipcode(value)}
+                          onChange={event => {
+                            const inputValue = event.target.value
+                            const numericValue = inputValue.replace(/\D/g, "") // Remove non-digit characters
+                            const filteredValue = numericValue.slice(0, 5) // Limit to 5 digits
+                            setFilteredZipcode(filteredValue)
+                          }}
                         />
+                      </div>
+                      <div className="d-flex flex-row mb-1 mt-2 justify-content-between align-items-center">
+                        <p className="text-muted mt-3"> </p>
+                        <Button
+                          className="h-25 bg-primary"
+                          style={{ width: 80 }}
+                          onClick={clearAllFilters}
+                        >
+                          Filter
+                        </Button>
                       </div>
 
                       {/* <Row className="justify-content-center mt-5">
@@ -500,6 +667,17 @@ const Calender = props => {
                 <Col lg={9}>
                   {/* fullcalendar control */}
                   <FullCalendar
+                    className="full-calendar"
+                    style={{
+                      backgroundColor: "white",
+                      transition: "background-color 0.3s",
+                    }}
+                    onMouseEnter={e =>
+                      (e.target.style.backgroundColor = "lightgray")
+                    }
+                    onMouseLeave={e =>
+                      (e.target.style.backgroundColor = "white")
+                    }
                     plugins={[BootstrapTheme, dayGridPlugin, interactionPlugin]}
                     slotDuration={"00:15:00"}
                     handleWindowResize={true}
@@ -509,9 +687,9 @@ const Calender = props => {
                       center: "title",
                       right: "dayGridMonth,dayGridWeek,dayGridDay",
                     }}
-                    events={allEvents}
-                    editable={false}
-                    droppable={false}
+                    events={data}
+                    editable={true}
+                    droppable={true}
                     selectable={true}
                     // dateClick={handleDateClick}
                     eventClick={handleEventClick}

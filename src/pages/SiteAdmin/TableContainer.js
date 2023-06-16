@@ -517,7 +517,7 @@ const TableContainer = ({
               <Col lg="6">
                 <div id="external-events" className="mt-2">
                   <p className="text-muted mt-3">Company </p>
-
+                  {console.log("uniqueCompany:", uniqueCompany)}
                   <AnimatedMulti
                     options={
                       Array.isArray(uniqueCompany)
