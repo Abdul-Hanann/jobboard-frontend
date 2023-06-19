@@ -50,6 +50,7 @@ import "@fullcalendar/bootstrap/main.css"
 
 //redux
 import { useSelector, useDispatch } from "react-redux"
+import { userTypes } from "pages/Authentication/userTypes"
 
 const AnimatedMulti = props => {
   const { options, value, setValue } = props
@@ -82,8 +83,12 @@ const Calender = props => {
   const [filteredStatus, setFilteredStatus] = useState("")
   const [filteredCompany, setFilteredCompany] = useState("")
   const [techniciansData, setTechniciansData] = useState([])
+  const [companyData, setCompanyData] = useState("")
   const [selectedTechniciansOption, setSelectedtechniciansOption] =
     useState(null)
+  const [selectedCompanyOption, setSelectedCompanyOption] = useState(null)
+  const [selectedStatusOption, setSelectedStatusOption] = useState(null)
+
   // events validation
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -203,7 +208,8 @@ const Calender = props => {
   const { jobs, isLoading, successDelete, errorDelete, error } = useSelector(
     state => state.JobListReducer
   )
-
+  const { company } = useSelector(state => state.CompanyReducer)
+  let userRole = localStorage.getItem("userRole")
   useEffect(() => {
     console.log("getting jobs")
     dispatch(fetchJobList())
@@ -214,7 +220,11 @@ const Calender = props => {
     if (technicians) {
       setTechniciansData(technicians)
     }
-  }, [technicians])
+    if (company) {
+      setCompanyData(company)
+    }
+  }, [technicians, company])
+  console.log("techniciansData:", techniciansData)
 
   // Function to calculate the end date based on the start date and number of days
   const calculateEndDate = (startDate, numberOfDays) => {
@@ -252,8 +262,6 @@ const Calender = props => {
     // })
   }, [dispatch])
 
-  const { company } = useSelector(state => state.CompanyReducer)
-
   useEffect(() => {
     if (!modal && !isEmpty(event) && !!isEdit) {
       setTimeout(() => {
@@ -276,13 +284,25 @@ const Calender = props => {
   }
 
   const handleSelectTechniciansChange = e => {
-    const selectedValue = e.target.initialValues
+    const selectedValue = e.target.value
     const selectedLabel = e.target.options[e.target.selectedIndex].text
     setSelectedtechniciansOption({ label: selectedLabel, value: selectedValue })
     if (selectedValue !== "" || selectedValue !== undefined) {
       document.getElementById("statusLabel").style.display = "block"
       document.getElementById("statusBox").style.display = "block"
     }
+  }
+
+  const handleSelectCompanyChange = e => {
+    const selectedValue = e.target.value
+    const selectedLabel = e.target.options[e.target.selectedIndex].text
+    setSelectedCompanyOption({ label: selectedLabel, value: selectedValue })
+  }
+
+  const handleSelectStatusChange = e => {
+    const selectedValue = e.target.value
+    const selectedLabel = e.target.options[e.target.selectedIndex].text
+    setSelectedStatusOption({ label: selectedLabel, value: selectedValue })
   }
 
   const toggleCategory = () => {
@@ -425,18 +445,45 @@ const Calender = props => {
   }, [checkedCategories, events])
 
   const clearAllFilters = () => {
-    // setSelectedtechniciansOption({ label: null, value: null })
-    setSelectedtechniciansOption(null)
-    const selectElement = document.querySelector('select[name="Technician"]')
-    selectElement.selectedIndex = 0
-    setFilteredCompany("")
-    setFilteredStartDate("")
-    setFilteredEndDate("")
-    setFilteredMiles("")
-    setFilteredZipcode("")
-    setFilteredStatus("")
-    document.getElementById("statusLabel").style.display = "none"
-    document.getElementById("statusBox").style.display = "none"
+    if (userRole === userTypes.ROLE_TECHNICIAN) {
+      setFilteredCompany("")
+      setFilteredStartDate("")
+      setFilteredEndDate("")
+      setFilteredMiles("")
+      setFilteredZipcode("")
+      // setFilteredStatus("")
+      document.getElementById("statusLabel").style.display = "none"
+      document.getElementById("statusBox").style.display = "none"
+    } else {
+      setSelectedtechniciansOption(null)
+      const selectElementTechnician = document.querySelector(
+        'select[name="Technician"]'
+      )
+      if (selectElementTechnician) {
+        selectElementTechnician.selectedIndex = 0
+      }
+
+      const selectElementCompany = document.querySelector(
+        'select[name="Company"]'
+      )
+      if (selectElementCompany) {
+        selectElementCompany.selectedIndex = 0
+      }
+      const selectElementStatus = document.querySelector(
+        'select[name="statusBox"]'
+      )
+      if (selectElementStatus) {
+        selectElementStatus.selectedIndex = 0
+      }
+      setFilteredCompany("")
+      setFilteredStartDate("")
+      setFilteredEndDate("")
+      setFilteredMiles("")
+      setFilteredZipcode("")
+      setFilteredStatus("")
+      document.getElementById("statusLabel").style.display = "none"
+      document.getElementById("statusBox").style.display = "none"
+    }
   }
 
   const convertToISOString = date => {
@@ -450,6 +497,27 @@ const Calender = props => {
     const day = padNumber(date.getDate())
 
     return `${year}-${month}-${day}`
+  }
+  const handleFilterClick = () => {
+    let data = {}
+    if (userRole === userTypes.ROLE_TECHNICIAN) {
+      data = {
+        technician: localStorage.getItem("userId"),
+        date: filteredStartDate,
+        location: filteredMiles,
+        zipCode: filteredZipcode,
+      }
+    } else {
+      data = {
+        technician: selectedTechniciansOption?.value,
+        company: selectedCompanyOption?.value,
+        status: selectedStatusOption?.value,
+        date: filteredStartDate,
+        location: filteredMiles?.value,
+        zipCode: filteredZipcode,
+      }
+    }
+    console.log("data:", data)
   }
 
   return (
@@ -517,40 +585,89 @@ const Calender = props => {
                             </label>
                           ))} */}
                         {/* <Label>Technician</Label> */}
-                        <div className="d-flex flex-row mb-1 justify-content-between align-items-center">
-                          <p className="text-muted mt-3">
-                            Filter by Technician
-                          </p>
-                          <Button
-                            className="h-25 bg-primary"
-                            onClick={clearAllFilters}
-                          >
-                            Clear all
-                          </Button>
-                        </div>
-                        <Input
-                          name="Technician"
-                          type="select"
-                          className="form-select"
-                          placeholder="Insert Technician"
-                          onChange={handleSelectTechniciansChange}
-                          value={selectedTechniciansOption?.value}
-                        >
-                          <option value="" disabled selected>
-                            Select Technician
-                          </option>
-                          {Array.isArray(techniciansData) &&
-                          techniciansData.length > 0 ? (
-                            techniciansData.map((technician, index) => (
-                              <option key={index} value={technician?.id}>
-                                {technician.displayName}
+                        {userRole !== userTypes.ROLE_TECHNICIAN && (
+                          <>
+                            <div className="d-flex flex-row mb-1 justify-content-between align-items-center">
+                              <p className="text-muted mt-3">
+                                Filter by Technician
+                              </p>
+                              <Button
+                                className="h-25 bg-primary"
+                                onClick={clearAllFilters}
+                              >
+                                Clear all
+                              </Button>
+                            </div>
+                          </>
+                        )}
+                        {userRole === userTypes.ROLE_TECHNICIAN && (
+                          <>
+                            <div className="d-flex flex-row mb-1 justify-content-between align-items-center">
+                              <p className="text-muted mt-3">Filter by Date</p>
+                              <Button
+                                className="h-25 bg-primary"
+                                onClick={clearAllFilters}
+                              >
+                                Clear all
+                              </Button>
+                            </div>
+                          </>
+                        )}
+                        {userRole !== userTypes.ROLE_TECHNICIAN && (
+                          <>
+                            <Input
+                              name="Technician"
+                              type="select"
+                              className="form-select"
+                              placeholder="Insert Technician"
+                              onChange={handleSelectTechniciansChange}
+                              value={selectedTechniciansOption?.value}
+                            >
+                              <option value="" disabled selected>
+                                Select Technician
                               </option>
-                            ))
-                          ) : (
-                            <option value="">No technicians available</option>
-                          )}
-                        </Input>
-                        {/* </div> */}
+                              {Array.isArray(techniciansData) &&
+                              techniciansData.length > 0 ? (
+                                techniciansData.map((technician, index) => (
+                                  <option key={index} value={technician?.id}>
+                                    {technician.displayName}
+                                  </option>
+                                ))
+                              ) : (
+                                <option value="">
+                                  No technicians available
+                                </option>
+                              )}
+                            </Input>
+                            {/* </div> */}
+
+                            <p className="text-muted mt-3">
+                              Filter by Company{" "}
+                            </p>
+                            <Input
+                              name="Company"
+                              type="select"
+                              className="form-select"
+                              placeholder="Select Company"
+                              onChange={handleSelectCompanyChange}
+                              value={selectedCompanyOption?.value}
+                            >
+                              <option value="" disabled selected>
+                                Select Company
+                              </option>
+                              {Array.isArray(companyData) &&
+                              companyData.length > 0 ? (
+                                companyData.map((company, index) => (
+                                  <option key={index} value={company?.id}>
+                                    {company?.name}
+                                  </option>
+                                ))
+                              ) : (
+                                <option value="">No Company available</option>
+                              )}
+                            </Input>
+                          </>
+                        )}
                         <p
                           className="text-muted mt-3"
                           id="statusLabel"
@@ -560,13 +677,14 @@ const Calender = props => {
                         </p>
                         <Input
                           id="statusBox"
+                          name="statusBox"
                           style={{ display: "none" }}
                           type="select"
                           className="form-select"
                           placeholder="Insert Technician"
-                          // onChange={handleSelectTechniciansChange}
-                          value={filteredStatus}
-                          setValue={setFilteredStatus}
+                          onChange={e => handleSelectStatusChange(e)}
+                          value={selectedStatusOption?.value}
+                          // setValue={setFilteredStatus}
                         >
                           <option value="" disabled selected>
                             Select Technician
@@ -577,29 +695,11 @@ const Calender = props => {
                             </option>
                           ))}
                         </Input>
-                        {/* <AnimatedMulti
-                          id="status"
-                          style={{ display: "block" }}
-                          options={jobStatus}
-                          value={filteredStatus}
-                          setValue={setFilteredStatus}
-                        /> */}
+                        {userRole !== userTypes.ROLE_TECHNICIAN && (
+                          <p className="text-muted mt-3">Filter by date</p>
+                        )}
 
-                        {/* <p className="text-muted mt-3">Filter by company </p>
-                        <AnimatedMulti
-                          options={
-                            Array.isArray(company)
-                              ? company.map(([id, name]) => ({
-                                  label: name,
-                                  value: id,
-                                }))
-                              : []
-                          }
-                          value={filteredCompany}
-                          setValue={setFilteredCompany}
-                        /> */}
-
-                        <p className="text-muted mt-3">Filter by date </p>
+                        {/* <p className="text-muted mt-3">Filter by date </p> */}
                         {/* <p className="text-muted mt-1 mb-0">Start date </p> */}
                         <Input
                           type="date"
@@ -647,7 +747,7 @@ const Calender = props => {
                         <Button
                           className="h-25 bg-primary"
                           style={{ width: 80 }}
-                          onClick={clearAllFilters}
+                          onClick={handleFilterClick}
                         >
                           Filter
                         </Button>
@@ -668,16 +768,16 @@ const Calender = props => {
                   {/* fullcalendar control */}
                   <FullCalendar
                     className="full-calendar"
-                    style={{
-                      backgroundColor: "white",
-                      transition: "background-color 0.3s",
-                    }}
-                    onMouseEnter={e =>
-                      (e.target.style.backgroundColor = "lightgray")
-                    }
-                    onMouseLeave={e =>
-                      (e.target.style.backgroundColor = "white")
-                    }
+                    // style={{
+                    //   backgroundColor: "white",
+                    //   transition: "background-color 0.3s",
+                    // }}
+                    // onMouseEnter={e =>
+                    //   (e.target.style.backgroundColor = "lightgray")
+                    // }
+                    // onMouseLeave={e =>
+                    //   (e.target.style.backgroundColor = "white")
+                    // }
                     plugins={[BootstrapTheme, dayGridPlugin, interactionPlugin]}
                     slotDuration={"00:15:00"}
                     handleWindowResize={true}
@@ -688,12 +788,55 @@ const Calender = props => {
                       right: "dayGridMonth,dayGridWeek,dayGridDay",
                     }}
                     events={data}
-                    editable={true}
-                    droppable={true}
+                    // editable={true}
+                    // droppable={true}
                     selectable={true}
-                    // dateClick={handleDateClick}
+                    eventContent={arg => (
+                      <div
+                        className="fc-content"
+                        style={{
+                          backgroundColor: arg.isMirror
+                            ? "lightgray"
+                            : arg.backgroundColor,
+                          borderColor: arg.borderColor,
+                        }}
+                      >
+                        <div
+                          className="fc-title"
+                          style={{ fontWeight: "bold" }}
+                        >
+                          {arg.event.title}
+                        </div>
+                      </div>
+                    )}
+                    eventDidMount={arg => {
+                      const eventElement = arg.el
+
+                      // Add hover effect
+                      eventElement.addEventListener("mouseover", () => {
+                        eventElement.style.backgroundColor = "green"
+                        eventElement.style.borderColor = "red"
+                      })
+
+                      eventElement.addEventListener("mouseout", () => {
+                        eventElement.style.backgroundColor = arg.backgroundColor
+                        eventElement.style.borderColor = arg.borderColor
+                      })
+
+                      // Add click effect
+                      eventElement.addEventListener("click", () => {
+                        eventElement.style.backgroundColor = "darkgreen"
+                      })
+
+                      eventElement.addEventListener("dblclick", () => {
+                        eventElement.style.backgroundColor = arg.backgroundColor
+                      })
+                    }}
+                    // eventDidMount={info => {
+                    //   // Change event background color to green
+                    //   info.el.style.backgroundColor = "green"
+                    // }}
                     eventClick={handleEventClick}
-                    // drop={onDrop}
                   />
 
                   {/* New/Edit event modal */}
