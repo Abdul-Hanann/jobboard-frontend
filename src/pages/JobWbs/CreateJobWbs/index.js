@@ -155,15 +155,7 @@ const TasksCreate = () => {
         document.getElementById("taskTextError" + key).style.display = "none"
       }
     })
-    if (
-      inputFields.length === 0
-      // editorState === ""
-      //  ||
-      // editorState?.blocks.length === 0 ||
-      // (editorState?.blocks.length === 1
-      //   ? editorState?.blocks[0].text === ""
-      //   : false)
-    ) {
+    if (inputFields.length === 0) {
       document.getElementById("taskError").style.display = "block"
       valid = false
     } else {
@@ -290,7 +282,7 @@ const TasksCreate = () => {
                                       className="inner form-control"
                                       value={field}
                                       onChange={e => handleInputChange(e, key)}
-                                      placeholder="Enter Name..."
+                                      placeholder="Enter Task..."
                                     />
                                     <div
                                       style={{

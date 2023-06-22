@@ -131,13 +131,14 @@ const Overview = ({ jobList }) => {
     // }
   }, [token])
 
-  useEffect(() => {
-    if (jobListId && accessToken) {
-      console.log("getting jobsList users")
-      dispatch(fetchJobListUsers(jobListId, accessToken))
-    }
-    // }
-  }, [dispatch, jobListId, accessToken])
+  // useEffect(() => {
+  //   if (jobListId && accessToken) {
+  //     console.log("getting jobsList users")
+  //     console.log("accessToken:", accessToken)
+  //     dispatch(fetchJobListUsers(jobListId, accessToken))
+  //   }
+  //   // }
+  // }, [dispatch, jobListId, accessToken])
 
   useEffect(() => {
     if (jobListId && accessToken) {
@@ -188,6 +189,11 @@ const Overview = ({ jobList }) => {
     } else {
       setModal(true)
       setDataField(jobList)
+      if (jobListId && accessToken) {
+        console.log("getting jobsList users")
+        console.log("accessToken:", accessToken)
+        dispatch(fetchJobListUsers(jobListId, accessToken))
+      }
     }
   }
 
@@ -219,11 +225,6 @@ const Overview = ({ jobList }) => {
 
   const handleApplyClick = (jobList, jobDays) => {
     setJobDay(jobDays)
-    // if (userId) {
-    //   dispatch(fetchTechnician(userId))
-    // }
-    // AddModal
-    // toggle()
     setAddModal(true)
   }
 
@@ -553,37 +554,67 @@ const Overview = ({ jobList }) => {
         <Card>
           <CardBody>
             <h5 className="fw-semibold">Overview</h5>
-
             <div className="table-responsive">
-              <table className="table">
+              <table className="table table-styling">
                 <tbody>
                   <tr>
-                    <th scope="col">Job Name</th>
+                    <th scope="col" style={{ width: "150px" }}>
+                      Job Name
+                    </th>
                     <td
                       scope="col"
                       className="d-flex justify-content-center text-align-center"
+                      style={{ whiteSpace: "pre-wrap" }}
                     >
                       {jobList.jobName}
                     </td>
                   </tr>
+
                   <tr>
-                    <th scope="row">Job Date:</th>
+                    <th scope="row" style={{ width: "150px" }}>
+                      Job Date
+                    </th>
                     <td className="d-flex justify-content-center text-align-center">
                       {handleValidDate(jobList.jobDate)}
                     </td>
                   </tr>
                   <tr>
-                    <th scope="row">Job No Of Days:</th>
-                    <td className="d-flex justify-content-center text-align-center">
-                      {jobList.numberOfDays}
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Job Site Id</th>
+                    <th scope="row" style={{ width: "150px" }}>
+                      Job Site Id
+                    </th>
                     <td className="d-flex justify-content-center text-align-center">
                       {jobList.site?.siteId}
                     </td>
                   </tr>
+                  <tr>
+                    <th scope="col" style={{ width: "150px" }}>
+                      Total Days
+                    </th>
+                    <td
+                      scope="col"
+                      className="d-flex justify-content-center text-align-center"
+                    >
+                      {jobList.numberOfDays}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h5 className="card-title">Technicians Limit</h5>
+            <div className="table-responsive">
+              <table className="table table-styling">
+                <tbody>
+                  {jobList?.technicianLimitForEachDay.map((noOfDays, index) => (
+                    <tr key={index}>
+                      <th scope="row" style={{ width: "150px" }}>
+                        Day {index + 1}
+                      </th>
+                      <td className="d-flex justify-content-center text-align-center">
+                        {`${noOfDays}`}
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
@@ -656,6 +687,8 @@ const Overview = ({ jobList }) => {
                         data => data.jobDay === index + 1
                       )
 
+                      // console.log("TechLimit:", TechLimit)
+
                       return (
                         <tr key={index}>
                           <td></td>
@@ -671,7 +704,7 @@ const Overview = ({ jobList }) => {
                                 <>
                                   {/* let day_Index = {index + 1} */}
                                   {dayData.userData.map((user, userIndex) => {
-                                    // console.log("user:", user)
+                                    console.log("user:", user)
                                     let initials = ""
                                     if (user?.name) {
                                       const nameWithoutUnderscore =
@@ -798,8 +831,8 @@ const Overview = ({ jobList }) => {
                                                 className="avatar-xs"
                                                 style={{
                                                   position: "relative",
-                                                  width: "40px", // Increase the width of the avatar-group-item
-                                                  height: "40px", // Increase the height of the avatar-group-item
+                                                  width: "42px", // Increase the width of the avatar-group-item
+                                                  height: "42px", // Increase the height of the avatar-group-item
                                                 }}
                                                 onMouseEnter={() =>
                                                   handleMouseEnter(
@@ -887,7 +920,11 @@ const Overview = ({ jobList }) => {
                                   {userRole === userTypes.ROLE_TECHNICIAN &&
                                     dayData.userData.filter(
                                       user => user.userId === userId
-                                    ).length === 0 && (
+                                    ).length === 0 &&
+                                    dayData.userData.length <
+                                      jobList.technicianLimitForEachDay[
+                                        index
+                                      ] && (
                                       <div style={{ margin: "0 auto" }}>
                                         <button
                                           type="button"
@@ -905,22 +942,26 @@ const Overview = ({ jobList }) => {
                                         </button>
                                       </div>
                                     )}
-                                  {userRole !== userTypes.ROLE_TECHNICIAN && (
-                                    <button
-                                      type="button"
-                                      id="btn-add"
-                                      style={{
-                                        width: "42px", // Increase the width of the avatar-group-item
-                                        height: "42px",
-                                      }}
-                                      onClick={() => {
-                                        handleClick(jobList, index + 1)
-                                      }}
-                                      className="btn btn-success btn-rounded ms-2"
-                                    >
-                                      <i className="fas fa-plus align-middle"></i>
-                                    </button>
-                                  )}
+                                  {userRole !== userTypes.ROLE_TECHNICIAN &&
+                                    dayData.userData.length <
+                                      jobList.technicianLimitForEachDay[
+                                        index
+                                      ] && (
+                                      <button
+                                        type="button"
+                                        id="btn-add"
+                                        style={{
+                                          width: "42px", // Increase the width of the avatar-group-item
+                                          height: "42px",
+                                        }}
+                                        onClick={() => {
+                                          handleClick(jobList, index + 1)
+                                        }}
+                                        className="btn btn-success btn-rounded ms-2"
+                                      >
+                                        <i className="fas fa-plus align-middle"></i>
+                                      </button>
+                                    )}
                                 </>
                               ) : (
                                 <>

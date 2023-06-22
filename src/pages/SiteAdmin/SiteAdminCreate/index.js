@@ -60,7 +60,7 @@ const TasksCreate = () => {
   const [stateData, setStateData] = useState("")
   const [zipcode, setZipcode] = useState("")
   const [timezone, setTimeZone] = useState("")
-
+  const [companyData, setCompanyData] = useState("")
   const [selectedCompanyOption, setSelectedCompanyOption] = useState(null)
   const [selectedjobWBSOption, setSelectedjobWBSOption] = useState(null)
   const dispatch = useDispatch()
@@ -111,6 +111,12 @@ const TasksCreate = () => {
 
   const { jobWbs } = useSelector(state => state.JobWbsReducer)
   const { company } = useSelector(state => state.CompanyReducer)
+
+  useEffect(() => {
+    if (company.company) {
+      setCompanyData(company.company)
+    }
+  }, [company])
 
   document.title = isEdit
     ? "Edit Site Admin | SAIT Job Board"
@@ -580,33 +586,18 @@ const TasksCreate = () => {
                               type="select"
                               className="form-select"
                               placeholder="Select Company"
-                              // value={selectedCompany}
-                              // onChange={e => CompanyFunc(e)}
                               value={selectedCompanyOption?.value}
-                              // value={selectedOption}
                               onChange={handleSelectChange}
-                              // onChange={e => setSelectedCompany(e.target.value)}
-                              // onChange={handleSelectChange}
-                              // onChange={validation.handleChange}
-                              // onBlur={validation.handleBlur}
-                              // value={validation.values.Company}
-                              // invalid={
-                              //   validation.touched.Company &&
-                              //   validation.errors.Company
-                              //     ? true
-                              //     : false
-                              // }
                             >
                               <option value="" disabled selected>
                                 Select Company
                               </option>
-                              {company.map((comp, index) => {
-                                return (
+                              {Array.isArray(companyData) &&
+                                companyData.map((comp, index) => (
                                   <option key={index} value={comp.id}>
                                     {comp.name}
                                   </option>
-                                )
-                              })}
+                                ))}
                             </Input>
                             <div
                               style={{

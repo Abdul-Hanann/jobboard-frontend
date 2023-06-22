@@ -160,7 +160,7 @@ const TableContainer = ({
         uniqueState.add(site?.state)
         uniqueZipCode.add(site?.zipcode)
         uniqueTimeZone.add(site?.timezone)
-        uniqueCompany.set(site?.company.id, site?.company.name)
+        uniqueCompany.set(site?.company?.id, site?.company?.name)
         uniqueJobWbs.set(site?.jobWbs.id, site?.jobWbs.name)
       })
 
@@ -705,7 +705,7 @@ const TableContainer = ({
                   </td>
                   <td>{rowdata?.city}</td>
                   <td>{rowdata?.jobWbs?.name}</td>
-                  <td>{rowdata?.company?.name}</td>
+                  <td>{rowdata?.company?.name || "N/A"}</td>
                   <td>{rowdata?.state}</td>
                   <td>{rowdata?.zipcode}</td>
                   <td>{rowdata?.timezone}</td>

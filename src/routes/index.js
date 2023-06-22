@@ -78,7 +78,8 @@ import DashboardCrypto from "../pages/Dashboard-crypto/index"
 import Blog from "../pages/Dashboard-Blog/index"
 import DashboardJob from "../pages/DashboardJob/index"
 
-import UserAdmin from "../pages/UserAdmin/index"
+import Company from "pages/Company"
+import CreateCompany from "pages/Company/CreateCompany"
 //Crypto
 import CryptoWallet from "../pages/Crypto/CryptoWallet/crypto-wallet"
 import CryptoBuySell from "../pages/Crypto/crypto-buy-sell"
@@ -203,7 +204,10 @@ const adminRoutes = [
   { path: "/siteadmin", component: <SiteAdmin /> },
   { path: "/siteadmin/create", component: <SiteAdminCreate /> },
   { path: "/siteadmin/edit", component: <SiteAdminCreate /> },
-  { path: "/useradmin", component: <UserAdmin /> },
+  { path: "/company", component: <Company /> },
+  { path: "/company/create", component: <CreateCompany /> },
+  { path: "/company/edit", component: <CreateCompany /> },
+  // { path: "/jobWbs/view", component: <JobWbsView /> },
   // { path: "/dashboard-saas", component: <DashboardSaas /> },
   // { path: "/dashboard-crypto", component: <DashboardCrypto /> },
   // { path: "/blog", component: <Blog /> },
@@ -338,7 +342,7 @@ const authProtectedRoutes = [
   { path: "/siteadmin", component: <SiteAdmin /> },
   { path: "/siteadmin/create", component: <SiteAdminCreate /> },
   { path: "/siteadmin/edit", component: <SiteAdminCreate /> },
-  { path: "/useradmin", component: <UserAdmin /> },
+  // { path: "/useradmin", component: <UserAdmin /> },
   { path: "/dashboard-saas", component: <DashboardSaas /> },
   { path: "/dashboard-crypto", component: <DashboardCrypto /> },
   { path: "/blog", component: <Blog /> },

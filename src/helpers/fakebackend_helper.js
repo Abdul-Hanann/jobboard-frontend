@@ -416,6 +416,34 @@ export const updateJobWbs = (id, jobWbs) =>
 // delete site
 export const deleteJobWbs = id => del(`${url.JOB_WBS_URL}/${id}`)
 
+export const getCompany = (company, limit, page) => {
+  let queryParams = ""
+  if (company) {
+    queryParams += `&company=${company}`
+  }
+  if (limit) {
+    queryParams += `&limit=${limit}`
+  }
+  if (page) {
+    queryParams += `&page=${page}`
+  }
+
+  const urlWithParams =
+    url.COMPANY_URL + (queryParams ? `?${queryParams.slice(1)}` : "")
+  return get(urlWithParams)
+}
+export const getCompanyById = id => get(`${url.COMPANY_URL}/${id}`)
+
+// add site
+export const addNewCompany = company => post(url.COMPANY_URL, company)
+
+// update site
+export const updateCompany = (id, company) =>
+  put(`${url.COMPANY_URL}/${id}`, company)
+
+// delete site
+export const deleteCompany = id => del(`${url.COMPANY_URL}/${id}`)
+
 // Delete Apply Jobs
 export const deleteApplyJob = data =>
   del(url.DELETE_APPLY_JOB, { headers: { data } })

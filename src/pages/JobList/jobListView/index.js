@@ -542,10 +542,25 @@ const JobsList = () => {
                     ) : (
                       map(data, (job, index) => (
                         <tr key={index}>
-                          <td>
-                            {/* {jobList.id} */}
+                          {/* <td>
                             <img src={img} alt="" className="avatar-sm" />
-                            {/* <img src={img} alt="" className="avatar-sm" /> */}
+                          </td> */}
+                          <td>
+                            <h5 className="text-truncate text-center font-size-14">
+                              {job?.site?.company?.logoUrl ? (
+                                <img
+                                  src={job.site.company.logoUrl}
+                                  alt="Company Logo"
+                                  // className="logo-image smaller-image"
+                                  className="avatar-sm"
+                                  // style={{ width: "50px", height: "50px" }}
+                                />
+                              ) : (
+                                <h5 className="text-truncate text-center font-size-14">
+                                  N/A
+                                </h5>
+                              )}
+                            </h5>
                           </td>
                           <td>
                             <h5 className="text-truncate font-size-14">
@@ -566,7 +581,7 @@ const JobsList = () => {
                             <p> {job.numberOfDays}</p>
                           </td>
                           <td>
-                            <p> {job.site?.siteId}</p>
+                            <p> {job.site?.siteId || "N/A"}</p>
                           </td>
                           <td>
                             <p> {job.jobWbs?.name || "N/A"}</p>

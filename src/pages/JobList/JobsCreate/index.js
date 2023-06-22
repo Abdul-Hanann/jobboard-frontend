@@ -40,6 +40,7 @@ import "react-datepicker/dist/react-datepicker.css"
 
 //Import Breadcrumb
 import Breadcrumbs from "../../../components/Common/Breadcrumb"
+import { isEmpty } from "lodash"
 
 const TasksCreate = () => {
   const { state } = useLocation()
@@ -53,6 +54,11 @@ const TasksCreate = () => {
 
   const [selectedJobSiteIdOption, setSelectedJobSiteIdOption] = useState(null)
   const [selectedjobWBSOption, setSelectedjobWBSOption] = useState(null)
+  const inpRow = []
+  const [indexNum, setIndexNum] = useState(0)
+  const [inputFields, setinputFields] = useState(inpRow)
+  const [technicianLimitForEachDay, setTechnicianLimitForEachDay] = useState({})
+
   const dispatch = useDispatch()
   const navigate = useNavigate()
   useEffect(() => {
@@ -65,6 +71,10 @@ const TasksCreate = () => {
   }, [state])
 
   useEffect(() => {
+    setJobNoOfDays(inputFields.length)
+  }, [inputFields])
+
+  useEffect(() => {
     if (data && data.id) {
       setId(data.id)
       setJobName(data.jobName)
@@ -75,6 +85,8 @@ const TasksCreate = () => {
       })
       setSelectedjobWBSOption({ value: data?.site?.jobWbs })
       setJobNotes(data.notes)
+      setinputFields(data?.technicianLimitForEachDay || [])
+      console.log("input field:", data.technicianLimitForEachDay)
     }
     if (data && data.jobDate) {
       const parsedDate = new Date(data.jobDate)
@@ -116,45 +128,160 @@ const TasksCreate = () => {
     ? "Edit job List | SAIT Job Board"
     : "Create job List  | SAIT Job Board"
 
+  // const validatePage = () => {
+  //   let value = false
+  //   if (jobName === "") {
+  //     document.getElementById("jobNameError").style.display = "block"
+  //     return false
+  //   } else {
+  //     document.getElementById("jobNameError").style.display = "none"
+  //     value = true
+  //   }
+
+  //   if (selectedDate === null) {
+  //     document.getElementById("jobDateError").style.display = "block"
+  //     return false
+  //   } else {
+  //     document.getElementById("jobDateError").style.display = "none"
+  //     value = true
+  //   }
+  //   if (inputFields.length === 0) {
+  //     document.getElementById("JobNoOfDaysError").style.display = "block"
+  //     return false
+  //   } else {
+  //     document.getElementById("JobNoOfDaysError").style.display = "none"
+  //     value = true
+  //   }
+  //   console.log("inputfield:", inputFields)
+  //   inputFields.forEach((field, key) => {
+  //     console.log("field:", field)
+  //     console.log("key:", key)
+  //     console.log("field[key]:", field[key])
+  //     if (
+  //       field === "" ||
+  //       field === undefined ||
+  //       field === null ||
+  //       field.length === 0
+  //     ) {
+  //       console.log("field[key]:", field[key])
+  //       document.getElementById("JobNoOfDaysError" + key).style.display =
+  //         "block"
+  //       return false
+  //     } else {
+  //       document.getElementById("JobNoOfDaysError" + key).style.display = "none"
+  //       value = true
+  //     }
+  //   })
+
+  //   if (
+  //     selectedJobSiteIdOption?.value === "" ||
+  //     selectedJobSiteIdOption?.value === undefined
+  //   ) {
+  //     document.getElementById("jobSiteIdError").style.display = "block"
+  //     return false
+  //   } else {
+  //     document.getElementById("jobSiteIdError").style.display = "none"
+  //     value = true
+  //   }
+  //   if (jobNotes === "") {
+  //     document.getElementById("jobNotesError").style.display = "block"
+  //     return false
+  //   } else {
+  //     document.getElementById("jobNotesError").style.display = "none"
+  //     value = true
+  //   }
+  //   if (
+  //     selectedjobWBSOption?.value === "" ||
+  //     selectedjobWBSOption?.value === undefined ||
+  //     selectedjobWBSOption?.value === "undefined"
+  //   ) {
+  //     document.getElementById("jobWbsError").style.display = "block"
+  //     return false
+  //   } else {
+  //     document.getElementById("jobWbsError").style.display = "none"
+  //     value = true
+  //   }
+
+  //   return value
+  // }
   const validatePage = () => {
-    jobName === ""
-      ? (document.getElementById("jobNameError").style.display = "block")
-      : (document.getElementById("jobNameError").style.display = "none")
+    let isValid = true
 
-    selectedDate === null
-      ? (document.getElementById("jobDateError").style.display = "block")
-      : (document.getElementById("jobDateError").style.display = "none")
+    if (jobName === "") {
+      document.getElementById("jobNameError").style.display = "block"
+      isValid = false
+    } else {
+      document.getElementById("jobNameError").style.display = "none"
+    }
 
-    jobNoOfDays === ""
-      ? (document.getElementById("JobNoOfDaysError").style.display = "block")
-      : (document.getElementById("JobNoOfDaysError").style.display = "none")
+    if (selectedDate === null) {
+      document.getElementById("jobDateError").style.display = "block"
+      isValid = false
+    } else {
+      document.getElementById("jobDateError").style.display = "none"
+    }
 
-    selectedjobWBSOption?.value === "" ||
-    selectedjobWBSOption?.value === undefined ||
-    selectedjobWBSOption?.value === "undefined"
-      ? (document.getElementById("jobWbsError").style.display = "block")
-      : (document.getElementById("jobWbsError").style.display = "none")
-    selectedJobSiteIdOption?.value === "" ||
-    selectedJobSiteIdOption?.value === undefined
-      ? (document.getElementById("jobSiteIdError").style.display = "block")
-      : (document.getElementById("jobSiteIdError").style.display = "none")
+    if (inputFields.length === 0) {
+      document.getElementById("JobNoOfDaysError").style.display = "block"
+      isValid = false
+    } else {
+      document.getElementById("JobNoOfDaysError").style.display = "none"
+    }
 
-    jobNotes === ""
-      ? (document.getElementById("jobNotesError").style.display = "block")
-      : (document.getElementById("jobNotesError").style.display = "none")
+    inputFields.forEach((field, key) => {
+      if (
+        field === "" ||
+        field === undefined ||
+        field === null ||
+        field.length === 0
+      ) {
+        console.log("field[key]:", field[key])
+        document.getElementById("JobNoOfDaysError" + key).style.display =
+          "block"
+        isValid = false
+      } else {
+        document.getElementById("JobNoOfDaysError" + key).style.display = "none"
+      }
+    })
 
     if (
-      jobName !== "" &&
-      selectedDate !== "" &&
-      jobNoOfDays !== "" &&
-      selectedJobSiteIdOption?.value !== "" &&
-      selectedjobWBSOption?.value !== "" &&
-      jobNotes !== ""
+      selectedJobSiteIdOption?.value === "" ||
+      selectedJobSiteIdOption?.value === undefined
     ) {
+      document.getElementById("jobSiteIdError").style.display = "block"
+      isValid = false
+    } else {
+      document.getElementById("jobSiteIdError").style.display = "none"
+    }
+
+    if (jobNotes === "") {
+      document.getElementById("jobNotesError").style.display = "block"
+      isValid = false
+    } else {
+      document.getElementById("jobNotesError").style.display = "none"
+    }
+
+    if (
+      selectedjobWBSOption?.value === "" ||
+      selectedjobWBSOption?.value === undefined ||
+      selectedjobWBSOption?.value === "undefined"
+    ) {
+      document.getElementById("jobWbsError").style.display = "block"
+      isValid = false
+    } else {
+      document.getElementById("jobWbsError").style.display = "none"
+    }
+
+    return isValid
+  }
+
+  const submitData = () => {
+    if (validatePage()) {
       let data = {
         jobName: jobName,
         jobDate: selectedDate,
         numberOfDays: jobNoOfDays,
+        technicianLimitForEachDay: inputFields,
         notes: jobNotes,
         jobWbs: selectedjobWBSOption?.value,
         site: selectedJobSiteIdOption?.value,
@@ -162,18 +289,16 @@ const TasksCreate = () => {
       let input = { id: id, data: data }
       if (isEdit) {
         console.log("edit")
+        console.log("edit:", input)
         dispatch(onUpdateJob(input))
       } else {
         console.log("Add")
+        console.log("Add:", data)
         dispatch(onAddNewJob(data))
       }
     } else {
       console.log("Check fields")
     }
-  }
-
-  const submitData = () => {
-    validatePage()
   }
 
   function handleClick() {
@@ -232,6 +357,43 @@ const TasksCreate = () => {
       document.getElementById("jobWbsError").style.display = "none"
     }
   }
+
+  function handleInputChange(e, index) {
+    // setIndexNum(index + 1)
+    const { value } = e.target
+    if (value !== "") {
+      // let x = { [`day ${index + 1}`]: { value } }
+      const fields = [...inputFields]
+      fields[index] = value
+      setinputFields(fields)
+      document.getElementById("JobNoOfDaysError" + index).style.display = "none"
+
+      // let updatedTechnicianLimit = { ...technicianLimitForEachDay } // Make a copy of the existing object
+      // updatedTechnicianLimit[`day${index + 1}`] = value // Add or update the value for the specific day
+      // setTechnicianLimitForEachDay(updatedTechnicianLimit)
+    }
+  }
+
+  function handleRemoveFields(idx) {
+    const fields = [...inputFields]
+    fields.splice(idx, 1)
+    setinputFields(fields)
+  }
+
+  function handleAddFields() {
+    // setIndexNum(indexNum + 1)
+    const fields = [...inputFields]
+    if (indexNum > 0 && !fields[indexNum]) {
+      document.getElementById("JobNoOfDaysError").style.display = "block"
+      document.getElementById("addButton").disabled = true
+    } else {
+      document.getElementById("JobNoOfDaysError").style.display = "none"
+      document.getElementById("addButton").disabled = false
+      const item1 = []
+      setinputFields([...inputFields, item1])
+    }
+  }
+
   return (
     <>
       <div className="page-content">
@@ -273,169 +435,209 @@ const TasksCreate = () => {
                   <form className="outer-repeater">
                     <div data-repeater-list="outer-group" className="outer">
                       <div data-repeater-item className="outer">
-                        {/* <Row> */}
-                        {/* <Col className="col-12"> */}
-                        <FormGroup className="mb-4" row>
-                          <Label
-                            htmlFor="jobName"
-                            className="col-form-label col-lg-2"
-                          >
-                            Job Name
-                          </Label>
-                          <Col lg="10">
-                            <Input
-                              id="JobName"
-                              name="JobName"
-                              type="text"
-                              className="form-control"
-                              placeholder="Enter Job Name..."
-                              value={jobName}
-                              onChange={handlejobNameChange}
-                            />
-                            <div
-                              style={{
-                                color: "red",
-                                display: "none",
-                              }}
-                              id={"jobNameError"}
-                            >
-                              Please Enter Your Job Name
-                            </div>
-                          </Col>
-                        </FormGroup>
-                        <div className="inner-repeater mb-4">
-                          <div className="inner form-group mb-0 row">
-                            <Label className="col-form-label col-lg-2">
-                              Job Date
-                            </Label>
-                            <div
-                              className="inner col-lg-10 ml-md-auto"
-                              id="repeater"
-                            >
-                              {/* {inputFields.map((field, key) => (*/}
-                              <div
-                                // key={key}
-                                // id={"nested" + key}
-                                className="mb-3 row align-items-center"
+                        <Row>
+                          <Col className="col-12">
+                            <FormGroup className="mb-4" row>
+                              <Label
+                                htmlFor="jobName"
+                                className="col-form-label col-lg-2"
                               >
-                                <Col md="5">
-                                  <DatePicker
-                                    id="jobDate"
-                                    name="jobDate"
-                                    selected={selectedDate}
-                                    placeholderText="Insert Job Date"
-                                    // onChange={date =>
-                                    //   handleDateChange("date", date)
-                                    // }
-                                    onChange={handleDateChange}
-                                    // onBlur={validation.handleBlur}
-                                    // dateFormat="yyyy-MM-dd"
-                                    // showTimeInput
-                                    className="form-control"
-                                  />
-                                  <div
-                                    style={{
-                                      color: "red",
-                                      display: "none",
-                                    }}
-                                    id={"jobDateError"}
-                                  >
-                                    Please Enter Your job Date
+                                Job Name
+                              </Label>
+                              <Col lg="10">
+                                <Input
+                                  id="JobName"
+                                  name="JobName"
+                                  type="text"
+                                  className="form-control"
+                                  placeholder="Enter Job Name..."
+                                  value={jobName}
+                                  onChange={handlejobNameChange}
+                                />
+                                <div
+                                  style={{
+                                    color: "red",
+                                    display: "none",
+                                  }}
+                                  id={"jobNameError"}
+                                >
+                                  Please Enter Your Job Name
+                                </div>
+                              </Col>
+                            </FormGroup>
+                            <div className="inner-repeater mb-3">
+                              <div className="inner form-group mb-0 row">
+                                <Label className="col-form-label col-lg-2">
+                                  Job Date
+                                </Label>
+                                <div
+                                  className="inner col-lg-10 ml-md-auto"
+                                  id="repeater"
+                                >
+                                  <div className="mb-3 row align-items-center">
+                                    <Col md="5">
+                                      <DatePicker
+                                        id="jobDate"
+                                        name="jobDate"
+                                        selected={selectedDate}
+                                        placeholderText="Insert Job Date"
+                                        onChange={handleDateChange}
+                                        className="form-control"
+                                      />
+                                      <div
+                                        style={{
+                                          color: "red",
+                                          display: "none",
+                                        }}
+                                        id={"jobDateError"}
+                                      >
+                                        Please Enter Your job Date
+                                      </div>
+                                    </Col>
+                                    <Col md="2">
+                                      <Label>Job Site Id</Label>
+                                    </Col>
+                                    <Col md="5">
+                                      <Input
+                                        name="JobSiteId"
+                                        type="select"
+                                        className="form-select"
+                                        placeholder="Insert Job Site Id"
+                                        onChange={handleSelectChange}
+                                        value={selectedJobSiteIdOption?.value}
+                                      >
+                                        <option value="" disabled selected>
+                                          Select Job Site Id
+                                        </option>
+                                        {sites &&
+                                          sites.sites &&
+                                          sites.sites.map((site, index) => {
+                                            return (
+                                              <option
+                                                key={index}
+                                                data-job-wbs={`${site?.jobWbs?.id},${site?.jobWbs?.name}`}
+                                                value={site?.id}
+                                              >
+                                                {site.siteId}
+                                              </option>
+                                            )
+                                          })}
+                                      </Input>
+                                      <div
+                                        style={{
+                                          color: "red",
+                                          display: "none",
+                                        }}
+                                        id={"jobSiteIdError"}
+                                      >
+                                        Please Select Job Site Id
+                                      </div>
+                                    </Col>
                                   </div>
-                                  {/* {validation.touched.jobDate &&
-                                  validation.errors.jobDate ? (
-                                    <FormFeedback type="invalid">
-                                      {validation.errors.jobDate}
-                                    </FormFeedback>
-                                  ) : null} */}
-                                </Col>
-                                <Col md="2">
-                                  <Label>Job No of Days</Label>
-                                </Col>
-                                <Col md="5">
-                                  <div className="mt-4 mt-md-0">
-                                    <Input
-                                      name="JobNoOfDays"
-                                      placeholder="Insert Job No Of Days"
-                                      type="number"
-                                      className="form-control"
-                                      value={jobNoOfDays}
-                                      onChange={handlejobNoOfDaysChange}
-                                    />
-                                  </div>
-                                  <div
-                                    style={{
-                                      color: "red",
-                                      display: "none",
-                                    }}
-                                    id={"JobNoOfDaysError"}
-                                  >
-                                    Please Enter Job No Of Days
-                                  </div>
-                                </Col>
+                                </div>
                               </div>
-                              {/* ))} */}
                             </div>
-                          </div>
-                        </div>
 
-                        <FormGroup className="mb-4" row>
-                          <Label
-                            htmlFor="taskname"
-                            className="col-form-label col-lg-2"
-                          >
-                            Job Site Id
-                          </Label>
-                          <Col lg="10">
-                            <Input
-                              name="JobSiteId"
-                              type="select"
-                              className="form-select"
-                              placeholder="Insert Job Site Id"
-                              onChange={handleSelectChange}
-                              // onBlur={validation.handleBlur}
-                              value={selectedJobSiteIdOption?.value}
-                              // invalid={
-                              //   validation.touched.JobSiteId &&
-                              //   validation.errors.JobSiteId
-                              //     ? true
-                              //     : false
-                              // }
-                            >
-                              <option value="" disabled selected>
-                                Select Job Site Id
-                              </option>
-                              {sites &&
-                                sites.sites &&
-                                sites.sites.map((site, index) => {
-                                  return (
-                                    <option
-                                      key={index}
-                                      data-job-wbs={`${site?.jobWbs?.id},${site?.jobWbs?.name}`}
-                                      value={site?.id}
+                            <div className="inner-repeater mb-4">
+                              <div className="inner form-group row">
+                                <Label className="col-form-label col-lg-2">
+                                  Job No of Days
+                                </Label>
+                                <div
+                                  className="inner col-lg-10 ml-md-auto"
+                                  id="repeater"
+                                >
+                                  {inputFields.map((field, key) => (
+                                    <div
+                                      key={key}
+                                      id={"nested" + key}
+                                      className="mb-3 row align-items-center"
                                     >
-                                      {site.siteId}
-                                    </option>
-                                  )
-                                })}
-                            </Input>
-                            <div
-                              style={{
-                                color: "red",
-                                display: "none",
-                              }}
-                              id={"jobSiteIdError"}
-                            >
-                              Please Select Job Site Id
+                                      <Col md="4">
+                                        <Label>
+                                          Add No of Technicians for Day{" "}
+                                          {key + 1}
+                                        </Label>
+                                      </Col>
+                                      <Col md="5">
+                                        <Input
+                                          name="JobNoOfDays"
+                                          placeholder={`Insert number of Technicians for day ${
+                                            key + 1
+                                          }`}
+                                          type="number"
+                                          className="form-control"
+                                          value={field}
+                                          onChange={e =>
+                                            handleInputChange(e, key)
+                                          }
+                                        />
+                                        <div
+                                          style={{
+                                            color: "red",
+                                            display: "none",
+                                          }}
+                                          id={"JobNoOfDaysError" + key}
+                                        >
+                                          Please Enter Job number Of Days
+                                        </div>
+                                      </Col>
+                                      <Col md="3">
+                                        <div className="mt-2 mt-md-0 d-grid">
+                                          <Button
+                                            color="danger"
+                                            className="inner"
+                                            onClick={() => {
+                                              handleRemoveFields(key)
+                                            }}
+                                            block
+                                          >
+                                            Delete
+                                          </Button>
+                                        </div>
+                                      </Col>
+                                    </div>
+                                  ))}
+                                  <Col md="3">
+                                    <div className="mt-2 mt-md-0 d-grid">
+                                      <h5>
+                                        <b>
+                                          Total number of days:{" "}
+                                          {inputFields.length}
+                                          {/* {setJobNoOfDays(inputFields.length)} */}
+                                        </b>
+                                      </h5>
+                                      <Button
+                                        id="addButton"
+                                        color="primary"
+                                        className="inner"
+                                        onClick={handleAddFields}
+                                        // style={{ width: 100 }}
+                                        block
+                                      >
+                                        Add
+                                      </Button>
+                                    </div>
+                                    <div
+                                      style={{
+                                        color: "red",
+                                        display: "none",
+                                      }}
+                                      id={"JobNoOfDaysError"}
+                                    >
+                                      Please Enter Job No Of Days
+                                    </div>
+                                  </Col>
+                                </div>
+                              </div>
                             </div>
-                          </Col>
-                        </FormGroup>
-                        <FormGroup className="mb-4" row>
-                          <Label className="col-form-label col-lg-2">
-                            Job Notes
-                          </Label>
-                          <Col lg="10">
-                            {/* <Editor
+
+                            <FormGroup className="mb-4" row>
+                              <Label className="col-form-label col-lg-2">
+                                Job Notes
+                              </Label>
+                              <Col lg="10">
+                                {/* <Editor
                               id="JobNotes"
                               name="JobNotes"
                               toolbarClassName="toolbarClassName"
@@ -458,76 +660,83 @@ const TasksCreate = () => {
                                 {validation.errors.JobNotes}
                               </FormFeedback>
                             ) : null} */}
-                            <Input
-                              id="JobNotes"
-                              name="JobNotes"
-                              type="textarea"
-                              className="form-control"
-                              placeholder="Enter Job Notes..."
-                              style={{ height: "200px" }}
-                              value={jobNotes}
-                              onChange={handlejobNotesChange}
-                            />
-                            <div
-                              style={{
-                                color: "red",
-                                display: "none",
-                              }}
-                              id={"jobNotesError"}
-                            >
-                              Please Enter Your job Notes
-                            </div>
-                          </Col>
-                        </FormGroup>
-                        <FormGroup className="mb-4" row>
-                          <Label
-                            htmlFor="taskname"
-                            className="col-form-label col-lg-2"
-                          >
-                            Job WBS
-                          </Label>
-                          <Col lg="10">
-                            <Input
-                              name="JobWBS"
-                              type="select"
-                              className="form-select"
-                              onChange={handleSelectjobWBSChange}
-                              // onChange={validation.handleChange}
-                              // onBlur={validation.handleBlur}
-                              value={selectedjobWBSOption?.value}
-                            >
-                              <option value="" disabled selected>
-                                Select JobWBS
-                              </option>
-                              {jobWbs && jobWbs.jobWbs ? (
-                                jobWbs.jobWbs.map((jobwbsData, index) => {
-                                  return (
-                                    <option key={index} value={jobwbsData.id}>
-                                      {jobwbsData.name}
+                                <Input
+                                  id="JobNotes"
+                                  name="JobNotes"
+                                  type="textarea"
+                                  className="form-control"
+                                  placeholder="Enter Job Notes..."
+                                  style={{ height: "200px" }}
+                                  value={jobNotes}
+                                  onChange={handlejobNotesChange}
+                                />
+                                <div
+                                  style={{
+                                    color: "red",
+                                    display: "none",
+                                  }}
+                                  id={"jobNotesError"}
+                                >
+                                  Please Enter Your job Notes
+                                </div>
+                              </Col>
+                            </FormGroup>
+                            <FormGroup className="mb-4" row>
+                              <Label
+                                htmlFor="taskname"
+                                className="col-form-label col-lg-2"
+                              >
+                                Job WBS
+                              </Label>
+                              <Col lg="10">
+                                <Input
+                                  name="JobWBS"
+                                  type="select"
+                                  className="form-select"
+                                  onChange={handleSelectjobWBSChange}
+                                  // onChange={validation.handleChange}
+                                  // onBlur={validation.handleBlur}
+                                  value={selectedjobWBSOption?.value}
+                                >
+                                  <option value="" disabled selected>
+                                    Select JobWBS
+                                  </option>
+                                  {jobWbs && jobWbs.jobWbs ? (
+                                    jobWbs.jobWbs.map((jobwbsData, index) => {
+                                      return (
+                                        <option
+                                          key={index}
+                                          value={jobwbsData.id}
+                                        >
+                                          {jobwbsData.name}
+                                        </option>
+                                      )
+                                    })
+                                  ) : (
+                                    <option value="">
+                                      No jobWbs available
                                     </option>
-                                  )
-                                })
-                              ) : (
-                                <option value="">No jobWbs available</option>
-                              )}
-                            </Input>
-                            {/* {validation.touched.JobWBS &&
+                                  )}
+                                </Input>
+                                {/* {validation.touched.JobWBS &&
                             validation.errors.JobWBS ? (
                               <FormFeedback type="invalid">
                                 {validation.errors.JobWBS}
                               </FormFeedback>
                             ) : null} */}
-                            <div
-                              style={{
-                                color: "red",
-                                display: "none",
-                              }}
-                              id={"jobWbsError"}
-                            >
-                              Please Select Your jobWbs
-                            </div>
+                                <div
+                                  style={{
+                                    color: "red",
+                                    display: "none",
+                                  }}
+                                  id={"jobWbsError"}
+                                >
+                                  Please Select Your jobWbs
+                                </div>
+                              </Col>
+                            </FormGroup>
                           </Col>
-                        </FormGroup>
+                        </Row>
                       </div>
                     </div>
                   </form>

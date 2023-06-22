@@ -176,17 +176,17 @@ const Navbar = props => {
                     </Link>
                   </li>
                 )}
-                {/* {userType === userTypes.ROLE_ADMIN && (
+                {userRole === userTypes.ROLE_ADMIN && (
                   <li className="nav-item dropdown">
                     <Link
                       className="nav-link dropdown-toggle arrow-none"
-                      to="/useradmin"
+                      to="/company"
                     >
                       <i className="bx bx-file me-2"></i>
-                      User Admin
+                      Company
                     </Link>
                   </li>
-                )} */}
+                )}
               </ul>
             </Collapse>
           </nav>
