@@ -315,8 +315,25 @@ export const getSite = id => get(`${url.SITES_URL}/${id}`)
 
 let accessToken = localStorage.getItem("accessToken")
 // get JobList users
-export const getJobListUsers = (id, accessToken) => {
-  return get(`${url.JOBLIST_USERS_URL}/${id}`, {
+export const getJobListUsers = (id, date, location, zipCode, accessToken) => {
+  let queryParams = ""
+  console.log("in getJobListUsers++++++++++++++++++++++++++++++++=")
+
+  if (date) {
+    queryParams += `&jobDate=${date}`
+  }
+  if (location) {
+    queryParams += `&maxDistance=${location}`
+  }
+  if (zipCode) {
+    queryParams += `&zipcode=${zipCode}`
+  }
+
+  const urlWithParams =
+    `${url.JOBLIST_USERS_URL}/${id}` +
+    (queryParams ? `?${queryParams.slice(1)}` : "")
+  console.log("in getJobListUsers:", urlWithParams)
+  return get(urlWithParams, {
     headers: {
       Authorization: "Bearer " + accessToken,
       "Content-Type": "application/json",

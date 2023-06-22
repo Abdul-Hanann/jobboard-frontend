@@ -23,9 +23,18 @@ import {
   UPDATE_JOB_TECHNICIAN_FAIL,
 } from "./actionTypes"
 
-export const fetchJobListUsers = (id, accessToken) => ({
+export const fetchJobListUsers = (
+  id,
+  date,
+  location,
+  zipCode,
+  accessToken
+) => ({
   type: FETCH_JOBLIST_USER,
   id,
+  date,
+  location,
+  zipCode,
   accessToken,
 })
 

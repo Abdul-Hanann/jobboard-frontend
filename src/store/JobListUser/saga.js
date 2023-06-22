@@ -87,8 +87,16 @@ import {
 
 function* fetchAllJobListUsersSaga(action) {
   try {
-    const { id, accessToken } = action
-    const allJobListUsers = yield call(getJobListUsers, id, accessToken)
+    console.log("=======================================================")
+    const { id, date, location, zipCode, accessToken } = action
+    const allJobListUsers = yield call(
+      getJobListUsers,
+      id,
+      date,
+      location,
+      zipCode,
+      accessToken
+    )
     yield put(fetchJobListUsersSuccess(allJobListUsers))
   } catch (error) {
     yield put(fetchJobListUsersFail(error))

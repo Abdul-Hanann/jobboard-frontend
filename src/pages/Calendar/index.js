@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react"
 import PropTypes from "prop-types"
 import { isEmpty } from "lodash"
 
+import * as moment from "moment"
 import {
   Button,
   Card,
@@ -41,6 +42,7 @@ import {
   fetchCompany,
   fetchJobList,
   fetchAllTechnicians,
+  fetchJobListUsers,
 } from "../../store/actions"
 
 import DeleteModal from "./DeleteModal"
@@ -51,6 +53,7 @@ import "@fullcalendar/bootstrap/main.css"
 //redux
 import { useSelector, useDispatch } from "react-redux"
 import { userTypes } from "pages/Authentication/userTypes"
+// import accessToken from "helpers/jwt-token-access/accessToken"
 
 const AnimatedMulti = props => {
   const { options, value, setValue } = props
@@ -195,6 +198,11 @@ const Calender = props => {
   const [selectedDay, setSelectedDay] = useState(0)
   const [isEdit, setIsEdit] = useState(false)
   const [data, setData] = useState(null)
+  const [jobListUsersData, setJobListUsersData] = useState(null)
+  const [accessToken, setAccessToken] = useState(
+    localStorage.getItem("accessToken")
+  )
+  const [userId, setUserId] = useState(localStorage.getItem("userId"))
 
   const {
     jobListUsers,
@@ -210,11 +218,25 @@ const Calender = props => {
   )
   const { company } = useSelector(state => state.CompanyReducer)
   let userRole = localStorage.getItem("userRole")
+  let id = localStorage.getItem("userId")
+  let token = localStorage.getItem("accessToken")
+
+  useEffect(() => {
+    if (token) {
+      setAccessToken(token)
+    }
+    if (id) {
+      setUserId(id)
+    }
+  }, [token, id])
+
+  console.log("accessToken:", accessToken)
   useEffect(() => {
     console.log("getting jobs")
     dispatch(fetchJobList())
+    // dispatch(fetchJobListUsers(userId, accessToken))
     dispatch(fetchAllTechnicians())
-  }, [dispatch])
+  }, [dispatch, userId, accessToken])
 
   useEffect(() => {
     if (technicians) {
@@ -224,14 +246,27 @@ const Calender = props => {
       setCompanyData(company)
     }
   }, [technicians, company])
+  console.log("jobListUsersData:", jobListUsersData)
+
+  useEffect(() => {
+    if (jobListUsers) {
+      setJobListUsersData(jobListUsers)
+      setData(jobListUsers)
+    }
+  }, [jobListUsers])
   console.log("techniciansData:", techniciansData)
 
   // Function to calculate the end date based on the start date and number of days
+  // const calculateEndDate = (startDate, numberOfDays) => {
+  //   const start = new Date(startDate)
+  //   const end = new Date(
+  //     start.getTime() + (numberOfDays - 1) * 24 * 60 * 60 * 1000
+  //   ) // Subtract 1 day from numberOfDays
+  //   return end.toISOString()
+  // }
   const calculateEndDate = (startDate, numberOfDays) => {
     const start = new Date(startDate)
-    const end = new Date(
-      start.getTime() + (numberOfDays - 1) * 24 * 60 * 60 * 1000
-    ) // Subtract 1 day from numberOfDays
+    const end = new Date(start.getTime() + numberOfDays * 24 * 60 * 60 * 1000)
     return end.toISOString()
   }
 
@@ -240,10 +275,12 @@ const Calender = props => {
       const mappedData = jobs?.jobs.map(job => ({
         id: job.id,
         title: job.jobName,
-        start: convertToISOString(job.jobDate.split("T")[0]),
-        end: convertToISOString(
-          calculateEndDate(job.jobDate, job.numberOfDays)
-        ),
+        // start: convertToISOString(job.jobDate.split("T")[0]),
+        // end: convertToISOString(
+        //   calculateEndDate(job.jobDate, job.numberOfDays)
+        // ),
+        start: handleValidDate(job.jobDate),
+        end: handleValidDate(calculateEndDate(job.jobDate, job.numberOfDays)),
         numberOfDays: job.numberOfDays,
         jobWbs: job.jobWbs,
         site: job.site,
@@ -287,10 +324,10 @@ const Calender = props => {
     const selectedValue = e.target.value
     const selectedLabel = e.target.options[e.target.selectedIndex].text
     setSelectedtechniciansOption({ label: selectedLabel, value: selectedValue })
-    if (selectedValue !== "" || selectedValue !== undefined) {
-      document.getElementById("statusLabel").style.display = "block"
-      document.getElementById("statusBox").style.display = "block"
-    }
+    // if (selectedValue !== "" || selectedValue !== undefined) {
+    //   document.getElementById("statusLabel").style.display = "block"
+    //   document.getElementById("statusBox").style.display = "block"
+    // }
   }
 
   const handleSelectCompanyChange = e => {
@@ -355,6 +392,115 @@ const Calender = props => {
     setIsEdit(true)
     toggle()
   }
+  const handleValidDate = date => {
+    const date1 = moment(new Date(date)).format("YYYY-MM-DD")
+    return date1
+  }
+  // function getFormattedEvents() {
+  //   if (data !== null) {
+  //     const { assignedJobs, unAssignedJobs } = data
+  //     const formattedEvents = []
+
+  //     assignedJobs.forEach(job => {
+  //       const event = {
+  //         title: job.title,
+  //         start: job.startDate,
+  //         end: job.endDate,
+  //         extendedProps: {
+  //           assigned: true,
+  //         },
+  //       }
+  //       formattedEvents.push(event)
+  //     })
+
+  //     unAssignedJobs.forEach(job => {
+  //       const event = {
+  //         title: job.title,
+  //         start: job.startDate,
+  //         end: job.endDate,
+  //         extendedProps: {
+  //           assigned: false,
+  //         },
+  //       }
+  //       formattedEvents.push(event)
+  //     })
+
+  //     return formattedEvents
+  //   } else {
+  //     console.log("data is null")
+  //   }
+  // }
+
+  function getFormattedEvents() {
+    const formattedEvents = []
+
+    if (data && data.assignedJobs && data.unAssignedJobs) {
+      // Case where data is in the format { assignedJobs: [], unAssignedJobs: [] }
+      console.log("data:", data)
+      const { assignedJobs, unAssignedJobs } = data
+
+      assignedJobs.forEach(job => {
+        if (!job) {
+          return
+        }
+        const event = {
+          id: job.id,
+          title: job.jobName,
+          start: handleValidDate(job.jobDate),
+          end: handleValidDate(calculateEndDate(job.jobDate, job.numberOfDays)),
+          numberOfDays: job.numberOfDays,
+          jobWbs: job.jobWbs,
+          site: job.site,
+          extendedProps: {
+            assigned: true,
+          },
+        }
+        formattedEvents.push(event)
+      })
+
+      unAssignedJobs.forEach(job => {
+        if (!job) {
+          return
+        }
+        const event = {
+          id: job.id,
+          title: job.jobName,
+          start: handleValidDate(job.jobDate),
+          end: handleValidDate(calculateEndDate(job.jobDate, job.numberOfDays)),
+          numberOfDays: job.numberOfDays,
+          jobWbs: job.jobWbs,
+          site: job.site,
+          extendedProps: {
+            assigned: false,
+          },
+        }
+        formattedEvents.push(event)
+      })
+    } else if (data) {
+      console.log("data:", data)
+      // Case where data is in the format { }
+
+      data.forEach(job => {
+        const event = {
+          id: job.id,
+          title: job.title,
+          start: job.start,
+          end: job.end,
+          numberOfDays: job.numberOfDays,
+          jobWbs: job.jobWbs,
+          site: job.site,
+          extendedProps: {
+            assigned: false,
+          },
+        }
+        formattedEvents.push(event)
+      })
+    } else {
+      console.log("data is null")
+    }
+    console.log("formattedEvents:", formattedEvents)
+    return formattedEvents
+  }
 
   /**
    * On delete event
@@ -416,7 +562,6 @@ const Calender = props => {
       setAllEvents(events)
     }
   }, [events])
-  const [selectedIds, setSelectedIds] = useState([])
 
   const handleCheckboxClick = (event, category) => {
     event.stopPropagation()
@@ -452,8 +597,8 @@ const Calender = props => {
       setFilteredMiles("")
       setFilteredZipcode("")
       // setFilteredStatus("")
-      document.getElementById("statusLabel").style.display = "none"
-      document.getElementById("statusBox").style.display = "none"
+      // document.getElementById("statusLabel").style.display = "none"
+      // document.getElementById("statusBox").style.display = "none"
     } else {
       setSelectedtechniciansOption(null)
       const selectElementTechnician = document.querySelector(
@@ -463,31 +608,45 @@ const Calender = props => {
         selectElementTechnician.selectedIndex = 0
       }
 
-      const selectElementCompany = document.querySelector(
-        'select[name="Company"]'
-      )
-      if (selectElementCompany) {
-        selectElementCompany.selectedIndex = 0
-      }
-      const selectElementStatus = document.querySelector(
-        'select[name="statusBox"]'
-      )
-      if (selectElementStatus) {
-        selectElementStatus.selectedIndex = 0
-      }
+      // const selectElementCompany = document.querySelector(
+      //   'select[name="Company"]'
+      // )
+      // if (selectElementCompany) {
+      //   selectElementCompany.selectedIndex = 0
+      // }
+      // const selectElementStatus = document.querySelector(
+      //   'select[name="statusBox"]'
+      // )
+      // if (selectElementStatus) {
+      //   selectElementStatus.selectedIndex = 0
+      // }
       setFilteredCompany("")
       setFilteredStartDate("")
       setFilteredEndDate("")
       setFilteredMiles("")
       setFilteredZipcode("")
       setFilteredStatus("")
-      document.getElementById("statusLabel").style.display = "none"
-      document.getElementById("statusBox").style.display = "none"
+      // document.getElementById("statusLabel").style.display = "none"
+      // document.getElementById("statusBox").style.display = "none"
     }
   }
 
+  // const convertToISOString = date => {
+  //   date = new Date(date)
+  //   const padNumber = num => {
+  //     return num.toString().padStart(2, "0")
+  //   }
+
+  //   const year = date.getFullYear()
+  //   const month = padNumber(date.getMonth() + 1)
+  //   const day = padNumber(date.getDate())
+
+  //   return `${year}-${month}-${day}`
+  // }
   const convertToISOString = date => {
     date = new Date(date)
+    date.setMinutes(date.getMinutes() + date.getTimezoneOffset()) // Adjust to local time zone
+
     const padNumber = num => {
       return num.toString().padStart(2, "0")
     }
@@ -498,26 +657,37 @@ const Calender = props => {
 
     return `${year}-${month}-${day}`
   }
+
   const handleFilterClick = () => {
     let data = {}
     if (userRole === userTypes.ROLE_TECHNICIAN) {
       data = {
-        technician: localStorage.getItem("userId"),
+        userId: localStorage.getItem("userId"),
         date: filteredStartDate,
         location: filteredMiles,
         zipCode: filteredZipcode,
       }
     } else {
       data = {
-        technician: selectedTechniciansOption?.value,
-        company: selectedCompanyOption?.value,
-        status: selectedStatusOption?.value,
+        userId: selectedTechniciansOption?.value,
         date: filteredStartDate,
         location: filteredMiles?.value,
         zipCode: filteredZipcode,
       }
+      // technician: selectedTechniciansOption?.value
     }
     console.log("data:", data)
+    // console.log("data:", data.userId)
+    // console.log("accessToken:", accessToken)
+    dispatch(
+      fetchJobListUsers(
+        data.userId,
+        data.date,
+        data.location,
+        data.zipCode,
+        accessToken
+      )
+    )
   }
 
   return (
@@ -641,7 +811,7 @@ const Calender = props => {
                             </Input>
                             {/* </div> */}
 
-                            <p className="text-muted mt-3">
+                            {/* <p className="text-muted mt-3">
                               Filter by Company{" "}
                             </p>
                             <Input
@@ -665,10 +835,10 @@ const Calender = props => {
                               ) : (
                                 <option value="">No Company available</option>
                               )}
-                            </Input>
+                            </Input> */}
                           </>
                         )}
-                        <p
+                        {/* <p
                           className="text-muted mt-3"
                           id="statusLabel"
                           style={{ display: "none" }}
@@ -694,13 +864,11 @@ const Calender = props => {
                               {technician.label}
                             </option>
                           ))}
-                        </Input>
+                        </Input> */}
                         {userRole !== userTypes.ROLE_TECHNICIAN && (
                           <p className="text-muted mt-3">Filter by date</p>
                         )}
 
-                        {/* <p className="text-muted mt-3">Filter by date </p> */}
-                        {/* <p className="text-muted mt-1 mb-0">Start date </p> */}
                         <Input
                           type="date"
                           className="filter-datepicker"
@@ -766,18 +934,8 @@ const Calender = props => {
 
                 <Col lg={9}>
                   {/* fullcalendar control */}
-                  <FullCalendar
+                  {/* <FullCalendar
                     className="full-calendar"
-                    // style={{
-                    //   backgroundColor: "white",
-                    //   transition: "background-color 0.3s",
-                    // }}
-                    // onMouseEnter={e =>
-                    //   (e.target.style.backgroundColor = "lightgray")
-                    // }
-                    // onMouseLeave={e =>
-                    //   (e.target.style.backgroundColor = "white")
-                    // }
                     plugins={[BootstrapTheme, dayGridPlugin, interactionPlugin]}
                     slotDuration={"00:15:00"}
                     handleWindowResize={true}
@@ -836,6 +994,64 @@ const Calender = props => {
                     //   // Change event background color to green
                     //   info.el.style.backgroundColor = "green"
                     // }}
+                    eventClick={handleEventClick}
+                  /> */}
+
+                  <FullCalendar
+                    className="full-calendar"
+                    plugins={[BootstrapTheme, dayGridPlugin, interactionPlugin]}
+                    slotDuration={"00:15:00"}
+                    handleWindowResize={true}
+                    themeSystem="bootstrap"
+                    headerToolbar={{
+                      left: "prev,next today",
+                      center: "title",
+                      right: "dayGridMonth,dayGridWeek,dayGridDay",
+                    }}
+                    events={getFormattedEvents()}
+                    // events={data}
+                    selectable={true}
+                    eventContent={arg => (
+                      <div
+                        className="fc-content"
+                        style={{
+                          backgroundColor: arg.event.extendedProps.assigned
+                            ? "green"
+                            : arg.backgroundColor,
+                          borderColor: arg.borderColor,
+                        }}
+                      >
+                        <div
+                          className="fc-title"
+                          style={{ fontWeight: "bold" }}
+                        >
+                          {arg.event.title}
+                        </div>
+                      </div>
+                    )}
+                    eventDidMount={arg => {
+                      const eventElement = arg.el
+
+                      // Add hover effect
+                      eventElement.addEventListener("mouseover", () => {
+                        eventElement.style.backgroundColor = "green"
+                        eventElement.style.borderColor = "red"
+                      })
+
+                      eventElement.addEventListener("mouseout", () => {
+                        eventElement.style.backgroundColor = arg.backgroundColor
+                        eventElement.style.borderColor = arg.borderColor
+                      })
+
+                      // Add click effect
+                      eventElement.addEventListener("click", () => {
+                        eventElement.style.backgroundColor = "darkgreen"
+                      })
+
+                      eventElement.addEventListener("dblclick", () => {
+                        eventElement.style.backgroundColor = arg.backgroundColor
+                      })
+                    }}
                     eventClick={handleEventClick}
                   />
 
