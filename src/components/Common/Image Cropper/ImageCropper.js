@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { Row, Col, Button, UncontrolledTooltip, ButtonGroup } from "reactstrap"
-import src from "../../../assets/images/user-placeholder.png"
+import src from "../../../assets/images/company_placeholder_img.png"
 // import { withNamespaces } from "react-i18next";
 import LoadingButton from "../LoadingButton/LoadingButton"
 //Image Cropper
@@ -208,7 +208,7 @@ class ImageCropper extends Component {
                             />
                           ) : (
                             <Button
-                              className="btn btn-primary btn-lg waves-effect waves-light"
+                              className="btn btn-primary btn-lg waves-effect waves-light mr-3 mt-2"
                               type="button"
                               color="primary"
                               onClick={() => {
@@ -220,7 +220,7 @@ class ImageCropper extends Component {
                             </Button>
                           )}
                           <Button
-                            className="btn btn-primary btn-lg waves-effect waves-light"
+                            className="btn btn-primary btn-lg waves-effect waves-light mt-2 ml-2"
                             type="button"
                             color="primary"
                             onClick={() => {

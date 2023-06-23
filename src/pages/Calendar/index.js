@@ -78,6 +78,7 @@ const Calender = props => {
   const dispatch = useDispatch()
 
   const [event, setEvent] = useState({})
+  const [data, setData] = useState(null)
   const [allEvents, setAllEvents] = useState([])
   const [filteredStartDate, setFilteredStartDate] = useState("")
   const [filteredEndDate, setFilteredEndDate] = useState("")
@@ -100,12 +101,14 @@ const Calender = props => {
     initialValues: {
       title: (event && event.title) || "",
       category: (event && event.category) || "bg-danger",
+      numberOfDays: (event && event.numberOfDays) || "",
       startDate: (event && event.start) || "",
       endDate: (event && event.end) || "",
     },
     validationSchema: Yup.object({
       title: Yup.string().required("Please Enter Your Event Name"),
       category: Yup.string().required("Please Select Your Category"),
+      numberOfDays: Yup.string().required("Please Select Your number of days"),
       startDate: Yup.string().required("Please Enter Your Start Date"),
       endDate: Yup.string().required("Please Enter Your End Date"),
     }),
@@ -197,7 +200,6 @@ const Calender = props => {
   const [checkedCategories, setCheckedCategories] = useState([])
   const [selectedDay, setSelectedDay] = useState(0)
   const [isEdit, setIsEdit] = useState(false)
-  const [data, setData] = useState(null)
   const [jobListUsersData, setJobListUsersData] = useState(null)
   const [accessToken, setAccessToken] = useState(
     localStorage.getItem("accessToken")
@@ -230,7 +232,6 @@ const Calender = props => {
     }
   }, [token, id])
 
-  console.log("accessToken:", accessToken)
   useEffect(() => {
     console.log("getting jobs")
     dispatch(fetchJobList())
@@ -246,7 +247,6 @@ const Calender = props => {
       setCompanyData(company)
     }
   }, [technicians, company])
-  console.log("jobListUsersData:", jobListUsersData)
 
   useEffect(() => {
     if (jobListUsers) {
@@ -254,7 +254,6 @@ const Calender = props => {
       setData(jobListUsers)
     }
   }, [jobListUsers])
-  console.log("techniciansData:", techniciansData)
 
   // Function to calculate the end date based on the start date and number of days
   // const calculateEndDate = (startDate, numberOfDays) => {
@@ -378,7 +377,6 @@ const Calender = props => {
    */
   const handleEventClick = arg => {
     const event = arg.event
-    console.log("event:", event)
     setEvent({
       id: event.id,
       title: event.title,
@@ -435,8 +433,6 @@ const Calender = props => {
     const formattedEvents = []
 
     if (data && data.assignedJobs && data.unAssignedJobs) {
-      // Case where data is in the format { assignedJobs: [], unAssignedJobs: [] }
-      console.log("data:", data)
       const { assignedJobs, unAssignedJobs } = data
 
       assignedJobs.forEach(job => {
@@ -477,7 +473,6 @@ const Calender = props => {
         formattedEvents.push(event)
       })
     } else if (data) {
-      console.log("data:", data)
       // Case where data is in the format { }
 
       data.forEach(job => {
@@ -498,7 +493,6 @@ const Calender = props => {
     } else {
       console.log("data is null")
     }
-    console.log("formattedEvents:", formattedEvents)
     return formattedEvents
   }
 
@@ -676,7 +670,6 @@ const Calender = props => {
       }
       // technician: selectedTechniciansOption?.value
     }
-    console.log("data:", data)
     // console.log("data:", data.userId)
     // console.log("accessToken:", accessToken)
     dispatch(
@@ -1018,7 +1011,9 @@ const Calender = props => {
                           backgroundColor: arg.event.extendedProps.assigned
                             ? "green"
                             : arg.backgroundColor,
-                          borderColor: arg.borderColor,
+                          borderColor: arg.event.extendedProps.assigned
+                            ? "green" // Set border color to green for assigned jobs
+                            : arg.borderColor,
                         }}
                       >
                         <div
@@ -1126,6 +1121,17 @@ const Calender = props => {
                                 </FormFeedback>
                               ) : null}
                             </div>
+                            {/* <div className="mb-3">
+                              <Label className="form-label">
+                                Job number of Days
+                              </Label>
+                              <Input
+                                name="jobNoOfDays"
+                                type="text"
+                                value={event ? event.numberOfDays : ""}
+                                disabled={true}
+                              />
+                            </div> */}
                           </Col>
                           <Col className="col-12">
                             <div className="mb-3">

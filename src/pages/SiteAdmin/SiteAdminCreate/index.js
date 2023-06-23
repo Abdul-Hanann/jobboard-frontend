@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom"
 import { userTypes } from "pages/Authentication/userTypes"
 // import { toast } from "react-toastify"
 // import "react-toastify/dist/ReactToastify.css"
+import PlacesAutocomplete, { usePlacesWidget } from "react-google-autocomplete"
 import toast from "toastr"
 import "toastr/build/toastr.min.css"
 // toast.configure()
@@ -55,7 +56,9 @@ const TasksCreate = () => {
   const [siteId, setSiteId] = useState("")
   const [building, setBuilding] = useState("")
   const [addressLine1, setAddressLine1] = useState("")
+  const [selectedAddress, setSelectedAddress] = useState("")
   const [addressLine2, setAddressLine2] = useState("")
+  const [fullAddress, setFullAddress] = useState("")
   const [city, setCity] = useState("")
   const [stateData, setStateData] = useState("")
   const [zipcode, setZipcode] = useState("")
@@ -63,6 +66,10 @@ const TasksCreate = () => {
   const [companyData, setCompanyData] = useState("")
   const [selectedCompanyOption, setSelectedCompanyOption] = useState(null)
   const [selectedjobWBSOption, setSelectedjobWBSOption] = useState(null)
+  const { ref } = usePlacesWidget({
+    apiKey: process.env.GOOGLE_MAPS_API_KEY,
+    onPlaceSelected: place => handleAddressSelect(place),
+  })
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -93,7 +100,7 @@ const TasksCreate = () => {
       setSiteId(site.siteId)
       setBuilding(site.building)
       setAddressLine1(site.addressLine1)
-      setAddressLine2(site.addressLine2)
+      // setAddressLine2(site.addressLine2)
       setSelectedjobWBSOption({
         label: site.jobWbs?.name,
         value: site.jobWbs?.id,
@@ -198,7 +205,7 @@ const TasksCreate = () => {
         siteId: siteId,
         building: building,
         addressLine1: addressLine1,
-        addressLine2: addressLine2 || "N/A",
+        // addressLine2: addressLine2 || "N/A",
         city: city,
         state: stateData,
         zipcode: zipcode,
@@ -237,11 +244,79 @@ const TasksCreate = () => {
   }
   const handleAddressLine1Change = e => {
     let value = e.target.value
-    setAddressLine1(e.target.value)
+    setAddressLine1(value)
     if (value !== "") {
       document.getElementById("AddressLine1Error").style.display = "none"
     }
+    if (value === "") {
+      setCity("")
+      setZipcode("")
+      setStateData("")
+    }
   }
+
+  const handlePlaceSelect = () => {
+    const input = document.getElementById("address-input")
+    const autocomplete = new google.maps.places.Autocomplete(input, {
+      types: ["address"],
+      fields: ["formatted_address", "address_components", "geometry"],
+    })
+
+    autocomplete.addListener("place_changed", () => {
+      const place = autocomplete.getPlace()
+      setAddressLine1(place.formatted_address)
+
+      const { address_components } = place
+      let fullAddress = ""
+      for (const component of address_components) {
+        fullAddress += component.long_name + ", "
+      }
+      fullAddress = fullAddress.slice(0, -2) // Remove the last comma and space
+
+      setAddressLine1(fullAddress)
+
+      const cityObj = address_components.find(component =>
+        component.types.includes("locality")
+      )
+      const zipcodeObj = address_components.find(component =>
+        component.types.includes("postal_code")
+      )
+      const stateObj = address_components.find(component =>
+        component.types.includes("administrative_area_level_1")
+      )
+
+      if (cityObj) setCity(cityObj.long_name)
+      if (zipcodeObj) {
+        setZipcode(zipcodeObj.long_name)
+        retrieveTimezone(zipcodeObj.long_name) // Call function to retrieve timezone
+      }
+      if (stateObj) setStateData(stateObj.long_name)
+    })
+  }
+  const retrieveTimezone = zipcode => {
+    const geocoder = new google.maps.Geocoder()
+
+    geocoder.geocode({ address: zipcode }, (results, status) => {
+      if (status === "OK") {
+        if (results.length > 0) {
+          const result = results[0]
+          const timezone = result.timeZoneId
+          setTimeZone(timezone) // Set the timezone state variable
+        }
+      } else if (status === "ZERO_RESULTS") {
+        console.log("No results found for the given address.")
+      } else if (status === "OVER_QUERY_LIMIT") {
+        console.log("The request quota for the geocoder has been exceeded.")
+      } else if (status === "REQUEST_DENIED") {
+        console.log("The geocoder request has been denied.")
+      } else if (status === "INVALID_REQUEST") {
+        console.log("The geocoder request is invalid.")
+      } else {
+        console.error("Geocode request failed. Status:", status)
+      }
+    })
+  }
+
   const handleAddressLine2Change = e => {
     let value = e.target.value
     setAddressLine2(e.target.value)
@@ -267,28 +342,28 @@ const TasksCreate = () => {
   }
   const handleCityChange = e => {
     let value = e.target.value
-    setCity(e.target.value)
+    setCity(value)
     if (value !== "") {
       document.getElementById("CityError").style.display = "none"
     }
   }
   const handleStateChange = e => {
     let value = e.target.value
-    setStateData(e.target.value)
+    setStateData(value)
     if (value !== "") {
       document.getElementById("StateError").style.display = "none"
     }
   }
   const handleZipcodeChange = e => {
     let value = e.target.value
-    setZipcode(e.target.value)
+    setZipcode(value)
     if (value !== "") {
       document.getElementById("ZipcodeError").style.display = "none"
     }
   }
   const handleTimeZoneChange = e => {
     let value = e.target.value
-    setTimeZone(e.target.value)
+    setTimeZone(value)
     if (value !== "") {
       document.getElementById("TimeZoneError").style.display = "none"
     }
@@ -417,6 +492,7 @@ const TasksCreate = () => {
                             ) : null} */}
                           </Col>
                         </FormGroup>
+
                         <FormGroup className="mb-4" row>
                           <Label
                             htmlFor="AddressLine1"
@@ -426,44 +502,22 @@ const TasksCreate = () => {
                           </Label>
                           <Col lg="10">
                             <Input
-                              id="AddressLine1"
-                              name="AddressLine1"
                               type="text"
-                              className="form-control"
-                              placeholder="Enter Address Line 1..."
-                              value={addressLine1}
+                              id="address-input"
+                              placeholder="Enter Address..."
                               onChange={handleAddressLine1Change}
-                              // validate={{
-                              //   required: { value: true },
-                              // }}
-                              // onChange={validation.handleChange}
-                              // onBlur={validation.handleBlur}
-                              // value={validation.values.AddressLine1 || ""}
-                              // invalid={
-                              //   validation.touched.AddressLine1 &&
-                              //   validation.errors.AddressLine1
-                              //     ? true
-                              //     : false
-                              // }
+                              value={addressLine1}
+                              onFocus={handlePlaceSelect}
                             />
                             <div
-                              style={{
-                                color: "red",
-                                display: "none",
-                              }}
-                              id={"AddressLine1Error"}
+                              style={{ color: "red", display: "none" }}
+                              id="AddressLine1Error"
                             >
                               Please Enter Your Address Line 1
                             </div>
-                            {/* {validation.touched.AddressLine1 &&
-                            validation.errors.AddressLine1 ? (
-                              <FormFeedback type="invalid">
-                                {validation.errors.AddressLine1}
-                              </FormFeedback>
-                            ) : null} */}
                           </Col>
                         </FormGroup>
-                        <FormGroup className="mb-4" row>
+                        {/* <FormGroup className="mb-4" row>
                           <Label
                             htmlFor="SiteId"
                             className="col-form-label col-lg-2"
@@ -501,14 +555,8 @@ const TasksCreate = () => {
                             >
                               Please Enter Your Address Line 2
                             </div>
-                            {/* {validation.touched.AddressLine2 &&
-                            validation.errors.Building ? (
-                              <FormFeedback type="invalid">
-                                {validation.errors.AddressLine2}
-                              </FormFeedback>
-                            ) : null} */}
                           </Col>
-                        </FormGroup>
+                        </FormGroup> */}
                         <FormGroup className="mb-4" row>
                           <Label
                             htmlFor="Company"
@@ -517,28 +565,13 @@ const TasksCreate = () => {
                             JobWBS
                           </Label>
                           <Col lg="10">
-                            {/* {console.log(validation.values.Company)} */}
                             <Input
                               name="jobWbs"
                               type="select"
                               className="form-select"
                               placeholder="Select jobWbs"
                               value={selectedjobWBSOption?.value}
-                              // value={selectedjobWbs}
                               onChange={handleSelectjobWBSChange}
-                              // onChange={e => setSelectedjobWbs(e.target.value)}
-                              // onChange={e => jobWbsFunc(e)}
-                              // value={selectedOption}
-                              // onChange={handleSelectChange}
-                              // onChange={validation.handleChange}
-                              // onBlur={validation.handleBlur}
-                              // value={validation.values.Company}
-                              // invalid={
-                              //   validation.touched.Company &&
-                              //   validation.errors.Company
-                              //     ? true
-                              //     : false
-                              // }
                             >
                               <option value="" disabled selected>
                                 Select JobWBS
@@ -564,12 +597,6 @@ const TasksCreate = () => {
                             >
                               Please Select Your jobWbs
                             </div>
-                            {/* {validation.touched.Company &&
-                            validation.errors.Company ? (
-                              <FormFeedback type="invalid">
-                                {validation.errors.Company}
-                              </FormFeedback>
-                            ) : null} */}
                           </Col>
                         </FormGroup>
                         <FormGroup className="mb-4" row>
@@ -580,7 +607,6 @@ const TasksCreate = () => {
                             Company
                           </Label>
                           <Col lg="10">
-                            {/* {console.log(validation.values.Company)} */}
                             <Input
                               name="Company"
                               type="select"
@@ -608,12 +634,6 @@ const TasksCreate = () => {
                             >
                               Please Select Your Company
                             </div>
-                            {/* {validation.touched.Company &&
-                            validation.errors.Company ? (
-                              <FormFeedback type="invalid">
-                                {validation.errors.Company}
-                              </FormFeedback>
-                            ) : null} */}
                           </Col>
                         </FormGroup>
                         <div className="inner-repeater mb-4">
@@ -642,18 +662,7 @@ const TasksCreate = () => {
                                     placeholder="Enter City name..."
                                     value={city}
                                     onChange={handleCityChange}
-                                    // validate={{
-                                    //   required: { value: true },
-                                    // }}
-                                    // onChange={validation.handleChange}
-                                    // onBlur={validation.handleBlur}
-                                    // value={validation.values.City || ""}
-                                    // invalid={
-                                    //   validation.touched.City &&
-                                    //   validation.errors.City
-                                    //     ? true
-                                    //     : false
-                                    // }
+                                    // readOnly={city !== "" && !isEdit}
                                   />
                                   <div
                                     style={{
@@ -664,20 +673,9 @@ const TasksCreate = () => {
                                   >
                                     Please Enter Your Job City
                                   </div>
-                                  {/* {validation.touched.City &&
-                                  validation.errors.City ? (
-                                    <FormFeedback type="invalid">
-                                      {validation.errors.City}
-                                    </FormFeedback>
-                                  ) : null} */}
                                 </Col>
                                 <Col md="2">
-                                  <Label
-                                    htmlFor="State"
-                                    // className="col-form-label col-lg-2"
-                                  >
-                                    State
-                                  </Label>
+                                  <Label htmlFor="State">State</Label>
                                 </Col>
                                 <Col md="5">
                                   <Input
@@ -688,18 +686,7 @@ const TasksCreate = () => {
                                     placeholder="Enter State name..."
                                     value={stateData}
                                     onChange={handleStateChange}
-                                    // validate={{
-                                    //   required: { value: true },
-                                    // }}
-                                    // onChange={validation.handleChange}
-                                    // onBlur={validation.handleBlur}
-                                    // value={validation.values.State || ""}
-                                    // invalid={
-                                    //   validation.touched.State &&
-                                    //   validation.errors.State
-                                    //     ? true
-                                    //     : false
-                                    // }
+                                    // readOnly={stateData !== "" && !isEdit}
                                   />
                                   <div
                                     style={{
@@ -710,12 +697,6 @@ const TasksCreate = () => {
                                   >
                                     Please Enter Your Job State
                                   </div>
-                                  {/* {validation.touched.State &&
-                                  validation.errors.State ? (
-                                    <FormFeedback type="invalid">
-                                      {validation.errors.State}
-                                    </FormFeedback>
-                                  ) : null} */}
                                 </Col>
                               </div>
                             </div>
@@ -747,18 +728,7 @@ const TasksCreate = () => {
                                     placeholder="Enter Zip Code..."
                                     value={zipcode}
                                     onChange={handleZipcodeChange}
-                                    // validate={{
-                                    //   required: { value: true },
-                                    // }}
-                                    // onChange={validation.handleChange}
-                                    // onBlur={validation.handleBlur}
-                                    // value={validation.values.Zipcode || ""}
-                                    // invalid={
-                                    //   validation.touched.Zipcode &&
-                                    //   validation.errors.Zipcode
-                                    //     ? true
-                                    //     : false
-                                    // }
+                                    // readOnly={zipcode !== "" && !isEdit}
                                   />
                                   <div
                                     style={{

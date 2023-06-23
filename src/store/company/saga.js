@@ -44,8 +44,8 @@ import {
 
 function* fetchAllCompanySaga(action) {
   try {
-    const { company, limit, page } = action
-    const allJobs = yield call(getCompany, company, limit, page)
+    const { Company, limit, page } = action
+    const allJobs = yield call(getCompany, Company, limit, page)
     yield put(fetchCompanySuccess(allJobs))
   } catch (error) {
     yield put(fetchCompanyFail(error))

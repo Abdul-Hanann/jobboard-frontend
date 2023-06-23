@@ -517,7 +517,6 @@ const TableContainer = ({
               <Col lg="6">
                 <div id="external-events" className="mt-2">
                   <p className="text-muted mt-3">Company </p>
-                  {console.log("uniqueCompany:", uniqueCompany)}
                   <AnimatedMulti
                     options={
                       Array.isArray(uniqueCompany)
@@ -660,13 +659,13 @@ const TableContainer = ({
               </th>
               <th scope="col">Building</th>
               <th scope="col">Address Line 1</th>
-              <th scope="col">Address Line 2</th>
+              {/* <th scope="col">Address Line 2</th> */}
               <th scope="col">City</th>
               <th scope="col">JobWBS</th>
               <th scope="col">Company</th>
               <th scope="col">State</th>
-              <th scope="col">Zip Code</th>
-              <th scope="col">Time Zone</th>
+              {/* <th scope="col">Zip Code</th>
+              <th scope="col">Time Zone</th> */}
               <th scope="col">Action</th>
             </tr>
           </thead>
@@ -698,17 +697,17 @@ const TableContainer = ({
                       {rowdata?.addressLine1}
                     </p>
                   </td>
-                  <td>
+                  {/* <td>
                     <p style={{ whiteSpace: "pre-wrap" }}>
                       {rowdata?.addressLine2 || "-"}
                     </p>
-                  </td>
+                  </td> */}
                   <td>{rowdata?.city}</td>
                   <td>{rowdata?.jobWbs?.name}</td>
                   <td>{rowdata?.company?.name || "N/A"}</td>
                   <td>{rowdata?.state}</td>
-                  <td>{rowdata?.zipcode}</td>
-                  <td>{rowdata?.timezone}</td>
+                  {/* <td>{rowdata?.zipcode}</td>
+                  <td>{rowdata?.timezone}</td> */}
                   <td>
                     <UncontrolledDropdown>
                       <DropdownToggle className="card-drop" tag="a">

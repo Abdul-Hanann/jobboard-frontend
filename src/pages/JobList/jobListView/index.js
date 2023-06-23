@@ -133,7 +133,6 @@ const JobsList = () => {
   const [uniqueJobNames, setUniqueJobName] = useState(null)
   const [uniqueJobWbs, setUniqueJobWbs] = useState(null)
   const [uniqueJobSites, setUniqueJobSites] = useState(null)
-
   useEffect(() => {
     if (Array.isArray(jobs?.jobs)) {
       setData(jobs?.jobs)
@@ -551,9 +550,7 @@ const JobsList = () => {
                                 <img
                                   src={job.site.company.logoUrl}
                                   alt="Company Logo"
-                                  // className="logo-image smaller-image"
                                   className="avatar-sm"
-                                  // style={{ width: "50px", height: "50px" }}
                                 />
                               ) : (
                                 <h5 className="text-truncate text-center font-size-14">

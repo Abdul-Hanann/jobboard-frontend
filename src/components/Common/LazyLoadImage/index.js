@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import placeholder from "../../../assets/images/user-placeholder.png"
+import placeholder from "../../../assets/images/company_placeholder_img.png"
 const LazyLoadImage = props => {
   const {
     src,

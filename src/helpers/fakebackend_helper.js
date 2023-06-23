@@ -433,10 +433,10 @@ export const updateJobWbs = (id, jobWbs) =>
 // delete site
 export const deleteJobWbs = id => del(`${url.JOB_WBS_URL}/${id}`)
 
-export const getCompany = (company, limit, page) => {
+export const getCompany = (Company, limit, page) => {
   let queryParams = ""
-  if (company) {
-    queryParams += `&company=${company}`
+  if (Company) {
+    queryParams += `&company=${Company}`
   }
   if (limit) {
     queryParams += `&limit=${limit}`

@@ -16,13 +16,16 @@ import {
   DELETE_COMPANY_FAIL,
 } from "./actionTypes"
 
-export const fetchCompany = () => ({
+export const fetchCompany = (Company, limit, page) => ({
   type: FETCH_COMPANY,
+  Company,
+  limit,
+  page,
 })
 
-export const fetchCompanySuccess = jobs => ({
+export const fetchCompanySuccess = Company => ({
   type: FETCH_COMPANY_SUCCESS,
-  payload: jobs,
+  payload: Company,
 })
 
 export const fetchCompanyFail = error => ({

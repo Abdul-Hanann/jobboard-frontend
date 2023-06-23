@@ -204,7 +204,6 @@ const TableContainer = ({
     }
   }, [company])
 
-  console.log("companyData:", companyData)
   const [modal, setModal] = useState(false)
   const [filteredjobWbsName, setFilteredjobWbsName] = useState(null)
 
@@ -287,7 +286,7 @@ const TableContainer = ({
     const limit = e.target.value
     const selectedLabel = e.target.options[e.target.selectedIndex].text
     setSelectedShowOption({ label: selectedLabel, value: limit })
-    dispatch(fetchJobWbs("", limit))
+    dispatch(fetchCompany("", limit))
     setPageDataLimit(limit)
   }
 
@@ -295,7 +294,7 @@ const TableContainer = ({
     const page = parseInt(e.target.value)
     const limit = selectedShowOption.value
     setPageDataLimit(limit)
-    dispatch(fetchJobWbs("", limit, page))
+    dispatch(fetchCompany("", limit, page))
   }
 
   const handlePrevPage = () => {
@@ -383,20 +382,19 @@ const TableContainer = ({
               </Input>
             </h3>
           </div>
-          {/* <div className="flex-shrink-0" style={{ marginRight: 20 }}>
-            <button
+          <div className="flex-shrink-0" style={{ marginRight: 20 }}>
+            {/*   <button
               className="btn btn-primary mdi mdi-filter me-1"
               style={{ backgroundColor: "green" }}
               onClick={() => handleClick()}
             >
-            </button>
+            </button> */}
             <button
               className="btn btn-primary mdi mdi-refresh me-1"
               style={{ backgroundColor: "green" }}
               onClick={() => handleRefresh()}
-            >
-            </button>
-          </div> */}
+            ></button>
+          </div>
         </div>
       </Row>
       <div>

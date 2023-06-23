@@ -41,7 +41,7 @@ import "react-datepicker/dist/react-datepicker.css"
 //Import Breadcrumb
 import Breadcrumbs from "../../../components/Common/Breadcrumb"
 
-import placeHolderImage from "../../../assets/images/user-placeholder.png"
+import placeHolderImage from "../../../assets/images/company_placeholder_img.png"
 import LazyLoadImage from "components/Common/LazyLoadImage"
 import Dropzone from "react-dropzone"
 import ImageCropper from "components/Common/Image Cropper/ImageCropper"
@@ -102,7 +102,7 @@ const CreateCompany = () => {
   }, [data])
 
   const { isLoading, successAdd, successUpdate, errorUpdate, errorAdd } =
-    useSelector(state => state.JobWbsReducer)
+    useSelector(state => state.CompanyReducer)
   useEffect(() => {
     if (!isEdit && !isLoading && successAdd) {
       toast.success("Data Added successfully")
@@ -163,6 +163,7 @@ const CreateCompany = () => {
   function handleClearClick() {
     // setEditorState("")
     // setinputFields([])
+    setprofileImageURL(placeHolderImage)
     setnewImageBlob(null)
     setName("")
   }
@@ -173,6 +174,18 @@ const CreateCompany = () => {
       document.getElementById("nameError").style.display = "none"
     }
   }
+
+  // Fetch the placeholder image and convert it to Blob
+  const fetchPlaceholderImage = async () => {
+    try {
+      const response = await fetch(placeHolderImage)
+      const blob = await response.blob()
+      setnewImageBlob(blob)
+    } catch (error) {
+      console.error("Error fetching placeholder image:", error)
+    }
+  }
+
   const validateForm = () => {
     let valid = true
     if (name === "") {
@@ -189,7 +202,6 @@ const CreateCompany = () => {
       reader.onloadend = function () {
         // let base64Data = reader.result.split(",")[1] // Extract base64 data from reader result
         let base64Data = reader.result
-        console.log("base64Data:", base64Data)
         let data = {
           logoUrl: base64Data,
           name: name,
@@ -201,12 +213,14 @@ const CreateCompany = () => {
           dispatch(onUpdateCompany(input))
         } else {
           console.log("create")
-          console.log("create:", data)
           dispatch(onAddNewCompany(data))
         }
       }
-      console.log("newImageBlob:", newImageBlob)
-      reader.readAsDataURL(newImageBlob)
+      if (newImageBlob === null) {
+        fetchPlaceholderImage()
+      } else {
+        reader.readAsDataURL(newImageBlob)
+      }
     } else {
       console.log("Check fields")
     }
