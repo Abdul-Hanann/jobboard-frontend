@@ -182,7 +182,7 @@ const Navbar = props => {
                       className="nav-link dropdown-toggle arrow-none"
                       to="/company"
                     >
-                      <i className="bx bx-file me-2"></i>
+                      <i className="bx bx-buildings me-2"></i>
                       Company
                     </Link>
                   </li>

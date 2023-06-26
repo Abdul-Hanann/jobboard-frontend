@@ -173,6 +173,16 @@ const TableContainer = ({
   // const count = data.length
   const [value, setValue] = useState("")
   const [jobWbsList, setJobWbsList] = useState("")
+  const [selectedShowOption, setSelectedShowOption] = useState({
+    label: "Show 10",
+    value: 10,
+  })
+
+  const [page, setPage] = useState(1)
+
+  const [totalPages, setTotalPages] = useState(1)
+
+  const [pageDataLimit, setPageDataLimit] = useState(selectedShowOption?.value)
 
   const dispatch = useDispatch()
 
@@ -186,11 +196,6 @@ const TableContainer = ({
   const [uniqueJobWbs, setUniqueJobWbs] = useState(null)
 
   const [count, setCount] = useState(jobWbs?.totalCount)
-
-  const [selectedShowOption, setSelectedShowOption] = useState({
-    label: "Show 10",
-    value: 10,
-  })
 
   useEffect(() => {
     if (Array.isArray(jobWbs?.jobWbs)) {
@@ -295,6 +300,7 @@ const TableContainer = ({
 
   const handleRefresh = () => {
     dispatch(fetchJobWbs())
+    setPage(1)
   }
 
   const handleFilterClick = () => {
@@ -307,12 +313,6 @@ const TableContainer = ({
     dispatch(fetchJobWbs(JobWbs))
     toggle()
   }
-
-  const [page, setPage] = useState(1)
-
-  const [totalPages, setTotalPages] = useState(1)
-
-  const [pageDataLimit, setPageDataLimit] = useState(selectedShowOption?.value)
 
   useEffect(() => {
     const Pages = Math.ceil(count / pageDataLimit)

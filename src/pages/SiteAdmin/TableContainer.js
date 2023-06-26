@@ -132,13 +132,17 @@ const TableContainer = ({
   const [uniqueTimeZones, setUniqueTimeZones] = useState(null)
   const [uniqueCompany, setUniqueCompany] = useState(null)
   const [uniqueJobWbs, setUniqueJobWbs] = useState(null)
-
-  const [count, setCount] = useState(sites?.totalCount)
+  const [page, setPage] = useState(1)
 
   const [selectedShowOption, setSelectedShowOption] = useState({
     label: "Show 10",
     value: 10,
   })
+  const [totalPages, setTotalPages] = useState(1)
+
+  const [pageDataLimit, setPageDataLimit] = useState(selectedShowOption?.value)
+
+  const [count, setCount] = useState(sites?.totalCount)
 
   useEffect(() => {
     if (Array.isArray(sites?.sites)) {
@@ -200,6 +204,7 @@ const TableContainer = ({
 
   const handleRefresh = () => {
     dispatch(fetchSites())
+    setPage(1)
   }
 
   const handleFilterClick = () => {
@@ -388,12 +393,6 @@ const TableContainer = ({
   //   const page = event.target.value ? Number(event.target.value) - 1 : 0
   //   gotoPage(page)
   // }
-
-  const [page, setPage] = useState(1)
-
-  const [totalPages, setTotalPages] = useState(1)
-
-  const [pageDataLimit, setPageDataLimit] = useState(selectedShowOption?.value)
 
   useEffect(() => {
     const Pages = Math.ceil(count / pageDataLimit)

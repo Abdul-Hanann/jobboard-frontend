@@ -132,6 +132,19 @@ const TasksCreate = () => {
   function handleBackClick() {
     navigate("/siteadmin")
   }
+
+  function handleClearClick() {
+    setSiteId("")
+    setBuilding("")
+    setAddressLine1("")
+    setCity("")
+    setStateData("")
+    setZipcode("")
+    setTimeZone("")
+    setSelectedCompanyOption({ value: "" })
+    setSelectedjobWBSOption({ value: "" })
+  }
+
   useEffect(() => {
     if (!isEdit && !isLoading && success) {
       toast.success("Data Added successfully")
@@ -355,7 +368,10 @@ const TasksCreate = () => {
     }
   }
   const handleZipcodeChange = e => {
-    let value = e.target.value
+    // let value = e.target.value
+    const inputValue = e.target.value
+    const numericValue = inputValue.replace(/\D/g, "") // Remove non-digit characters
+    const value = numericValue.slice(0, 5) // Limit to 5 digits
     setZipcode(value)
     if (value !== "") {
       document.getElementById("ZipcodeError").style.display = "none"
@@ -400,7 +416,7 @@ const TasksCreate = () => {
                       <button
                         // type="submit"
                         className="btn btn-danger w-xl ms-4 h-75  d-flex justify-content-center align-items-center"
-                        // onClick={handleClearClick}
+                        onClick={handleClearClick}
                       >
                         Clear
                       </button>

@@ -305,6 +305,16 @@ const TasksCreate = () => {
     navigate("/joblist")
   }
 
+  function handleClearClick() {
+    setJobName("")
+    setSelectedDate(null)
+    setJobNoOfDays("")
+    setJobNotes("")
+    setinputFields([])
+    setSelectedJobSiteIdOption({ value: "" }) // Set select element value to index 0
+    setSelectedjobWBSOption({ value: "" }) // Set select element value to index 0
+  }
+
   const handlejobNameChange = e => {
     let value = e.target.value
     setJobName(e.target.value)
@@ -338,9 +348,10 @@ const TasksCreate = () => {
     if (jobWbsId != undefined && jobWbsId != "undefined") {
       setSelectedjobWBSOption({ label: jobWbsName, value: jobWbsId })
       document.getElementById("jobWbsError").style.display = "none"
-    } else {
-      setSelectedjobWBSOption({ label: "Select JobWBS", value: "" })
     }
+    // else {
+    //   setSelectedjobWBSOption({ label: "Select JobWBS", value: "" })
+    // }
   }
   const handlejobNotesChange = e => {
     let value = e.target.value
@@ -425,7 +436,7 @@ const TasksCreate = () => {
                       <button
                         // type="submit"
                         className="btn btn-danger w-xl ms-4 h-75  d-flex justify-content-center align-items-center"
-                        // onClick={handleClearClick}
+                        onClick={handleClearClick}
                       >
                         Clear
                       </button>

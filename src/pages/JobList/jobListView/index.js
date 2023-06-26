@@ -133,6 +133,16 @@ const JobsList = () => {
   const [uniqueJobNames, setUniqueJobName] = useState(null)
   const [uniqueJobWbs, setUniqueJobWbs] = useState(null)
   const [uniqueJobSites, setUniqueJobSites] = useState(null)
+  const [selectedShowOption, setSelectedShowOption] = useState({
+    label: "Show 10",
+    value: 10,
+  })
+  const [page, setPage] = useState(1)
+
+  const [totalPages, setTotalPages] = useState(1)
+
+  const [pageDataLimit, setPageDataLimit] = useState(selectedShowOption?.value)
+
   useEffect(() => {
     if (Array.isArray(jobs?.jobs)) {
       setData(jobs?.jobs)
@@ -166,10 +176,7 @@ const JobsList = () => {
   const [filteredJobWbs, setFilteredJobWbs] = useState(null)
   const [filteredJobSiteId, setFilteredJobSiteId] = useState(null)
   const [filteredStartDate, setFilteredStartDate] = useState(null)
-  const [selectedShowOption, setSelectedShowOption] = useState({
-    label: "Show 10",
-    value: 10,
-  })
+
   const toggle = () => {
     if (modal) {
       setModal(false)
@@ -250,6 +257,7 @@ const JobsList = () => {
   }
   const handleRefresh = () => {
     dispatch(fetchJobList())
+    setPage(1)
   }
   const handleFilterClick = () => {
     console.log("getting jobs")
@@ -286,12 +294,6 @@ const JobsList = () => {
       setFilteredStartDate(date)
     }
   }
-
-  const [page, setPage] = useState(1)
-
-  const [totalPages, setTotalPages] = useState(1)
-
-  const [pageDataLimit, setPageDataLimit] = useState(selectedShowOption?.value)
 
   useEffect(() => {
     const Pages = Math.ceil(count / pageDataLimit)
