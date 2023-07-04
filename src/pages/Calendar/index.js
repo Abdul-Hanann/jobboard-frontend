@@ -42,7 +42,7 @@ import {
   fetchCompany,
   fetchJobList,
   fetchAllTechnicians,
-  fetchJobListUsers,
+  fetchJobListUserForCalendar,
 } from "../../store/actions"
 
 import DeleteModal from "./DeleteModal"
@@ -673,7 +673,7 @@ const Calender = props => {
     // console.log("data:", data.userId)
     // console.log("accessToken:", accessToken)
     dispatch(
-      fetchJobListUsers(
+      fetchJobListUserForCalendar(
         data.userId,
         data.date,
         data.location,

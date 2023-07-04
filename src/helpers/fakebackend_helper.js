@@ -315,9 +315,37 @@ export const getSite = id => get(`${url.SITES_URL}/${id}`)
 
 let accessToken = localStorage.getItem("accessToken")
 // get JobList users
-export const getJobListUsers = (id, date, location, zipCode, accessToken) => {
+export const getJobListUsers = (id, accessToken) => {
+  // let queryParams = ""
+
+  return get(`${url.JOBLIST_USERS_URL}/${id}`, {
+    headers: {
+      Authorization: "Bearer " + accessToken,
+      "Content-Type": "application/json",
+    },
+  })
+}
+
+//   const urlWithParams =
+//     `${url.JOBLIST_USERS_URL}/${id}` +
+//     (queryParams ? `?${queryParams.slice(1)}` : "")
+//   console.log("in getJobListUsers:", urlWithParams)
+//   return get(urlWithParams, {
+//     headers: {
+//       Authorization: "Bearer " + accessToken,
+//       "Content-Type": "application/json",
+//     },
+//   })
+// }
+
+export const getJobListUserForCalendar = (
+  id,
+  date,
+  location,
+  zipCode,
+  accessToken
+) => {
   let queryParams = ""
-  console.log("in getJobListUsers++++++++++++++++++++++++++++++++=")
 
   if (date) {
     queryParams += `&jobDate=${date}`
@@ -342,6 +370,7 @@ export const getJobListUsers = (id, date, location, zipCode, accessToken) => {
 }
 
 export const getAllTechnicians = () => {
+  let accessToken = localStorage.getItem("accessToken")
   return get(`${url.GET_AZURE_USERS}`, {
     headers: {
       Authorization: "Bearer " + accessToken,

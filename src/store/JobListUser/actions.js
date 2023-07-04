@@ -3,6 +3,9 @@ import {
   FETCH_JOBLIST_USER,
   FETCH_JOBLIST_USER_FAIL,
   FETCH_JOBLIST_USER_SUCCESS,
+  FETCH_JOBLIST_USER_FOR_CALENDAR,
+  FETCH_JOBLIST_USER_FAIL_FOR_CALENDAR,
+  FETCH_JOBLIST_USER_SUCCESS_FOR_CALENDAR,
   FETCH_ALL_TECHNICIANS,
   FETCH_ALL_TECHNICIANS_SUCCESS,
   FETCH_ALL_TECHNICIANS_FAIL,
@@ -23,18 +26,9 @@ import {
   UPDATE_JOB_TECHNICIAN_FAIL,
 } from "./actionTypes"
 
-export const fetchJobListUsers = (
-  id,
-  date,
-  location,
-  zipCode,
-  accessToken
-) => ({
+export const fetchJobListUsers = (id, accessToken) => ({
   type: FETCH_JOBLIST_USER,
   id,
-  date,
-  location,
-  zipCode,
   accessToken,
 })
 
@@ -45,6 +39,31 @@ export const fetchJobListUsersSuccess = jobListUsers => ({
 
 export const fetchJobListUsersFail = error => ({
   type: FETCH_JOBLIST_USER_FAIL,
+  payload: error,
+})
+
+export const fetchJobListUserForCalendar = (
+  id,
+  date,
+  location,
+  zipCode,
+  accessToken
+) => ({
+  type: FETCH_JOBLIST_USER_FOR_CALENDAR,
+  id,
+  date,
+  location,
+  zipCode,
+  accessToken,
+})
+
+export const fetchJobListUserForCalendarSuccess = jobListUsers => ({
+  type: FETCH_JOBLIST_USER_SUCCESS_FOR_CALENDAR,
+  payload: jobListUsers,
+})
+
+export const fetchJobListUserForCalendarFail = error => ({
+  type: FETCH_JOBLIST_USER_FAIL_FOR_CALENDAR,
   payload: error,
 })
 

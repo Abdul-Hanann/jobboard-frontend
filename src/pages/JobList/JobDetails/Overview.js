@@ -88,6 +88,7 @@ const Overview = ({ jobList }) => {
 
   const userRoleType = localStorage.getItem("userRole")
   const [userRole, setUserRole] = useState(null)
+  const [userCount, setUserCount] = useState(0)
 
   const statusOptions = [
     {
@@ -131,14 +132,14 @@ const Overview = ({ jobList }) => {
     // }
   }, [token])
 
-  // useEffect(() => {
-  //   if (jobListId && accessToken) {
-  //     console.log("getting jobsList users")
-  //     console.log("accessToken:", accessToken)
-  //     dispatch(fetchJobListUsers(jobListId, accessToken))
-  //   }
-  //   // }
-  // }, [dispatch, jobListId, accessToken])
+  useEffect(() => {
+    if (jobListId && accessToken) {
+      console.log("getting jobsList users")
+      console.log("accessToken:", accessToken)
+      dispatch(fetchJobListUsers(jobListId, accessToken))
+    }
+    // }
+  }, [dispatch, jobListId, accessToken])
 
   useEffect(() => {
     if (jobListId && accessToken) {
@@ -159,6 +160,7 @@ const Overview = ({ jobList }) => {
 
   useEffect(() => {
     if (jobListUsers && jobListUsers.length > 0) {
+      console.log("jobListUsers:", jobListUsers)
       const userDataArray = jobListUsers.map(item => ({
         jobId: item.jobId,
         jobDay: item.jobDay,
@@ -182,6 +184,11 @@ const Overview = ({ jobList }) => {
     }
   }, [technician])
 
+  // // Calculate the user count
+  // useEffect(() => {
+  //   setUserCount(dayData.userData.length)
+  // }, [dayData.userData])
+
   const toggle = () => {
     if (modal) {
       setModal(false)
@@ -200,6 +207,11 @@ const Overview = ({ jobList }) => {
   const updateToggle = () => {
     if (updateModal) {
       setUpdateModal(false)
+      if (jobListId && accessToken) {
+        console.log("getting jobsList users")
+        console.log("accessToken:", accessToken)
+        dispatch(fetchJobListUsers(jobListId, accessToken))
+      }
     } else {
       setUpdateModal(true)
     }
@@ -601,7 +613,7 @@ const Overview = ({ jobList }) => {
               </table>
             </div>
 
-            <h5 className="card-title">Technicians Limit</h5>
+            {/* <h5 className="card-title">Technicians Limit</h5>
             <div className="table-responsive">
               <table className="table table-styling">
                 <tbody>
@@ -617,7 +629,7 @@ const Overview = ({ jobList }) => {
                   ))}
                 </tbody>
               </table>
-            </div>
+            </div> */}
 
             {/* <CardBody> */}
             <h4 className="card-title mb-2">
@@ -626,55 +638,9 @@ const Overview = ({ jobList }) => {
             <div className="table-responsive">
               <table className="table table-nowrap align-middle mb-0">
                 <tbody>
-                  {/* {userRole === userTypes.ROLE_TECHNICIAN ? (
-                    // logic for ROLE_TECHNICIAN
-                    <>
-                      <tr>
-                        <td>
-                          <div
-                            className="avatar-group"
-                            style={{
-                              display: "flex",
-                              justifyContent: "center",
-                            }}
-                          >
-                            <div
-                              className="avatar-group-item mb-5"
-                              style={{
-                                display: "flex",
-                                justifyContent: "center",
-                              }}
-                            >
-                              <button
-                                type="button"
-                                style={{
-                                  position: "absolute",
-                                }}
-                                onClick={() => {
-                                  handleApplyClick(
-                                    jobList,
-                                    jobList.numberOfDays
-                                  )
-                                }}
-                                className="btn btn-success"
-                              >
-                                <i className="fas fa-plus align-middle">
-                                  {" "}
-                                  Apply for this Job
-                                </i>
-                              </button>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    </>
-                  ) :  */}
                   {isLoadingUser ? (
                     <tr>
                       <td colSpan="8" className="text-center">
-                        {/* <div className="spinner-border" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                      </div> */}
                         <div className="text-center my-3">
                           <i className="bx bx-loader bx-spin font-size-18 align-middle text-success me-2" />
                           Loading...
@@ -686,25 +652,41 @@ const Overview = ({ jobList }) => {
                       const dayData = userData.find(
                         data => data.jobDay === index + 1
                       )
-
-                      // console.log("TechLimit:", TechLimit)
-
+                      const noOfDays = jobList.technicianLimitForEachDay[index]
+                      const remainingDays = noOfDays - dayData?.userData.length
+                      console.log("dayData:", dayData)
+                      let bColor = "green"
+                      if (remainingDays == 0) {
+                        bColor = "red"
+                      }
                       return (
                         <tr key={index}>
                           <td></td>
                           <td>
-                            <h5 className="text-truncate font-size-14 m-0">
+                            <h5 className="text-truncate font-size-14 m-0 d-flex justify-content-center text-align-center">
                               Day {index + 1}
-                              {/* let dayIndex = {index + 1} */}
                             </h5>
+                            {userRole !== userTypes.ROLE_TECHNICIAN && (
+                              <p
+                                className="mt-1 d-flex justify-content-center text-align-center"
+                                style={{
+                                  backgroundColor: bColor,
+                                  borderRadius: 10,
+                                  color: "white",
+                                }}
+                              >
+                                {remainingDays} left
+                              </p>
+                            )}
                           </td>
+
                           <td>
                             <div className="avatar-group">
                               {dayData && dayData.userData.length > 0 ? (
                                 <>
                                   {/* let day_Index = {index + 1} */}
                                   {dayData.userData.map((user, userIndex) => {
-                                    console.log("user:", user)
+                                    // console.log("user:", user)
                                     let initials = ""
                                     if (user?.name) {
                                       const nameWithoutUnderscore =
@@ -717,14 +699,19 @@ const Overview = ({ jobList }) => {
                                     // on hover:backgroundColor = "#358c4b"
                                     let backgroundColor = ""
                                     let statusValue = ""
+                                    let CName = ""
                                     if (user?.status === "approved") {
                                       statusValue = "Approved"
+                                      CName = "badge rounded-pill badge-success"
                                       backgroundColor = "#30ab4f" // Set background color to green for approved status
                                     } else if (user.status === "pending") {
                                       statusValue = "Pending"
-                                      backgroundColor = "#f7748c" // Set background color to red for pending status
+                                      CName = "badge rounded-pill badge-warning"
+                                      // backgroundColor = "#f7748c
+                                      backgroundColor = "#ffc107" // Set background color to red for pending status
                                     } else if (user.status === "declined") {
                                       statusValue = "Declined"
+                                      CName = "badge rounded-pill badge-danger"
                                       backgroundColor = "#807877" // Set background color to red for pending status
                                     }
 
@@ -747,10 +734,10 @@ const Overview = ({ jobList }) => {
                                       ) {
                                         return (
                                           <div
-                                            className="avatar-group"
+                                            className="avatar-group d-flex justify-content-center text-align-center"
                                             key={userIndex}
                                           >
-                                            <div className="avatar-group-item">
+                                            <div className="avatar-group-item d-flex justify-content-center text-align-center">
                                               <div
                                                 className="button-show"
                                                 style={{
@@ -778,8 +765,18 @@ const Overview = ({ jobList }) => {
                                                       backgroundColor,
                                                     width: "100px", // Increase the width of the avatar-group-item
                                                     // height: "100px",
+                                                    fontSize: 14,
+                                                    borderRadius: 10,
                                                   }}
-                                                  className="btn btn-success ms-2"
+                                                  className={
+                                                    userRole !==
+                                                    userTypes.ROLE_TECHNICIAN
+                                                      ? "btn btn-success ms-2 d-flex justify-content-center text-align-center"
+                                                      : CName
+                                                  }
+                                                  disabled={
+                                                    statusValue === "Approved"
+                                                  }
                                                 >
                                                   {statusValue}
                                                 </button>
@@ -815,7 +812,7 @@ const Overview = ({ jobList }) => {
                                       } else {
                                         return (
                                           <div
-                                            className="avatar-group"
+                                            className="avatar-group d-flex justify-content-center text-align-center"
                                             key={userIndex}
                                           >
                                             <div
@@ -889,26 +886,6 @@ const Overview = ({ jobList }) => {
                                               effect="solid"
                                               id={`tooltip-${userIndex}`}
                                             />
-
-                                            {/* <button
-                                              type="button"
-                                              style={{
-                                                width: "40px", // Increase the width of the avatar-group-item
-                                                height: "40px",
-                                              }}
-                                              onClick={() => {
-                                                console.log(
-                                                  "66666666666666666666666666666666666666666666666"
-                                                )
-                                                handleClick(
-                                                  jobList,
-                                                  dayData.jobDay
-                                                )
-                                              }}
-                                              className="btn btn-success btn-rounded ms-2"
-                                            >
-                                              <i className="fas fa-plus align-middle"></i>
-                                            </button> */}
                                           </div>
                                         )
                                       }
@@ -916,7 +893,6 @@ const Overview = ({ jobList }) => {
 
                                     return null // Return null for other users that don't match the role conditions
                                   })}
-
                                   {userRole === userTypes.ROLE_TECHNICIAN &&
                                     dayData.userData.filter(
                                       user => user.userId === userId
@@ -942,6 +918,34 @@ const Overview = ({ jobList }) => {
                                         </button>
                                       </div>
                                     )}
+                                  {/* {dayData.userData.length >=
+                                    jobList.technicianLimitForEachDay[
+                                      index
+                                    ] && <p>Limit Reached</p>} */}
+                                  {userRole === userTypes.ROLE_TECHNICIAN &&
+                                    dayData.userData.filter(
+                                      user => user.userId === userId
+                                    ).length === 0 &&
+                                    dayData.userData.length >=
+                                      jobList.technicianLimitForEachDay[
+                                        index
+                                      ] && (
+                                      <button
+                                        type="button"
+                                        style={{
+                                          backgroundColor: "#dc3545",
+                                          // width: "100px", // Increase the width of the avatar-group-item
+                                          // height: "100px",
+                                          fontSize: 14,
+                                          borderRadius: 10,
+                                        }}
+                                        className="badge rounded-pill badge-danger"
+                                        disabled
+                                      >
+                                        Limit Reached
+                                      </button>
+                                    )}
+
                                   {userRole !== userTypes.ROLE_TECHNICIAN &&
                                     dayData.userData.length <
                                       jobList.technicianLimitForEachDay[

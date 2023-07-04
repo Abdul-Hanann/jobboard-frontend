@@ -2,6 +2,9 @@ import {
   FETCH_JOBLIST_USER,
   FETCH_JOBLIST_USER_FAIL,
   FETCH_JOBLIST_USER_SUCCESS,
+  FETCH_JOBLIST_USER_FOR_CALENDAR,
+  FETCH_JOBLIST_USER_FAIL_FOR_CALENDAR,
+  FETCH_JOBLIST_USER_SUCCESS_FOR_CALENDAR,
   FETCH_ALL_TECHNICIANS,
   FETCH_ALL_TECHNICIANS_SUCCESS,
   FETCH_ALL_TECHNICIANS_FAIL,
@@ -24,6 +27,7 @@ import {
 
 const INIT_STATE = {
   jobListUsers: [],
+  jobListUser: [],
   technician: [],
   technicians: [],
   // jobUser: [],
@@ -58,6 +62,36 @@ const JobListUsersReducer = (state = INIT_STATE, action) => {
       }
 
     case FETCH_JOBLIST_USER_FAIL:
+      return {
+        ...state,
+        isLoading: false,
+        isLoadingUser: false,
+        success: false,
+        success_delete: false,
+        error: action.payload,
+      }
+
+    case FETCH_JOBLIST_USER_FOR_CALENDAR:
+      return {
+        ...state,
+        isLoading: false,
+        isLoadingUser: true,
+        success: false,
+        success_delete: false,
+        error: false,
+      }
+    case FETCH_JOBLIST_USER_SUCCESS_FOR_CALENDAR:
+      return {
+        ...state,
+        isLoading: false,
+        isLoadingUser: false,
+        // success: true,
+        success_delete: false,
+        error: false,
+        jobListUser: action.payload,
+      }
+
+    case FETCH_JOBLIST_USER_FAIL_FOR_CALENDAR:
       return {
         ...state,
         isLoading: false,

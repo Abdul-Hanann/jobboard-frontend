@@ -3,6 +3,7 @@ import { takeEvery, fork, put, all, call } from "redux-saga/effects"
 // Redux States
 import {
   FETCH_JOBLIST_USER,
+  ETCH_JOBLIST_USER_FOR_CALENDAR,
   FETCH_ALL_TECHNICIANS,
   FETCH_TECHNICIAN,
   FETCH_JOB_USER,
@@ -10,11 +11,14 @@ import {
   UPDATE_JOB_TECHNICIAN,
   UPDATE_JOB_USER,
   DELETE_JOB_TECHNICIAN,
+  FETCH_JOBLIST_USER_FOR_CALENDAR,
 } from "./actionTypes"
 import {
   fetchJobListUsersSuccess,
   // fetchSiteSuccess,
   fetchJobListUsersFail,
+  fetchJobListUserForCalendarSuccess,
+  fetchJobListUserForCalendarFail,
   fetchAllTechniciansSuccess,
   fetchAllTechniciansFail,
   fetchTechnicianSuccess,
@@ -30,6 +34,7 @@ import {
 } from "./actions"
 import {
   getJobListUsers,
+  getJobListUserForCalendar,
   getAllTechnicians,
   addNewJobTechnician,
   deleteJobTechnician,
@@ -88,18 +93,29 @@ import {
 function* fetchAllJobListUsersSaga(action) {
   try {
     console.log("=======================================================")
+    const { id, accessToken } = action
+    const allJobListUsers = yield call(getJobListUsers, id, accessToken)
+    yield put(fetchJobListUsersSuccess(allJobListUsers))
+  } catch (error) {
+    yield put(fetchJobListUsersFail(error))
+  }
+}
+
+function* fetchAllJobListUserForCalendarSaga(action) {
+  try {
+    console.log("=======================================================")
     const { id, date, location, zipCode, accessToken } = action
     const allJobListUsers = yield call(
-      getJobListUsers,
+      getJobListUserForCalendar,
       id,
       date,
       location,
       zipCode,
       accessToken
     )
-    yield put(fetchJobListUsersSuccess(allJobListUsers))
+    yield put(fetchJobListUserForCalendarSuccess(allJobListUsers))
   } catch (error) {
-    yield put(fetchJobListUsersFail(error))
+    yield put(fetchJobListUserForCalendarFail(error))
   }
 }
 
@@ -152,6 +168,10 @@ function* onDeleteJobTechnician({ payload: id }) {
 export function* watchFetchAllJobListUsers() {
   // yield takeEvery(FETCH_SITES, fetchAllSitesSaga)
   yield takeEvery(FETCH_JOBLIST_USER, fetchAllJobListUsersSaga)
+  yield takeEvery(
+    FETCH_JOBLIST_USER_FOR_CALENDAR,
+    fetchAllJobListUserForCalendarSaga
+  )
   yield takeEvery(FETCH_ALL_TECHNICIANS, fetchAllTechniciansSaga)
   yield takeEvery(FETCH_TECHNICIAN, fetchTechnicianSaga)
   yield takeEvery(ADD_NEW_TECHNICIAN, onAddNewJobTechnician)
