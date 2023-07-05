@@ -340,25 +340,31 @@ export const getJobListUsers = (id, accessToken) => {
 
 export const getJobListUserForCalendar = (
   id,
-  date,
-  location,
-  zipCode,
+  startDate,
+  endDate,
+  maxDistance,
+  zipcode,
   accessToken
 ) => {
   let queryParams = ""
+  console.log("startDate:", startDate)
+  console.log("endDate:", endDate)
 
-  if (date) {
-    queryParams += `&jobDate=${date}`
+  if (startDate) {
+    queryParams += `&startDate=${startDate}`
   }
-  if (location) {
-    queryParams += `&maxDistance=${location}`
+  if (endDate) {
+    queryParams += `&endDate=${endDate}`
   }
-  if (zipCode) {
-    queryParams += `&zipcode=${zipCode}`
+  if (maxDistance) {
+    queryParams += `&maxDistance=${maxDistance}`
+  }
+  if (zipcode) {
+    queryParams += `&zipcode=${zipcode}`
   }
 
   const urlWithParams =
-    `${url.JOBLIST_USERS_URL}/${id}` +
+    `${url.USER_JOBLIST_URL}/${id}` +
     (queryParams ? `?${queryParams.slice(1)}` : "")
   console.log("in getJobListUsers:", urlWithParams)
   return get(urlWithParams, {

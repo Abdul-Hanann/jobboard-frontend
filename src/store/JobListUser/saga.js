@@ -103,14 +103,16 @@ function* fetchAllJobListUsersSaga(action) {
 
 function* fetchAllJobListUserForCalendarSaga(action) {
   try {
-    console.log("=======================================================")
-    const { id, date, location, zipCode, accessToken } = action
+    const { id, startDate, endDate, maxDistance, zipcode, accessToken } = action
+    console.log("startDate:", startDate)
+    console.log("endDate:", endDate)
     const allJobListUsers = yield call(
       getJobListUserForCalendar,
       id,
-      date,
-      location,
-      zipCode,
+      startDate,
+      endDate,
+      maxDistance,
+      zipcode,
       accessToken
     )
     yield put(fetchJobListUserForCalendarSuccess(allJobListUsers))

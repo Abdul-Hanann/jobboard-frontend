@@ -27,7 +27,7 @@ const ProfileMenu = props => {
   // Declare a new state variable, which we'll call "menu"
   const [menu, setMenu] = useState(false)
 
-  const [username, setusername] = useState("Admin")
+  const [username, setusername] = useState(localStorage.getItem("name"))
 
   const dispatch = useDispatch()
   const history = useNavigate()
@@ -39,6 +39,8 @@ const ProfileMenu = props => {
     localStorage.removeItem("accessToken")
     localStorage.removeItem("tokenId")
     localStorage.removeItem("isAuthenticated")
+    localStorage.removeItem("name")
+    localStorage.removeItem("username")
 
     console.log("loging out")
     window.open(GET_LOGOUT, "_blank")
@@ -50,19 +52,13 @@ const ProfileMenu = props => {
   }
 
   useEffect(() => {
-    if (localStorage.getItem("authUser")) {
-      if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
-        const obj = JSON.parse(localStorage.getItem("authUser"))
-        setusername(obj.displayName)
-      } else if (
-        process.env.REACT_APP_DEFAULTAUTH === "fake" ||
-        process.env.REACT_APP_DEFAULTAUTH === "jwt"
-      ) {
-        const obj = JSON.parse(localStorage.getItem("authUser"))
-        setusername(obj.username)
-      }
+    if (localStorage.getItem("name")) {
+      const name = localStorage.getItem("name")
+      setusername(name)
+    } else {
+      setusername("User")
     }
-  }, [props.success])
+  }, [localStorage.getItem("name")])
 
   return (
     <React.Fragment>
@@ -76,11 +72,37 @@ const ProfileMenu = props => {
           id="page-header-user-dropdown"
           tag="button"
         >
-          <img
+          {/* <img
             className="rounded-circle header-profile-user"
             src={user1}
             alt="Header Avatar"
-          />
+          /> */}
+          <span
+            className="rounded-circle"
+            style={{
+              backgroundColor: "#003768",
+              padding: "15px",
+              textAlign: "center",
+              color: "white",
+              fontStyle: "bold",
+              width: 40,
+              height: 40,
+            }}
+          >
+            {username && (
+              <span
+                className="rounded-circle header-profile-user"
+                style={{ backgroundColor: "#003768", width: 40, height: 40 }}
+              >
+                {username
+                  .replace(/^_+/, "") // Remove leading underscores
+                  .split(" ")
+                  .map(word => word.charAt(0))
+                  .join("")}
+              </span>
+            )}
+          </span>
+
           <span className="d-none d-xl-inline-block ms-2 me-1">{username}</span>
           <i className="mdi mdi-chevron-down d-none d-xl-inline-block" />
         </DropdownToggle>

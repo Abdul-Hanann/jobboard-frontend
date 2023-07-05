@@ -653,7 +653,9 @@ const Overview = ({ jobList }) => {
                         data => data.jobDay === index + 1
                       )
                       const noOfDays = jobList.technicianLimitForEachDay[index]
-                      const remainingDays = noOfDays - dayData?.userData.length
+                      const remainingDays =
+                        noOfDays - (dayData?.userData.length || 0)
+
                       console.log("dayData:", dayData)
                       let bColor = "green"
                       if (remainingDays == 0) {

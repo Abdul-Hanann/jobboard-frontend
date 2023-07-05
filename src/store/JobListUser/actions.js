@@ -44,16 +44,18 @@ export const fetchJobListUsersFail = error => ({
 
 export const fetchJobListUserForCalendar = (
   id,
-  date,
-  location,
-  zipCode,
+  startDate,
+  endDate,
+  maxDistance,
+  zipcode,
   accessToken
 ) => ({
   type: FETCH_JOBLIST_USER_FOR_CALENDAR,
   id,
-  date,
-  location,
-  zipCode,
+  startDate,
+  endDate,
+  maxDistance,
+  zipcode,
   accessToken,
 })
 

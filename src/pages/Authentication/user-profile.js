@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"
 import {
   Container,
   Row,
@@ -11,104 +11,123 @@ import {
   Input,
   FormFeedback,
   Form,
-} from "reactstrap";
-
+} from "reactstrap"
+import { userTypeLabels, userTypes } from "./userTypes"
 // Formik Validation
-import * as Yup from "yup";
-import { useFormik } from "formik";
+import * as Yup from "yup"
+import { useFormik } from "formik"
 
 //redux
-import { useSelector, useDispatch } from "react-redux";
-import withRouter from "components/Common/withRouter";
+import { useSelector, useDispatch } from "react-redux"
+import withRouter from "components/Common/withRouter"
 
 //Import Breadcrumb
-import Breadcrumb from "../../components/Common/Breadcrumb";
+import Breadcrumb from "../../components/Common/Breadcrumb"
 
-import avatar from "../../assets/images/users/avatar-1.jpg";
+import avatar from "../../assets/images/users/avatar-1.jpg"
 // actions
-import { editProfile, resetProfileFlag } from "../../store/actions";
+import { editProfile, resetProfileFlag } from "../../store/actions"
 
 const UserProfile = () => {
-
   //meta title
-  document.title = "Profile | Skote - React Admin & Dashboard Template";
+  document.title = "User Profile | SA IT Services"
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
-  const [email, setemail] = useState("");
-  const [name, setname] = useState("");
-  const [idx, setidx] = useState(1);
+  const [email, setemail] = useState("")
+  const [name, setname] = useState("")
+  const [userRole, setUserRole] = useState("")
 
   const { error, success } = useSelector(state => ({
     error: state.Profile.error,
     success: state.Profile.success,
-  }));
+  }))
 
   useEffect(() => {
-    if (localStorage.getItem("authUser")) {
-      const obj = JSON.parse(localStorage.getItem("authUser"));
-      if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
-        setname(obj.displayName);
-        setemail(obj.email);
-        setidx(obj.uid);
-      } else if (
-        process.env.REACT_APP_DEFAULTAUTH === "fake" ||
-        process.env.REACT_APP_DEFAULTAUTH === "jwt"
-      ) {
-        setname(obj.username);
-        setemail(obj.email);
-        setidx(obj.uid);
+    if (localStorage.getItem("userRole")) {
+      const userRoleType = localStorage.getItem("userRole")
+      console.log("userRoleType:", userRoleType)
+      if (userRoleType === userTypes.ROLE_ADMIN) {
+        const userRole = userTypeLabels.ROLE_ADMIN
+        console.log("userRole:", userRole)
+        setUserRole(userRole)
+      } else if (userRoleType === userTypes.ROLE_JOB_CREATOR) {
+        const userRole = userTypeLabels.ROLE_JOB_CREATOR
+        setUserRole(userRole)
+      } else if (userRoleType === userTypes.ROLE_SCHEDULER) {
+        const userRole = userTypeLabels.ROLE_SCHEDULER
+        setUserRole(userRole)
+      } else if (userRoleType === userTypes.ROLE_SITE_ADMIN) {
+        const userRole = userTypeLabels.ROLE_SITE_ADMIN
+        setUserRole(userRole)
+      } else if (userRoleType === userTypes.ROLE_TECHNICIAN) {
+        const userRole = userTypeLabels.ROLE_TECHNICIAN
+        setUserRole(userRole)
       }
-      setTimeout(() => {
-        dispatch(resetProfileFlag());
-      }, 3000);
     }
-  }, [dispatch, success]);
-
-  const validation = useFormik({
-    // enableReinitialize : use this flag when initial values needs to be changed
-    enableReinitialize: true,
-
-    initialValues: {
-      username: name || '',
-      idx: idx || '',
-    },
-    validationSchema: Yup.object({
-      username: Yup.string().required("Please Enter Your UserName"),
-    }),
-    onSubmit: (values) => {
-      dispatch(editProfile(values));
+    if (localStorage.getItem("username")) {
+      setemail(localStorage.getItem("username"))
     }
-  });
-
+    if (localStorage.getItem("name")) {
+      setname(localStorage.getItem("name"))
+    }
+    setTimeout(() => {
+      dispatch(resetProfileFlag())
+    }, 3000)
+  }, [dispatch, localStorage.getItem("username"), localStorage.getItem("name")])
 
   return (
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
           {/* Render Breadcrumb */}
-          <Breadcrumb title="Skote" breadcrumbItem="Profile" />
+          <Breadcrumb title="SA IT Services" breadcrumbItem="User Profile" />
 
           <Row>
             <Col lg="12">
-              {error && error ? <Alert color="danger">{error}</Alert> : null}
-              {success ? <Alert color="success">{success}</Alert> : null}
-
               <Card>
                 <CardBody>
                   <div className="d-flex">
                     <div className="ms-3">
-                      <img
+                      {/* <img
                         src={avatar}
                         alt=""
                         className="avatar-md rounded-circle img-thumbnail"
-                      />
+                      /> */}
+                      <span
+                        className="mt-5 mr-5 rounded-circle"
+                        style={{
+                          marginTop: 50,
+                          backgroundColor: "#003768",
+                          padding: "15px",
+                          textAlign: "center",
+                          color: "white",
+                          fontStyle: "bold",
+                          width: 40,
+                          height: 40,
+                        }}
+                      >
+                        {name && (
+                          <span
+                            className="rounded-circle header-profile-user"
+                            style={{
+                              backgroundColor: "#003768",
+                            }}
+                          >
+                            {name
+                              .replace(/^_+/, "") // Remove leading underscores
+                              .split(" ")
+                              .map(word => word.charAt(0))
+                              .join("")}
+                          </span>
+                        )}
+                      </span>
                     </div>
                     <div className="flex-grow-1 align-self-center">
                       <div className="text-muted">
                         <h5>{name}</h5>
                         <p className="mb-1">{email}</p>
-                        <p className="mb-0">Id no: #{idx}</p>
+                        {/* <p className="mb-0">Id no: #{idx}</p> */}
                       </div>
                     </div>
                   </div>
@@ -117,42 +136,41 @@ const UserProfile = () => {
             </Col>
           </Row>
 
-          <h4 className="card-title mb-4">Change User Name</h4>
+          <h4 className="card-title mb-4">Details</h4>
 
           <Card>
             <CardBody>
-              <Form
-                className="form-horizontal"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  validation.handleSubmit();
-                  return false;
-                }}
-              >
+              <Form className="form-horizontal">
                 <div className="form-group">
-                  <Label className="form-label">User Name</Label>
+                  <Label className="form-label">User Role</Label>
+                  <Input
+                    name="userRole"
+                    value={userRole}
+                    className="form-control"
+                    placeholder="Enter User Role"
+                    type="text"
+                    disabled
+                  />
+
+                  <Label className="form-label mt-3">User Email</Label>
                   <Input
                     name="username"
-                    // value={name}
+                    value={email}
+                    className="form-control"
+                    placeholder="Enter User Email"
+                    type="text"
+                    disabled
+                  />
+
+                  <Label className="form-label mt-3"> User Name</Label>
+                  <Input
+                    name="username"
+                    value={name}
                     className="form-control"
                     placeholder="Enter User Name"
                     type="text"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.username || ""}
-                    invalid={
-                      validation.touched.username && validation.errors.username ? true : false
-                    }
+                    disabled
                   />
-                  {validation.touched.username && validation.errors.username ? (
-                    <FormFeedback type="invalid">{validation.errors.username}</FormFeedback>
-                  ) : null}
-                  <Input name="idx" value={idx} type="hidden" />
-                </div>
-                <div className="text-center mt-4">
-                  <Button type="submit" color="danger">
-                    Update User Name
-                  </Button>
                 </div>
               </Form>
             </CardBody>
@@ -160,7 +178,7 @@ const UserProfile = () => {
         </Container>
       </div>
     </React.Fragment>
-  );
-};
+  )
+}
 
-export default withRouter(UserProfile);
+export default withRouter(UserProfile)

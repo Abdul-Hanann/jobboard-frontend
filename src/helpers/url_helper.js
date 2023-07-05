@@ -90,6 +90,7 @@ export const SITES_URL = baseUrl + "/sites"
 
 //
 export const JOBLIST_USERS_URL = baseUrl + "/userJobs/users"
+export const USER_JOBLIST_URL = baseUrl + "/userJobs/user"
 
 export const JOBLIST_TECHNICIAN_URL = baseUrl + "/userJobs/"
 //Job Wbs

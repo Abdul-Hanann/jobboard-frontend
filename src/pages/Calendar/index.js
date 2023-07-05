@@ -207,7 +207,7 @@ const Calender = props => {
   const [userId, setUserId] = useState(localStorage.getItem("userId"))
 
   const {
-    jobListUsers,
+    jobListUser,
     technicians,
     technician,
     isLoadingUser,
@@ -249,11 +249,12 @@ const Calender = props => {
   }, [technicians, company])
 
   useEffect(() => {
-    if (jobListUsers) {
-      setJobListUsersData(jobListUsers)
-      setData(jobListUsers)
+    if (jobListUser) {
+      setJobListUsersData(jobListUser)
+      setData(jobListUser)
     }
-  }, [jobListUsers])
+  }, [jobListUser])
+  console.log("data+++++++++++++++++++++++++++:", data)
 
   // Function to calculate the end date based on the start date and number of days
   // const calculateEndDate = (startDate, numberOfDays) => {
@@ -439,6 +440,13 @@ const Calender = props => {
         if (!job) {
           return
         }
+
+        // Check if the job with the same ID already exists in formattedEvents
+        const existingJob = formattedEvents.find(event => event.id === job.id)
+        if (existingJob) {
+          return
+        }
+
         const event = {
           id: job.id,
           title: job.jobName,
@@ -472,7 +480,7 @@ const Calender = props => {
         }
         formattedEvents.push(event)
       })
-    } else if (data) {
+    } else if (data && !data.assignedJobs && !data.unAssignedJobs) {
       // Case where data is in the format { }
 
       data.forEach(job => {
@@ -623,6 +631,7 @@ const Calender = props => {
       // document.getElementById("statusLabel").style.display = "none"
       // document.getElementById("statusBox").style.display = "none"
     }
+    dispatch(fetchJobList())
   }
 
   // const convertToISOString = date => {
@@ -654,19 +663,23 @@ const Calender = props => {
 
   const handleFilterClick = () => {
     let data = {}
+    console.log("filteredStartDate:", filteredStartDate)
+    console.log("filteredEndDate:", filteredEndDate)
     if (userRole === userTypes.ROLE_TECHNICIAN) {
       data = {
         userId: localStorage.getItem("userId"),
-        date: filteredStartDate,
-        location: filteredMiles,
-        zipCode: filteredZipcode,
+        startDate: filteredStartDate,
+        endDate: filteredEndDate,
+        maxDistance: filteredMiles,
+        zipcode: filteredZipcode,
       }
     } else {
       data = {
         userId: selectedTechniciansOption?.value,
-        date: filteredStartDate,
-        location: filteredMiles?.value,
-        zipCode: filteredZipcode,
+        startDate: filteredStartDate,
+        endDate: filteredEndDate,
+        maxDistance: filteredMiles?.value,
+        zipcode: filteredZipcode,
       }
       // technician: selectedTechniciansOption?.value
     }
@@ -675,9 +688,10 @@ const Calender = props => {
     dispatch(
       fetchJobListUserForCalendar(
         data.userId,
-        data.date,
-        data.location,
-        data.zipCode,
+        data.startDate,
+        data.endDate,
+        data.maxDistance,
+        data.zipcode,
         accessToken
       )
     )
@@ -766,7 +780,7 @@ const Calender = props => {
                         {userRole === userTypes.ROLE_TECHNICIAN && (
                           <>
                             <div className="d-flex flex-row mb-1 justify-content-between align-items-center">
-                              <p className="text-muted mt-3">Filter by Date</p>
+                              <p className="text-muted mt-3">Filter by Dates</p>
                               <Button
                                 className="h-25 bg-primary"
                                 onClick={clearAllFilters}
@@ -859,8 +873,21 @@ const Calender = props => {
                           ))}
                         </Input> */}
                         {userRole !== userTypes.ROLE_TECHNICIAN && (
-                          <p className="text-muted mt-3">Filter by date</p>
+                          <p className="text-muted mt-3">Filter by Dates</p>
                         )}
+
+                        {/* <Input
+                          type="date"
+                          className="filter-datepicker"
+                          value={filteredStartDate}
+                          onChange={event =>
+                            setFilteredStartDate(event.target.value)
+                          }
+                        />
+
+                        <p className="text-muted mt-3 d-flex justify-content-center align-items-center">
+                          --between--
+                        </p>
 
                         <Input
                           type="date"
@@ -869,16 +896,27 @@ const Calender = props => {
                           onChange={event =>
                             setFilteredStartDate(event.target.value)
                           }
-                        />
-                        {/* <p className="text-muted mt-1 mb-0">End date</p>
-                        <Input
-                          type="date"
-                          className="filter-datepicker"
-                          value={filteredEndDate}
-                          onChange={event =>
-                            setFilteredEndDate(event.target.value)
-                          }
                         /> */}
+                        <div className="d-flex align-items-center">
+                          <Input
+                            type="date"
+                            className="filter-datepicker"
+                            value={filteredStartDate}
+                            onChange={event =>
+                              setFilteredStartDate(event.target.value)
+                            }
+                          />
+                          <p className="text-muted mx-1 mb-0">b/w</p>
+                          <Input
+                            type="date"
+                            className="filter-datepicker"
+                            value={filteredEndDate}
+                            onChange={event =>
+                              setFilteredEndDate(event.target.value)
+                            }
+                          />
+                        </div>
+
                         <p className="text-muted mt-3">Filter by location</p>
                         <Select
                           className="basic-single"
