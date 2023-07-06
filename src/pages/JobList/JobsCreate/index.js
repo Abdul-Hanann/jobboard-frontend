@@ -85,6 +85,10 @@ const TasksCreate = () => {
       setId(data.id)
       setJobName(data.jobName)
       setJobNoOfDays(data.numberOfDays)
+      setSelectedCompanyIdOption({
+        label: data?.site?.company?.name,
+        value: data?.site?.company?.id,
+      })
       setSelectedJobSiteIdOption({
         label: data.site.siteId,
         value: data.site.id,
@@ -92,7 +96,7 @@ const TasksCreate = () => {
       setSelectedjobWBSOption({ value: data?.site?.jobWbs })
       setJobNotes(data.notes)
       setinputFields(data?.technicianLimitForEachDay || [])
-      console.log("input field:", data.technicianLimitForEachDay)
+      setSelectedDates(data?.technicianLimitForEachDayDate || [])
     }
     if (data && data.jobDate) {
       const parsedDate = new Date(data.jobDate)
@@ -255,7 +259,6 @@ const TasksCreate = () => {
         field === null ||
         field.length === 0
       ) {
-        console.log("field[key]:", field[key])
         document.getElementById("JobNoOfDaysError" + key).style.display =
           "block"
         isValid = false
@@ -312,7 +315,9 @@ const TasksCreate = () => {
         jobDate: selectedDate,
         numberOfDays: jobNoOfDays,
         technicianLimitForEachDay: inputFields,
+        technicianLimitForEachDayDate: selectedDates,
         notes: jobNotes,
+        company: selectedCompanyIdOption?.value,
         jobWbs: selectedjobWBSOption?.value,
         site: selectedJobSiteIdOption?.value,
       }
@@ -337,7 +342,7 @@ const TasksCreate = () => {
 
   function handleClearClick() {
     setJobName("")
-    setSelectedDate(null)
+    // setSelectedDate([])
     setJobNoOfDays("")
     setJobNotes("")
     setinputFields([])
@@ -461,7 +466,6 @@ const TasksCreate = () => {
 
   function handleAddFields() {
     if (selectedDate) {
-      console.log("selectedDate:", selectedDate)
       document.getElementById("jobDateError").style.display = "none"
 
       const fields = [...inputFields]
@@ -473,7 +477,6 @@ const TasksCreate = () => {
         document.getElementById("addButton").disabled = false
         const item1 = []
         setinputFields([...inputFields, item1])
-        console.log("selectedDate:", selectedDate)
         // const newDate = new Date(selectedDate) // Create a new Date object
         const newDate =
           selectedDates.length > 0
@@ -748,7 +751,9 @@ const TasksCreate = () => {
                                         <DatePicker
                                           id={"jobDate" + key}
                                           name="jobDate"
-                                          selected={selectedDates[key]}
+                                          selected={
+                                            new Date(selectedDates[key])
+                                          }
                                           placeholderText="Insert Job Date"
                                           onChange={date =>
                                             handleDateChangeNested(date, key)
