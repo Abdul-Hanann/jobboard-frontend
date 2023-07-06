@@ -461,6 +461,7 @@ const TasksCreate = () => {
 
   function handleAddFields() {
     if (selectedDate) {
+      console.log("selectedDate:", selectedDate)
       document.getElementById("jobDateError").style.display = "none"
 
       const fields = [...inputFields]
@@ -472,12 +473,16 @@ const TasksCreate = () => {
         document.getElementById("addButton").disabled = false
         const item1 = []
         setinputFields([...inputFields, item1])
+        console.log("selectedDate:", selectedDate)
+        // const newDate = new Date(selectedDate) // Create a new Date object
         const newDate =
           selectedDates.length > 0
             ? new Date(selectedDates[selectedDates.length - 1])
-            : selectedDate
+            : new Date(selectedDate)
 
-        newDate.setDate(newDate.getDate() + 1)
+        if (selectedDates.length > 0) {
+          newDate.setDate(newDate.getDate() + 1)
+        }
 
         setSelectedDates(prevDates => [...prevDates, newDate])
         setinputFields([...inputFields, []])
