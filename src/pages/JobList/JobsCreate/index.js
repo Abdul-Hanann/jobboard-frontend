@@ -26,6 +26,7 @@ import {
   updateJob as onUpdateJob,
   fetchJobWbs,
   fetchSites,
+  fetchCompany,
 } from "store/actions"
 
 import * as Yup from "yup"
@@ -51,6 +52,7 @@ const TasksCreate = () => {
   const [jobName, setJobName] = useState("")
   const [jobNoOfDays, setJobNoOfDays] = useState("")
   const [jobNotes, setJobNotes] = useState("")
+  const [selectedCompanyIdOption, setSelectedCompanyIdOption] = useState(null)
 
   const [selectedJobSiteIdOption, setSelectedJobSiteIdOption] = useState(null)
   const [selectedjobWBSOption, setSelectedjobWBSOption] = useState(null)
@@ -58,7 +60,11 @@ const TasksCreate = () => {
   const [indexNum, setIndexNum] = useState(0)
   const [inputFields, setinputFields] = useState(inpRow)
   const [technicianLimitForEachDay, setTechnicianLimitForEachDay] = useState({})
+  const [companyData, setCompanyData] = useState("")
+  const [siteIdData, setSiteIdData] = useState("")
 
+  const [selectedDates, setSelectedDates] = useState([])
+  const currentDate = new Date()
   const dispatch = useDispatch()
   const navigate = useNavigate()
   useEffect(() => {
@@ -116,12 +122,26 @@ const TasksCreate = () => {
   }, [isEdit, isLoading, successAdd, successUpdate, error])
 
   useEffect(() => {
-    dispatch(fetchJobWbs())
-    dispatch(fetchSites())
+    // dispatch(fetchJobWbs())/
+    // dispatch(fetchSites())
+    dispatch(fetchCompany())
   }, [dispatch])
 
   const { jobWbs } = useSelector(state => state.JobWbsReducer)
   const { sites } = useSelector(state => state.SitesReducer)
+  const { company } = useSelector(state => state.CompanyReducer)
+
+  useEffect(() => {
+    if (company.company) {
+      setCompanyData(company.company)
+    }
+  }, [company])
+
+  useEffect(() => {
+    if (sites.sites) {
+      setSiteIdData(sites.sites)
+    }
+  }, [sites])
 
   console.log("isEdit:", isEdit)
   document.title = isEdit
@@ -245,6 +265,16 @@ const TasksCreate = () => {
     })
 
     if (
+      selectedCompanyIdOption?.value === "" ||
+      selectedCompanyIdOption?.value === undefined
+    ) {
+      document.getElementById("companyError").style.display = "block"
+      isValid = false
+    } else {
+      document.getElementById("companyError").style.display = "none"
+    }
+
+    if (
       selectedJobSiteIdOption?.value === "" ||
       selectedJobSiteIdOption?.value === undefined
     ) {
@@ -311,6 +341,9 @@ const TasksCreate = () => {
     setJobNoOfDays("")
     setJobNotes("")
     setinputFields([])
+    setCompanyData("")
+    setSiteIdData("")
+    setSelectedCompanyIdOption({ value: "" })
     setSelectedJobSiteIdOption({ value: "" }) // Set select element value to index 0
     setSelectedjobWBSOption({ value: "" }) // Set select element value to index 0
   }
@@ -328,6 +361,19 @@ const TasksCreate = () => {
       document.getElementById("jobDateError").style.display = "none"
     }
   }
+
+  const handleDateChangeNested = (date, index) => {
+    if (date instanceof Date && !isNaN(date)) {
+      // setSelectedDate(date)
+      setSelectedDates(prevDates => {
+        const updatedDates = [...prevDates]
+        updatedDates[index] = date
+        return updatedDates
+      })
+      document.getElementById("jobDateError" + index).style.display = "none"
+    }
+  }
+
   const handlejobNoOfDaysChange = e => {
     let value = e.target.value
     setJobNoOfDays(e.target.value)
@@ -353,6 +399,18 @@ const TasksCreate = () => {
     //   setSelectedjobWBSOption({ label: "Select JobWBS", value: "" })
     // }
   }
+
+  const handleSelectCompanyChange = e => {
+    const selectedValue = e.target.value
+    const selectedLabel = e.target.options[e.target.selectedIndex].text
+    setSelectedCompanyIdOption({ label: selectedLabel, value: selectedValue })
+    if (selectedValue !== "") {
+      document.getElementById("companyError").style.display = "none"
+    }
+    dispatch(fetchSites("", "", "", "", "", "", "", selectedValue, "", ""))
+    dispatch(fetchJobWbs())
+  }
+
   const handlejobNotesChange = e => {
     let value = e.target.value
     setJobNotes(e.target.value)
@@ -378,10 +436,6 @@ const TasksCreate = () => {
       fields[index] = value
       setinputFields(fields)
       document.getElementById("JobNoOfDaysError" + index).style.display = "none"
-
-      // let updatedTechnicianLimit = { ...technicianLimitForEachDay } // Make a copy of the existing object
-      // updatedTechnicianLimit[`day${index + 1}`] = value // Add or update the value for the specific day
-      // setTechnicianLimitForEachDay(updatedTechnicianLimit)
     }
   }
 
@@ -389,19 +443,47 @@ const TasksCreate = () => {
     const fields = [...inputFields]
     fields.splice(idx, 1)
     setinputFields(fields)
+
+    setSelectedDates(prevDates => {
+      const updatedDates = [...prevDates]
+      updatedDates.splice(idx, 1)
+
+      // Update the remaining dates to ensure consecutive values
+      for (let i = idx; i < updatedDates.length; i++) {
+        const date = new Date(updatedDates[i])
+        date.setDate(date.getDate() - 1)
+        updatedDates[i] = date
+      }
+
+      return updatedDates
+    })
   }
 
   function handleAddFields() {
-    // setIndexNum(indexNum + 1)
-    const fields = [...inputFields]
-    if (indexNum > 0 && !fields[indexNum]) {
-      document.getElementById("JobNoOfDaysError").style.display = "block"
-      document.getElementById("addButton").disabled = true
+    if (selectedDate) {
+      document.getElementById("jobDateError").style.display = "none"
+
+      const fields = [...inputFields]
+      if (indexNum > 0 && !fields[indexNum]) {
+        document.getElementById("JobNoOfDaysError").style.display = "block"
+        document.getElementById("addButton").disabled = true
+      } else {
+        document.getElementById("JobNoOfDaysError").style.display = "none"
+        document.getElementById("addButton").disabled = false
+        const item1 = []
+        setinputFields([...inputFields, item1])
+        const newDate =
+          selectedDates.length > 0
+            ? new Date(selectedDates[selectedDates.length - 1])
+            : selectedDate
+
+        newDate.setDate(newDate.getDate() + 1)
+
+        setSelectedDates(prevDates => [...prevDates, newDate])
+        setinputFields([...inputFields, []])
+      }
     } else {
-      document.getElementById("JobNoOfDaysError").style.display = "none"
-      document.getElementById("addButton").disabled = false
-      const item1 = []
-      setinputFields([...inputFields, item1])
+      document.getElementById("jobDateError").style.display = "block"
     }
   }
 
@@ -479,7 +561,7 @@ const TasksCreate = () => {
                             <div className="inner-repeater mb-3">
                               <div className="inner form-group mb-0 row">
                                 <Label className="col-form-label col-lg-2">
-                                  Job Date
+                                  Company
                                 </Label>
                                 <div
                                   className="inner col-lg-10 ml-md-auto"
@@ -487,22 +569,32 @@ const TasksCreate = () => {
                                 >
                                   <div className="mb-3 row align-items-center">
                                     <Col md="5">
-                                      <DatePicker
-                                        id="jobDate"
-                                        name="jobDate"
-                                        selected={selectedDate}
-                                        placeholderText="Insert Job Date"
-                                        onChange={handleDateChange}
-                                        className="form-control"
-                                      />
+                                      <Input
+                                        name="JobSiteId"
+                                        type="select"
+                                        className="form-select"
+                                        placeholder="Insert Company"
+                                        onChange={handleSelectCompanyChange}
+                                        value={selectedCompanyIdOption?.value}
+                                      >
+                                        <option value="" disabled selected>
+                                          Select Company
+                                        </option>
+                                        {Array.isArray(companyData) &&
+                                          companyData.map((comp, index) => (
+                                            <option key={index} value={comp.id}>
+                                              {comp.name}
+                                            </option>
+                                          ))}
+                                      </Input>
                                       <div
                                         style={{
                                           color: "red",
                                           display: "none",
                                         }}
-                                        id={"jobDateError"}
+                                        id={"companyError"}
                                       >
-                                        Please Enter Your job Date
+                                        Please Select Company
                                       </div>
                                     </Col>
                                     <Col md="2">
@@ -518,11 +610,10 @@ const TasksCreate = () => {
                                         value={selectedJobSiteIdOption?.value}
                                       >
                                         <option value="" disabled selected>
-                                          Select Job Site Id
+                                          Select Site Id
                                         </option>
-                                        {sites &&
-                                          sites.sites &&
-                                          sites.sites.map((site, index) => {
+                                        {siteIdData &&
+                                          siteIdData.map((site, index) => {
                                             return (
                                               <option
                                                 key={index}
@@ -548,6 +639,85 @@ const TasksCreate = () => {
                                 </div>
                               </div>
                             </div>
+                            <div className="inner-repeater mb-3">
+                              <div className="inner form-group mb-0 row">
+                                <Label className="col-form-label col-lg-2">
+                                  Job Date
+                                </Label>
+                                <div
+                                  className="inner col-lg-10 ml-md-auto"
+                                  id="repeater"
+                                >
+                                  <div className="mb-3 row align-items-center">
+                                    <Col md="5">
+                                      <DatePicker
+                                        id="jobDate"
+                                        name="jobDate"
+                                        selected={selectedDate}
+                                        placeholderText="Insert Job Date"
+                                        onChange={handleDateChange}
+                                        className="form-control"
+                                        minDate={currentDate}
+                                      />
+                                      <div
+                                        style={{
+                                          color: "red",
+                                          display: "none",
+                                        }}
+                                        id={"jobDateError"}
+                                      >
+                                        Please Enter Your job Date
+                                      </div>
+                                    </Col>
+                                    <Col md="2">
+                                      <Label>Job WBS</Label>
+                                    </Col>
+                                    <Col md="5">
+                                      <Input
+                                        name="JobWBS"
+                                        type="select"
+                                        className="form-select"
+                                        onChange={handleSelectjobWBSChange}
+                                        // onChange={validation.handleChange}
+                                        // onBlur={validation.handleBlur}
+                                        value={selectedjobWBSOption?.value}
+                                      >
+                                        <option value="" disabled selected>
+                                          Select JobWBS
+                                        </option>
+                                        {jobWbs && jobWbs.jobWbs ? (
+                                          jobWbs.jobWbs.map(
+                                            (jobwbsData, index) => {
+                                              return (
+                                                <option
+                                                  key={index}
+                                                  value={jobwbsData.id}
+                                                >
+                                                  {jobwbsData.name}
+                                                </option>
+                                              )
+                                            }
+                                          )
+                                        ) : (
+                                          <option value="">
+                                            No jobWbs available
+                                          </option>
+                                        )}
+                                      </Input>
+                                      <div
+                                        style={{
+                                          color: "red",
+                                          display: "none",
+                                        }}
+                                        id={"jobWbsError"}
+                                      >
+                                        Job WBS is Missing
+                                      </div>
+                                    </Col>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
 
                             <div className="inner-repeater mb-4">
                               <div className="inner form-group row">
@@ -564,13 +734,34 @@ const TasksCreate = () => {
                                       id={"nested" + key}
                                       className="mb-3 row align-items-center"
                                     >
-                                      <Col md="4">
+                                      <Col md="2">
                                         <Label>
-                                          Add No of Technicians for Day{" "}
-                                          {key + 1}
+                                          Add Technician limit for Day {key + 1}
                                         </Label>
                                       </Col>
-                                      <Col md="5">
+                                      <Col md="4">
+                                        <DatePicker
+                                          id={"jobDate" + key}
+                                          name="jobDate"
+                                          selected={selectedDates[key]}
+                                          placeholderText="Insert Job Date"
+                                          onChange={date =>
+                                            handleDateChangeNested(date, key)
+                                          }
+                                          className="form-control"
+                                          disabled
+                                        />
+                                        <div
+                                          style={{
+                                            color: "red",
+                                            display: "none",
+                                          }}
+                                          id={"jobDateError" + key}
+                                        >
+                                          Date for Day {key + 1} is missing
+                                        </div>
+                                      </Col>
+                                      <Col md="4">
                                         <Input
                                           name="JobNoOfDays"
                                           placeholder={`Insert number of Technicians for day ${
@@ -593,7 +784,7 @@ const TasksCreate = () => {
                                           Please Enter Job number Of Days
                                         </div>
                                       </Col>
-                                      <Col md="3">
+                                      <Col md="2">
                                         <div className="mt-2 mt-md-0 d-grid">
                                           <Button
                                             color="danger"
@@ -689,60 +880,6 @@ const TasksCreate = () => {
                                   id={"jobNotesError"}
                                 >
                                   Please Enter Your job Notes
-                                </div>
-                              </Col>
-                            </FormGroup>
-                            <FormGroup className="mb-4" row>
-                              <Label
-                                htmlFor="taskname"
-                                className="col-form-label col-lg-2"
-                              >
-                                Job WBS
-                              </Label>
-                              <Col lg="10">
-                                <Input
-                                  name="JobWBS"
-                                  type="select"
-                                  className="form-select"
-                                  onChange={handleSelectjobWBSChange}
-                                  // onChange={validation.handleChange}
-                                  // onBlur={validation.handleBlur}
-                                  value={selectedjobWBSOption?.value}
-                                >
-                                  <option value="" disabled selected>
-                                    Select JobWBS
-                                  </option>
-                                  {jobWbs && jobWbs.jobWbs ? (
-                                    jobWbs.jobWbs.map((jobwbsData, index) => {
-                                      return (
-                                        <option
-                                          key={index}
-                                          value={jobwbsData.id}
-                                        >
-                                          {jobwbsData.name}
-                                        </option>
-                                      )
-                                    })
-                                  ) : (
-                                    <option value="">
-                                      No jobWbs available
-                                    </option>
-                                  )}
-                                </Input>
-                                {/* {validation.touched.JobWBS &&
-                            validation.errors.JobWBS ? (
-                              <FormFeedback type="invalid">
-                                {validation.errors.JobWBS}
-                              </FormFeedback>
-                            ) : null} */}
-                                <div
-                                  style={{
-                                    color: "red",
-                                    display: "none",
-                                  }}
-                                  id={"jobWbsError"}
-                                >
-                                  Please Select Your jobWbs
                                 </div>
                               </Col>
                             </FormGroup>
