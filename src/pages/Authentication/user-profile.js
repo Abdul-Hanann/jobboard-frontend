@@ -24,7 +24,7 @@ import withRouter from "components/Common/withRouter"
 //Import Breadcrumb
 import Breadcrumb from "../../components/Common/Breadcrumb"
 
-import avatar from "../../assets/images/users/avatar-1.jpg"
+import avatar from "../../assets/images/avatar1.png"
 // actions
 import { editProfile, resetProfileFlag } from "../../store/actions"
 
@@ -88,13 +88,13 @@ const UserProfile = () => {
               <Card>
                 <CardBody>
                   <div className="d-flex">
-                    <div className="ms-3">
-                      {/* <img
+                    <div className="mr-3">
+                      <img
                         src={avatar}
                         alt=""
                         className="avatar-md rounded-circle img-thumbnail"
-                      /> */}
-                      <span
+                      />
+                      {/* <span
                         className="mt-5 mr-5 rounded-circle"
                         style={{
                           marginTop: 50,
@@ -121,7 +121,7 @@ const UserProfile = () => {
                               .join("")}
                           </span>
                         )}
-                      </span>
+                      </span> */}
                     </div>
                     <div className="flex-grow-1 align-self-center">
                       <div className="text-muted">
@@ -152,22 +152,22 @@ const UserProfile = () => {
                     disabled
                   />
 
-                  <Label className="form-label mt-3">User Email</Label>
-                  <Input
-                    name="username"
-                    value={email}
-                    className="form-control"
-                    placeholder="Enter User Email"
-                    type="text"
-                    disabled
-                  />
-
                   <Label className="form-label mt-3"> User Name</Label>
                   <Input
                     name="username"
                     value={name}
                     className="form-control"
                     placeholder="Enter User Name"
+                    type="text"
+                    disabled
+                  />
+
+                  <Label className="form-label mt-3">User Email</Label>
+                  <Input
+                    name="username"
+                    value={email}
+                    className="form-control"
+                    placeholder="Enter User Email"
                     type="text"
                     disabled
                   />

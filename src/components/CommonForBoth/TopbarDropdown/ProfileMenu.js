@@ -21,7 +21,7 @@ import { logoutUser } from "store/actions"
 import { GET_LOGOUT } from "helpers/url_helper"
 
 // users
-import user1 from "../../../assets/images/users/avatar-1.jpg"
+import user1 from "../../../assets/images/avatar1.png"
 
 const ProfileMenu = props => {
   // Declare a new state variable, which we'll call "menu"
@@ -72,12 +72,12 @@ const ProfileMenu = props => {
           id="page-header-user-dropdown"
           tag="button"
         >
-          {/* <img
+          <img
             className="rounded-circle header-profile-user"
             src={user1}
             alt="Header Avatar"
-          /> */}
-          <span
+          />
+          {/* <span
             className="rounded-circle"
             style={{
               backgroundColor: "#003768",
@@ -100,8 +100,8 @@ const ProfileMenu = props => {
                   .map(word => word.charAt(0))
                   .join("")}
               </span>
-            )}
-          </span>
+            )} 
+                </span>*/}
 
           <span className="d-none d-xl-inline-block ms-2 me-1">{username}</span>
           <i className="mdi mdi-chevron-down d-none d-xl-inline-block" />

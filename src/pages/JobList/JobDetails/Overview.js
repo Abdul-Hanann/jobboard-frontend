@@ -25,6 +25,7 @@ import avatar1 from "../../../assets/images/users/avatar-1.jpg"
 import avatar2 from "../../../assets/images/users/avatar-2.jpg"
 import avatar6 from "../../../assets/images/users/avatar-6.jpg"
 import avatar3 from "../../../assets/images/users/avatar-3.jpg"
+import icon from "../../../assets/images/cross-icon1.png"
 // import avatar7 from "../../../assets"
 import Select from "react-select"
 import {
@@ -82,8 +83,8 @@ const Overview = ({ jobList }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null)
   const [dayIndex, setDayIndex] = useState(null)
 
-  // const userId = localStorage.getItem("userId")
-  const tokenId = "8cd171d0-929d-4632-866e-2ec210b0858d"
+  const tokenId = localStorage.getItem("userId")
+  // const tokenId = "8cd171d0-929d-4632-866e-2ec210b0858d"
   const [userId, setUserId] = useState(null)
 
   const userRoleType = localStorage.getItem("userRole")
@@ -744,8 +745,8 @@ const Overview = ({ jobList }) => {
                                                 className="button-show"
                                                 style={{
                                                   position: "relative",
-                                                  // width: "40px", // Increase the width of the avatar-group-item
-                                                  // height: "40px", // Increase the height of the avatar-group-item
+                                                  width: "fit-content", // Increase the width of the avatar-group-item
+                                                  height: "fit-content", // Increase the height of the avatar-group-item
                                                 }}
                                                 onMouseEnter={() =>
                                                   handleMouseEnter(
@@ -793,7 +794,7 @@ const Overview = ({ jobList }) => {
                                                         top: "-5px",
                                                         right: "-5px",
                                                         borderRadius: "50%",
-                                                        padding: "3px", // Adjust the padding value for button size
+                                                        // padding: "3px", // Adjust the padding value for button size
                                                         fontSize: "8px", // Adjust the font size for button size
                                                       }}
                                                       onClick={() =>
@@ -866,14 +867,17 @@ const Overview = ({ jobList }) => {
                                                   dayIndex === index + 1 && (
                                                     <button
                                                       type="button"
-                                                      className="btn btn-danger btn-circle btn-sm"
+                                                      className="btn btn-danger btn-circle btn-sm justify-content-center align-item-center"
                                                       style={{
                                                         position: "absolute",
-                                                        top: "-5px",
-                                                        right: "-5px",
+                                                        top: "-7px",
+                                                        right: "-7px",
                                                         borderRadius: "50%",
-                                                        padding: "3px", // Adjust the padding value for button size
+                                                        // padding:
+                                                        //   "2px 7px px 7px", // Adjust the padding value for button size
                                                         fontSize: "8px", // Adjust the font size for button size
+                                                        // height: 6,
+                                                        // width: 6,
                                                       }}
                                                       onClick={() =>
                                                         onClickDelete(user.id)
