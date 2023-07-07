@@ -132,16 +132,25 @@
         min-height: 100vh;
     }
 }
+
+
+  
 @media only screen and (min-width: 304px) and (max-width: 1199px) {
-    //.heroCol {
+    .mid-col {
+        display: none;
+      }
+    //   .landing-Page-text-1{
+    //     font-size: "46px",
+    //   }
+    // .heroCol {
     //    margin-top: 0px !important;
     //    display: none !important;
-    //}
-    //.landing-page-row-2 {
+    // }
+    // .landing-page-row-2 {
     //    margin-top: 0px !important;
     //    display: none !important;
-    //}
-    //.landingPageImageCol {
+    // }
+    // .landingPageImageCol {
     //    margin-top: 0px !important;
     //    display: none !important;
     //  }
@@ -150,6 +159,82 @@
     //    margin-top: 0px !important;
     //  }
 }
+
+@media only screen and (max-width: 462px) {
+    .landing-Page-text-1 {
+      font-size: 40px !important;
+    }
+  
+    .landing-Page-para-1 {
+      font-size: 16px !important;
+    }
+  }
+
+  @media only screen and (max-width: 767px) {
+    .landing-Page-text-1 {
+      margin-left: 20 !important;
+    }
+  
+    .landing-Page-para-1 {
+      margin-left: 20 !important;
+    }
+  }
+  
+  @media only screen and (min-width: 767px) and (max-width: 981px) { 
+    .landing-Page-text-1 {
+      font-size: 46px !important;
+    }
+  
+    .landing-Page-para-1 {
+      font-size: 18px !important;
+    }
+
+  }
+  
+  @media only screen and (min-width: 982px) and (max-width: 1199px) {
+    .landing-Page-text-1 {
+      font-size: 55px !important;
+    }
+  
+    .landing-Page-para-1 {
+      font-size: 20px !important;
+    }
+  }
+  
+  @media only screen and (min-width: 1201px) {
+    .landing-Page-text-1 {
+      font-size: 65px !important;
+    }
+  
+    .landing-Page-para-1 {
+      font-size: 24px !important;
+    }
+  }
+
+  @media only screen and (max-width: 767px) {
+    .landingPageImageCol {
+        display: none !important;
+    }
+    
+    .landing-page-row-1 {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    }
+    .landing-page-row-2{
+        display: none !important;
+    }
+    .blank-div{
+        display: none !important;
+    }
+    .hero-area-v1{
+        margin-top: 0 !important;
+        margin-left: 20 !important;
+        padding-left: 20 !important;
+    }
+  }
+  
+
+  
 .auth-review-carousel{
     &.owl-theme {
         .owl-dots {

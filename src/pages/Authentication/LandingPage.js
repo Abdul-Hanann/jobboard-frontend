@@ -24,6 +24,7 @@ const CarouselPage = () => {
           backgroundColor: "#e0ecf0",
           display: "flex",
           overflow: "hidden",
+          height: "100vh",
         }}
       >
         <Row
@@ -42,7 +43,7 @@ const CarouselPage = () => {
             className="landing-page-row-2"
             // style={{ overflow: "hidden", display: "inline-flex" }}
           ></Row>
-          <Col xs={2} md={1} lg={1} className="mt-5"></Col>
+          <Col xs={2} md={1} lg={1} className="blank-div mt-5"></Col>
           <Col md={5} lg={5} className="hero-area-v1 mt-5">
             <div style={{ marginTop: 150 }}>
               <h3
@@ -90,7 +91,6 @@ const CarouselPage = () => {
               </button>
             </div>
           </Col>
-
           <Col md={1} lg={1} xs={0} className="mid-col">
             {" "}
           </Col>
@@ -104,7 +104,7 @@ const CarouselPage = () => {
               // height={242}
               style={{
                 width: "1300px",
-                height: "820px",
+                height: "750px",
                 marginTop: 5.39,
               }}
             ></img>
