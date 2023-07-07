@@ -806,8 +806,8 @@ const Calender = props => {
                               {Array.isArray(techniciansData) &&
                               techniciansData.length > 0 ? (
                                 techniciansData.map((technician, index) => (
-                                  <option key={index} value={technician?.id}>
-                                    {technician.displayName}
+                                  <option key={index} value={technician?.principalId}>
+                                    {technician.principalDisplayName}
                                   </option>
                                 ))
                               ) : (
@@ -1243,7 +1243,7 @@ const Calender = props => {
                               >
                                 Delete
                               </button>
-                            )} 
+                            )}
                           </Col>*/}
                           <Col className="col-6 text-start">
                             <button
