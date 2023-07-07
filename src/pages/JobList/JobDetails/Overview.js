@@ -83,6 +83,10 @@ const Overview = ({ jobList }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null)
   const [dayIndex, setDayIndex] = useState(null)
 
+  const [addressLine, setAddressLine] = useState("")
+  const [latitude, setLatitude] = useState(null)
+  const [longitute, setLongitute] = useState(null)
+
   const tokenId = localStorage.getItem("userId")
   // const tokenId = "8cd171d0-929d-4632-866e-2ec210b0858d"
   const [userId, setUserId] = useState(null)
@@ -122,7 +126,15 @@ const Overview = ({ jobList }) => {
 
   useEffect(() => {
     setJobListId(jobList.id)
+    console.log("jobList:", jobList)
+    setAddressLine(jobList?.site?.addressLine1)
+    setLatitude(parseFloat(jobList?.site?.latitude))
+    setLongitute(parseFloat(jobList?.site?.longitute))
   }, [jobList])
+  console.log("lat++++++++++++++++++++", latitude)
+  console.log("lat++++++++++++++++++++", typeof latitude)
+  console.log("lng++++++++++++++++++++", longitute)
+  console.log("lat++++++++++++++++++++", typeof longitute)
 
   let token = localStorage.getItem("accessToken")
 
@@ -132,6 +144,29 @@ const Overview = ({ jobList }) => {
     }
     // }
   }, [token])
+
+  useEffect(() => {
+    if (latitude && longitute) {
+      const map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: latitude, lng: longitute },
+        zoom: 15,
+      })
+      // lat: latValue, lng: lngValue
+      // Add a marker to the map at the specified location
+      const marker = new google.maps.Marker({
+        position: { lat: latitude, lng: longitute },
+        map,
+        title: addressLine,
+      })
+
+      // Add a click event listener to the marker
+      marker.addListener("click", () => {
+        // Open Google Maps in a new tab with the specified address
+        const mapsUrl = `https://www.google.com/maps?q=${addressLine}`
+        window.open(mapsUrl, "_blank")
+      })
+    }
+  }, [latitude, longitute])
 
   useEffect(() => {
     if (jobListId && accessToken) {
@@ -613,6 +648,10 @@ const Overview = ({ jobList }) => {
                 </tbody>
               </table>
             </div>
+            <div className="mb-2">
+              <h4 className="card-title mb-2">Site Location on Map</h4>
+              <div id="map" style={{ height: "300px", width: "100%" }}></div>
+            </div>
 
             {/* <h5 className="card-title">Technicians Limit</h5>
             <div className="table-responsive">
@@ -631,7 +670,6 @@ const Overview = ({ jobList }) => {
                 </tbody>
               </table>
             </div> */}
-
             {/* <CardBody> */}
             <h4 className="card-title mb-2">
               {userRole === userTypes.ROLE_TECHNICIAN ? "Apply" : "Assignees"}
@@ -1114,7 +1152,6 @@ const Overview = ({ jobList }) => {
               </table>
             </div>
             {/* </CardBody> */}
-
             {userType === userTypes.ROLE_TECHNICIAN && (
               <div className="hstack gap-2">
                 <button className="btn btn-soft-success w-100">

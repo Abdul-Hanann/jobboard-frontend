@@ -58,7 +58,8 @@ const TasksCreate = () => {
   const [addressLine1, setAddressLine1] = useState("")
   const [selectedAddress, setSelectedAddress] = useState("")
   const [addressLine2, setAddressLine2] = useState("")
-  const [fullAddress, setFullAddress] = useState("")
+  const [latitude, setLatitude] = useState(null)
+  const [longitute, setLongitute] = useState(null)
   const [city, setCity] = useState("")
   const [stateData, setStateData] = useState("")
   const [zipcode, setZipcode] = useState("")
@@ -218,6 +219,8 @@ const TasksCreate = () => {
         siteId: siteId,
         building: building,
         addressLine1: addressLine1,
+        latitude: latitude,
+        longitute: longitute,
         // addressLine2: addressLine2 || "N/A",
         city: city,
         state: stateData,
@@ -278,6 +281,17 @@ const TasksCreate = () => {
     autocomplete.addListener("place_changed", () => {
       const place = autocomplete.getPlace()
       setAddressLine1(place.formatted_address)
+
+      // Check if the Google Maps API is ready and loaded
+      if (window.google && window.google.maps) {
+        const { geometry } = place
+        const { lat, lng } = geometry.location
+        console.log("place++++++++++++++++++++", place)
+        console.log("lat++++++++++++++++++++", lat())
+        console.log("lng++++++++++++++++++++", lng())
+        setLatitude(lat())
+        setLongitute(lng())
+      }
 
       const { address_components } = place
       let fullAddress = ""
