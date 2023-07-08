@@ -88,7 +88,6 @@ const TasksCreate = () => {
   }, [isEdit, isLoading, successAdd, successUpdate, error])
 
   function handleAddFields() {
-    // setIndexNum(indexNum + 1)
     const fields = [...inputFields]
     if (indexNum > 0 && !fields[indexNum]) {
       document.getElementById("taskError").style.display = "block"
@@ -239,15 +238,9 @@ const TasksCreate = () => {
                               type="text"
                               className="form-control"
                               placeholder="Enter Name..."
-                              // validate={{
-                              //   required: { value: true },
-                              // }}
                               onChange={e => {
                                 handleNameChange(e)
                               }}
-                              // onChange={e => {
-                              //   setName(e.target.value)
-                              // }}
                               value={name}
                             />
                             <div
@@ -321,13 +314,6 @@ const TasksCreate = () => {
                                     Add
                                   </Button>
                                 </div>
-                                {/* <FormFeedback
-                                  id="taskError"
-                                  style={{ display: "none" }}
-                                  type="invalid"
-                                >
-                                  Please Enter Your Wbs Tasks
-                                </FormFeedback> */}
                                 <div
                                   style={{
                                     color: "red",

@@ -21,16 +21,6 @@ const DetailsSection = ({ jobWbs }) => {
               <img src={wechat} alt="" height="50" />
               <div className="flex-grow-1 ms-3">
                 <h5 className="fw-semibold">{jobWbs?.name}</h5>
-                {/* <ul className="list-unstyled hstack gap-2 mb-0">
-                  <li>
-                    <i className="bx bx-building-house"></i>{" "}
-                    <span className="text-muted">{"ASDOASODK"}</span>
-                  </li>
-                  <li>
-                    <i className="bx bx-map"></i>{" "}
-                    <span className="text-muted">California</span>
-                  </li>
-                </ul> */}
               </div>
               <button
                 className="btn btn-dark w-lg d-flex justify-content-center align-items-center"
