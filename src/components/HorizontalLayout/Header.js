@@ -7,25 +7,11 @@ import { Link } from "react-router-dom"
 
 // Redux Store
 import { showRightSidebarAction, toggleLeftmenu } from "../../store/actions"
-// reactstrap
-import { Row, Col, Dropdown, DropdownToggle, DropdownMenu } from "reactstrap"
 
 import ProfileMenu from "../CommonForBoth/TopbarDropdown/ProfileMenu"
-
-import megamenuImg from "../../assets/images/megamenu-img.png"
-import logo from "../../assets/images/logo.svg"
-import logoLight from "../../assets/images/logo-light.png"
-import logoLightSvg from "../../assets/images/logo-light.svg"
-// import logoDark from "../../assets/images/logo-dark.png";
+// import logoLight from "../../assets/images/logo-light.png"
+// import logoLightSvg from "../../assets/images/logo-light.svg"
 import logoDark from "../../assets/images/sait-logo.png"
-
-// import images
-import github from "../../assets/images/brands/github.png"
-import bitbucket from "../../assets/images/brands/bitbucket.png"
-import dribbble from "../../assets/images/brands/dribbble.png"
-import dropbox from "../../assets/images/brands/dropbox.png"
-import mail_chimp from "../../assets/images/brands/mail_chimp.png"
-import slack from "../../assets/images/brands/slack.png"
 
 //i18n
 import { withTranslation } from "react-i18next"
@@ -77,14 +63,14 @@ const Header = props => {
                 </span>
               </Link>
 
-              <Link to="/" className="logo logo-light">
+              {/* <Link to="/" className="logo logo-light">
                 <span className="logo-sm">
                   <img src={logoLightSvg} alt="" height="22" />
                 </span>
                 <span className="logo-lg">
                   <img src={logoLight} alt="" height="19" />
                 </span>
-              </Link>
+              </Link> */}
             </div>
 
             <button

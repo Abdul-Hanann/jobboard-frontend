@@ -5,7 +5,6 @@ import Layout from "./layout/reducer"
 
 // Authentication
 import loginV2 from "./auth-v2/login/reducer"
-import Profile from "./auth/profile/reducer"
 
 //Calendar
 import calendar from "./calendar/reducer"
@@ -27,7 +26,6 @@ const rootReducer = combineReducers({
   Layout,
   // Login,
   loginV2,
-  Profile,
   calendar,
   DashboardJob,
   JobListReducer,

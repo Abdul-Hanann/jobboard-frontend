@@ -142,8 +142,13 @@ ProfileMenu.propTypes = {
 }
 
 const mapStatetoProps = state => {
-  const { error, success } = state.Profile
-  return { error, success }
+  const { error = null, success } = state.Profile || {} // provide a default value or fallback for error
+  return {
+    error,
+    success,
+  }
+  // const { error, success } = state.Profile
+  // return { error, success }
 }
 
 export default withRouter(

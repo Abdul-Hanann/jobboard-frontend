@@ -1,4 +1,3 @@
-import { data } from "common/data/jobWbsData"
 import {
   FETCH_JOBLIST_USER,
   FETCH_JOBLIST_USER_FAIL,

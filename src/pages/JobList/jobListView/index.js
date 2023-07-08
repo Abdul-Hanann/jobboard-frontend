@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom"
 import withRouter from "components/Common/withRouter"
 import { isEmpty, map } from "lodash"
 import * as moment from "moment"
-import { jobsList } from "common/data/job"
 
 import toast from "toastr"
 import "toastr/build/toastr.min.css"
@@ -44,10 +43,6 @@ import { fetchJobWbsById } from "store/actions"
 //Import Component
 import Breadcrumbs from "components/Common/Breadcrumb"
 import DeleteModal from "components/Common/DeleteModal"
-
-//Import Image
-import images from "assets/images"
-import img from "assets/images/companies/img-1.png"
 
 // import {
 //   getJobList as onGetJobList,
@@ -169,7 +164,7 @@ const JobsList = () => {
     }
   }, [jobs])
 
-  const [dataField, setDataField] = useState(jobsList)
+  const [dataField, setDataField] = useState(null)
   const [modal, setModal] = useState(false)
   const [filteredJobName, setFilteredJobName] = useState(null)
   const [filteredJobNoOfDays, setFilteredJobNoOfDays] = useState(null)

@@ -18,14 +18,6 @@ import AddModal from "components/Common/AddModalCustom"
 //redux
 import { useSelector, useDispatch } from "react-redux"
 import * as moment from "moment"
-//Import Images
-import avatar4 from "../../../assets/images/users/avatar-4.jpg"
-import avatar5 from "../../../assets/images/users/avatar-5.jpg"
-import avatar1 from "../../../assets/images/users/avatar-1.jpg"
-import avatar2 from "../../../assets/images/users/avatar-2.jpg"
-import avatar6 from "../../../assets/images/users/avatar-6.jpg"
-import avatar3 from "../../../assets/images/users/avatar-3.jpg"
-import icon from "../../../assets/images/cross-icon1.png"
 // import avatar7 from "../../../assets"
 import Select from "react-select"
 import {
@@ -51,8 +43,6 @@ import {
   CardBody,
   Button,
 } from "reactstrap"
-//import images
-import adobephotoshop from "../../../assets/images/companies/adobe-photoshop.svg"
 
 const Overview = ({ jobList }) => {
   const userType = localStorage.getItem("userType")

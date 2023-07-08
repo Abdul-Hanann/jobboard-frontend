@@ -5,7 +5,7 @@ import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css"
 import TableContainer from "./TableContainer"
 import * as Yup from "yup"
 import { useFormik } from "formik"
-import { jobWbsData } from "common/data/jobWbsData"
+// import { jobWbsData } from "common/data/jobWbsData"
 
 //import components
 import Breadcrumbs from "components/Common/Breadcrumb"
@@ -150,7 +150,7 @@ function Company() {
                 </CardBody>
                 <TableContainer
                   columns={[]}
-                  data={jobWbsData}
+                  data={[]}
                   isGlobalFilter={true}
                   isAddOptions={false}
                   isJobListGlobalFilter={true}

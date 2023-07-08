@@ -2,7 +2,6 @@ import React, { useState } from "react"
 import { Link } from "react-router-dom"
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css"
 import TableContainer from "./TableContainer"
-import { jobWbsData } from "common/data/jobWbsData"
 
 //import components
 import Breadcrumbs from "components/Common/Breadcrumb"
@@ -71,7 +70,7 @@ function JobWbs() {
                 </CardBody>
                 <TableContainer
                   columns={[]}
-                  data={jobWbsData}
+                  data={[]}
                   isGlobalFilter={true}
                   isAddOptions={false}
                   isJobListGlobalFilter={true}
