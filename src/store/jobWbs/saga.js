@@ -29,7 +29,7 @@ import {
   addNewJobWbs,
   updateJobWbs,
   deleteJobWbs,
-} from "helpers/fakebackend_helper"
+} from "helpers/backend_helper"
 
 import { getRequestData } from "../../helpers/GlobalUtils"
 

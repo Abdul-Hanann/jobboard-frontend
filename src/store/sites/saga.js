@@ -21,11 +21,11 @@ import {
   deleteSiteSuccess,
   deleteSiteFail,
 } from "./actions"
-import { getSites, getSite, getSitesFilter } from "helpers/fakebackend_helper"
+import { getSites, getSite, getSitesFilter } from "helpers/backend_helper"
 
 import { GET_JOB_LIST_URL } from "../../helpers/url_helper"
 import { getRequestData } from "../../helpers/GlobalUtils"
-import { addNewSite, updateSite, deleteSite } from "helpers/fakebackend_helper"
+import { addNewSite, updateSite, deleteSite } from "helpers/backend_helper"
 
 // Fetching All Notifications
 // function* fetchAllJobsSaga() {

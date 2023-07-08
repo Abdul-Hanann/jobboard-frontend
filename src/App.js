@@ -7,7 +7,6 @@ import { userTypes } from "pages/Authentication/userTypes"
 import "react-tooltip/dist/react-tooltip.css"
 // Import Routes all
 import {
-  authProtectedRoutes,
   publicRoutes,
   adminRoutes,
   siteAdminRoutes,
@@ -18,7 +17,6 @@ import {
 } from "./routes"
 
 // Import all middleware
-import Authmiddleware from "./routes/route"
 import { Middleware } from "routes/middleware"
 
 // layouts Format
@@ -27,10 +25,6 @@ import NonAuthLayout from "./components/NonAuthLayout"
 
 // Import scss
 import "./assets/scss/theme.scss"
-import fakeBackend from "./helpers/AuthType/fakeBackend"
-
-// Activating fake backend
-// fakeBackend()
 
 const App = () => {
   const getCookies = () => {

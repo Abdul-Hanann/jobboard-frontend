@@ -24,7 +24,7 @@ import {
   addNewJobList,
   updateJobList,
   deleteJobList,
-} from "helpers/fakebackend_helper"
+} from "helpers/backend_helper"
 
 function* fetchJobList(action) {
   try {

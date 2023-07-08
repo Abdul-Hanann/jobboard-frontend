@@ -41,12 +41,8 @@ import {
   getTechnician,
   updateJobTechnician,
   getSitesFilter,
-} from "helpers/fakebackend_helper"
-import {
-  addNewJobUser,
-  updateSite,
-  deleteSite,
-} from "helpers/fakebackend_helper"
+} from "helpers/backend_helper"
+import { addNewJobUser, updateSite, deleteSite } from "helpers/backend_helper"
 
 // Fetching All Notifications
 // function* fetchAllJobsSaga() {
