@@ -451,7 +451,7 @@ const JobsList = () => {
                   placeholder="Select..."
                   onChange={handleChange}
                   value={selectedShowOption?.value}
-                  style={{ maxWidth: "20%", fontSize: 16 }}
+                  style={{ maxWidth: "10%", fontSize: 16 }}
                 >
                   {/* <option value="" disabled selected>
                     Select Entity...

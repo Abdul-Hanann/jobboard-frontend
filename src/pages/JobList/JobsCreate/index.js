@@ -853,16 +853,6 @@ const TasksCreate = () => {
                                   value={jobNotes}
                                   onChange={handlejobNotesChange}
                                 />
-                                {/* <Input
-                                  id="JobNotes"
-                                  name="JobNotes"
-                                  type="textarea"
-                                  className="form-control"
-                                  placeholder="Enter Job Notes..."
-                                  style={{ height: "200px" }}
-                                  value={jobNotes}
-                                  onChange={handlejobNotesChange}
-                                /> */}
                                 <div
                                   style={{
                                     color: "red",
