@@ -4,10 +4,6 @@ import { Navigate } from "react-router-dom"
 // Profile
 import UserProfile from "../pages/Authentication/user-profile"
 
-//Invoices
-import InvoicesList from "../pages/Invoices/invoices-list"
-import InvoiceDetail from "../pages/Invoices/invoices-detail"
-
 // Authentication related pages
 import Login from "../pages/Authentication/Login"
 import Logout from "../pages/Authentication/Logout"
