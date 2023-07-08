@@ -29,11 +29,7 @@ import {
   fetchCompany,
 } from "store/actions"
 
-import * as Yup from "yup"
-import { useFormik } from "formik"
-// Import Editor
-import { Editor } from "react-draft-wysiwyg"
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css"
+import Editor from "react-simple-wysiwyg"
 
 //Import Date Picker
 import DatePicker from "react-datepicker"
@@ -41,7 +37,6 @@ import "react-datepicker/dist/react-datepicker.css"
 
 //Import Breadcrumb
 import Breadcrumbs from "../../../components/Common/Breadcrumb"
-import { isEmpty } from "lodash"
 
 const TasksCreate = () => {
   const { state } = useLocation()
@@ -849,30 +844,16 @@ const TasksCreate = () => {
                                 Job Notes
                               </Label>
                               <Col lg="10">
-                                {/* <Editor
-                              id="JobNotes"
-                              name="JobNotes"
-                              toolbarClassName="toolbarClassName"
-                              wrapperClassName="wrapperClassName"
-                              editorClassName="editorClassName"
-                              placeholder="Place Your Content Here..."
-                              onChange={validation.handleChange}
-                              onBlur={validation.handleBlur}
-                              value={validation.values.JobNotes || ""}
-                              invalid={
-                                validation.touched.JobNotes &&
-                                validation.errors.JobNotes
-                                  ? true
-                                  : false
-                              }
-                            />
-                            {validation.touched.JobNotes &&
-                            validation.errors.JobNotes ? (
-                              <FormFeedback type="invalid">
-                                {validation.errors.JobNotes}
-                              </FormFeedback>
-                            ) : null} */}
-                                <Input
+                                <Editor
+                                  id="JobNotes"
+                                  name="JobNotes"
+                                  className="form-control"
+                                  placeholder="Enter Job Notes..."
+                                  style={{ height: "200px" }}
+                                  value={jobNotes}
+                                  onChange={handlejobNotesChange}
+                                />
+                                {/* <Input
                                   id="JobNotes"
                                   name="JobNotes"
                                   type="textarea"
@@ -881,7 +862,7 @@ const TasksCreate = () => {
                                   style={{ height: "200px" }}
                                   value={jobNotes}
                                   onChange={handlejobNotesChange}
-                                />
+                                /> */}
                                 <div
                                   style={{
                                     color: "red",
