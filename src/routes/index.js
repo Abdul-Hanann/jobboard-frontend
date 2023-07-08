@@ -20,7 +20,6 @@ import JobList from "../pages/JobList"
 import JobCreate from "../pages/JobList/JobsCreate"
 import JobDetails from "pages/JobList/JobDetails"
 // import jobListView from "pages/JobList/jobListView"
-import AddJob from "../pages/AddJob"
 import JobWbs from "pages/JobWbs"
 import JobWbsCreate from "pages/JobWbs/CreateJobWbs"
 import JobWbsView from "pages/JobWbs/ViewJobWbs"
@@ -38,7 +37,6 @@ const adminRoutes = [
   { path: "/jobWbs/edit", component: <JobWbsCreate /> },
   { path: "/jobWbs/view", component: <JobWbsView /> },
   { path: "/schedule", component: <Schedule /> },
-  { path: "/addjob", component: <AddJob /> },
   { path: "/siteadmin", component: <SiteAdmin /> },
   { path: "/siteadmin/create", component: <SiteAdminCreate /> },
   { path: "/siteadmin/edit", component: <SiteAdminCreate /> },
