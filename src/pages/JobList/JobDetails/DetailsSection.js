@@ -53,7 +53,11 @@ const DetailsSection = ({ jobList }) => {
           </CardBody>
           <CardBody>
             <h5 className="fw-semibold mb-3">Description</h5>
-            <p className="text-muted">{jobList.notes}</p>
+            {/* <p className="text-muted">{jobList.notes}</p> */}
+            <p
+              className="text-muted"
+              dangerouslySetInnerHTML={{ __html: jobList.notes }}
+            />
           </CardBody>
         </Card>
         <Card>
