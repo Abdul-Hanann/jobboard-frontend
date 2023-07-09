@@ -368,10 +368,11 @@ const TasksCreate = () => {
       document.getElementById("jobDateError").style.display = "none"
 
       const fields = [...inputFields]
-      if (indexNum > 0 && !fields[indexNum]) {
-        document.getElementById("JobNoOfDaysError").style.display = "block"
-        document.getElementById("addButton").disabled = true
-      } else {
+      // if (indexNum > 0 && !fields[indexNum]) {
+      //   document.getElementById("JobNoOfDaysError").style.display = "block"
+      //   document.getElementById("addButton").disabled = true
+      // } else
+      {
         document.getElementById("JobNoOfDaysError").style.display = "none"
         document.getElementById("addButton").disabled = false
         const item1 = []
