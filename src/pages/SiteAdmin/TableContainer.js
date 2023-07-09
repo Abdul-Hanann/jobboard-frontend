@@ -5,7 +5,6 @@ import "toastr/build/toastr.min.css"
 import {
   useTable,
   useGlobalFilter,
-  useAsyncDebounce,
   useSortBy,
   useFilters,
   useExpanded,
@@ -20,7 +19,6 @@ import {
   Modal,
   ModalHeader,
   ModalBody,
-  CardBody,
   DropdownItem,
   UncontrolledDropdown,
   DropdownToggle,
@@ -34,11 +32,8 @@ import { useSelector, useDispatch } from "react-redux"
 import Select from "react-select"
 import makeAnimated from "react-select/animated"
 
-import { isEmpty, map } from "lodash"
-// import { Filter, DefaultColumnFilter } from "./filters"
-import { Filter, DefaultColumnFilter } from "components/Common/filters"
-// import JobListGlobalFilter from "../../components/Common/GlobalSearchFilter"
-import JobListGlobalFilter from "components/Common/GlobalSearchFilter"
+import { map } from "lodash"
+import { DefaultColumnFilter } from "components/Common/filters"
 import { useNavigate } from "react-router-dom"
 
 const AnimatedMulti = props => {
@@ -114,9 +109,7 @@ const TableContainer = ({
 
   const [sitesList, setSitesList] = useState([])
   const [dataField, setDataField] = useState([])
-  const [site, setSite] = useState(null)
   const dispatch = useDispatch()
-  // const [count, setCount] = useState(jobs?.totalCount)
   useEffect(() => {
     dispatch(fetchSites())
   }, [])
@@ -250,54 +243,6 @@ const TableContainer = ({
     toggle()
   }
 
-  // const [data, setData] = useState(jobs)
-  // const [uniqueJobNoOfDays, setUniqueJobNoOfDays] = useState(null)
-  // const [uniqueJobNames, setUniqueJobName] = useState(null)
-  // const [uniqueJobWbs, setUniqueJobWbs] = useState(null)
-  // const [uniqueJobSites, setUniqueJobSites] = useState(null)
-
-  // console.log("uniqueJobWbs:", uniqueJobWbs)
-  // console.log("uniqueJobSites:", uniqueJobSites)
-
-  // useEffect(() => {
-  //   if (Array.isArray(jobs)) {
-  //     setData(jobs)
-
-  //     const uniqueJobNoOfDays = new Set()
-  //     const uniqueJobName = new Set()
-  //     const uniqueJobWbsMap = new Map()
-  //     const uniqueJobSitesMap = new Map()
-
-  //     jobs.forEach(job => {
-  //       uniqueJobNoOfDays.add(job?.numberOfDays)
-  //       uniqueJobName.add(job?.jobName)
-  //       uniqueJobWbsMap.set(job?.jobWbs.id, job?.jobWbs.name)
-  //       uniqueJobSitesMap.set(job?.site.id, job?.site.siteId)
-  //     })
-
-  //     setUniqueJobNoOfDays([...uniqueJobNoOfDays])
-  //     setUniqueJobName([...uniqueJobName])
-  //     setUniqueJobWbs(Array.from(uniqueJobWbsMap.entries()))
-  //     setUniqueJobSites(Array.from(uniqueJobSitesMap.entries()))
-  //   }
-  // }, [jobs])
-  const SiteId = [
-    { value: "SK2540", label: "SK2540" },
-    { value: "SK2541", label: "SK2541" },
-    { value: "SK2542", label: "SK2542" },
-  ]
-  const Building = [
-    { value: "Building1", label: "Building 1" },
-    { value: "Building2", label: "Building 2" },
-    { value: "Building3", label: "Building 3" },
-    { value: "Building4", label: "Building 4" },
-  ]
-  const City = [
-    { value: "California", label: "California" },
-    { value: "NewYork", label: "NewYork" },
-    { value: "Sydney", label: "Sydney" },
-  ]
-
   const toggle = () => {
     if (modal) {
       setModal(false)
@@ -307,37 +252,6 @@ const TableContainer = ({
       setDataField(dataField)
     }
   }
-
-  // const handleSearch = (searchInput, filterOption) => {
-  //   const filteredData = dataField.filter(rowdata => {
-  //     if (filterOption === "siteId") {
-  //       return rowdata.siteId.toLowerCase().includes(searchInput.toLowerCase())
-  //     } else if (filterOption === "building") {
-  //       return rowdata.building
-  //         .toLowerCase()
-  //         .includes(searchInput.toLowerCase())
-  //     } else if (filterOption === "state") {
-  //       return rowdata.state.toLowerCase().includes(searchInput.toLowerCase())
-  //     } else if (filterOption === "city") {
-  //       return rowdata.city.toLowerCase().includes(searchInput.toLowerCase())
-  //     } else if (filterOption === "timeZone") {
-  //       return rowdata.timeZone
-  //         .toLowerCase()
-  //         .includes(searchInput.toLowerCase())
-  //     } else {
-  //       return (
-  //         rowdata.siteId.toLowerCase().includes(searchInput.toLowerCase()) ||
-  //         rowdata.building.toLowerCase().includes(searchInput.toLowerCase()) ||
-  //         rowdata.state.toLowerCase().includes(searchInput.toLowerCase()) ||
-  //         rowdata.city.toLowerCase().includes(searchInput.toLowerCase()) ||
-  //         rowdata.zipCode.toLowerCase().includes(searchInput.toLowerCase()) ||
-  //         rowdata.timeZone.toLowerCase().includes(searchInput.toLowerCase())
-  //       )
-  //     }
-  //   })
-  //   console.log("filteredData:", filteredData)
-  //   setDataField(filteredData)
-  // }
 
   const handleClick = () => {
     setFilteredSiteId(null)
@@ -350,49 +264,12 @@ const TableContainer = ({
     setFilteredTimeZone(null)
     toggle()
   }
-
-  // const [showEntries, setshowEntries] = useState(10)
-  // const [paginationItems, setpaginationItems] = useState(1)
-  // const [selectedPaginationItem, setselectedPaginationItem] = useState(1)
-  // const [currentTableData, setcurrentTableData] = useState([])
-  // const count = sites.length
-  // const [value, setValue] = useState("")
-  // useEffect(() => {
-  //   if (sites) {
-  //     setpaginationItems(Math.ceil(sites.length / showEntries))
-  //   }
-  // }, [sites, showEntries])
-
-  // useEffect(() => {
-  //   if (sites) {
-  //     let rows = selectedPaginationItem * showEntries
-  //     let selectedRowsStart = rows - showEntries
-  //     let selectedRowsEnd = rows - 1
-  //     if (selectedRowsEnd > sites.length - 1) {
-  //       selectedRowsEnd = sites.length
-  //     }
-  //     setcurrentTableData(sites.slice(selectedRowsStart, selectedRowsEnd + 1))
-  //   }
-  // }, [sites, paginationItems, selectedPaginationItem, showEntries])
   const navigate = useNavigate()
   const handleEditClick = site => {
     navigate("/siteadmin/edit", {
       state: { sites: site, canEdit: true },
     })
   }
-
-  // const generateSortingIndicator = column => {
-  //   return column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : ""
-  // }
-
-  // const onChangeInSelect = event => {
-  //   setPageSize(Number(event.target.value))
-  // }
-
-  // const onChangeInInput = event => {
-  //   const page = event.target.value ? Number(event.target.value) - 1 : 0
-  //   gotoPage(page)
-  // }
 
   useEffect(() => {
     const Pages = Math.ceil(count / pageDataLimit)
@@ -476,15 +353,6 @@ const TableContainer = ({
                     setValue={setFilteredBuilding}
                   />
                   <p className="text-muted mt-3">City</p>
-                  {/* <Select
-                    className="basic-single"
-                    classNamePrefix="select"
-                    name="color"
-                    placeholder="Select distance..."
-                    value={filteredCity}
-                    onChange={value => setFilteredCity(value)}
-                    options={City}
-                  /> */}
                   <AnimatedMulti
                     options={
                       Array.isArray(uniqueCitys)

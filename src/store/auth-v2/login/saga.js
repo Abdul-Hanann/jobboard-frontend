@@ -4,28 +4,16 @@ import { call, put, takeEvery, takeLatest } from "redux-saga/effects"
 import { LOGIN_USER, LOGOUT_USER, SOCIAL_LOGIN } from "./actionTypes"
 import { apiError, loginSuccess, logoutUserSuccess } from "./actions"
 
-//Include Both Helper File with needed methods
-import { getFirebaseBackend } from "../../../helpers/firebase_helper"
 import {
   postFakeLogin,
   postJwtLogin,
   getSocialLogin,
   getLogout,
-} from "../../../helpers/fakebackend_helper"
-
-const fireBaseBackend = getFirebaseBackend()
+} from "../../../helpers/backend_helper"
 
 function* loginUser({ payload: { user, history } }) {
   try {
-    if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
-      const response = yield call(
-        fireBaseBackend.loginUser,
-        user.role,
-        user.email,
-        user.password
-      )
-      yield put(loginSuccess(response))
-    } else if (process.env.REACT_APP_DEFAULTAUTH === "jwt") {
+    if (process.env.REACT_APP_DEFAULTAUTH === "jwt") {
       const response = yield call(postJwtLogin, {
         roleValue: user.role,
         email: user.email,

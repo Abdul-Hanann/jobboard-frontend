@@ -30,7 +30,7 @@ import {
   addNewCompany,
   updateCompany,
   deleteCompany,
-} from "helpers/fakebackend_helper"
+} from "helpers/backend_helper"
 
 // Fetching All Notifications
 // function* fetchAllCompanySaga() {

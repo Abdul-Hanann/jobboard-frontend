@@ -5,11 +5,6 @@ import { FC } from "react"
 import { Navigate } from "react-router"
 import { userTypes } from "pages/Authentication/userTypes"
 
-import { GET_LOGOUT } from "helpers/url_helper"
-// import { useAppSelector } from "./store/hooks"
-
-// import { RoutesPath } from "./utils/constants/common"
-
 export const Middleware: FC = () => {
   const isAuthenticated = localStorage.getItem("isAuthenticated")
   console.log("isAuthenticated:", isAuthenticated)

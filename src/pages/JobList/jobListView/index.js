@@ -1,69 +1,37 @@
 import React, { useEffect, useState } from "react"
-// import { Link, withRouter } from "react-router-dom";
-import { Link } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
 import withRouter from "components/Common/withRouter"
-import { isEmpty, map } from "lodash"
+import { map } from "lodash"
 import * as moment from "moment"
-import { jobsList } from "common/data/job"
 
 import toast from "toastr"
 import "toastr/build/toastr.min.css"
 
-import ReactSelect from "react-select"
 import {
-  button,
   Badge,
   Col,
-  Container,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
   Row,
   Table,
   UncontrolledDropdown,
-  UncontrolledTooltip,
   Modal,
   ModalHeader,
   ModalBody,
-  Form,
   Input,
-  FormFeedback,
-  Label,
   Button,
 } from "reactstrap"
-import * as Yup from "yup"
-import { useFormik } from "formik"
 
 //Import Date Picker
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 
-import { fetchJobWbsById } from "store/actions"
-
 //Import Component
-import Breadcrumbs from "components/Common/Breadcrumb"
 import DeleteModal from "components/Common/DeleteModal"
-
-//Import Image
-import images from "assets/images"
-import img from "assets/images/companies/img-1.png"
-
-// import {
-//   getJobList as onGetJobList,
-//   addNewJobList as onAddNewJobList,
-//   updateJobList as onUpdateJobList,
-//   deleteJobList as onDeleteJobList,
-// } from "store/actions"
-
 import { fetchJobList, deleteJob as onDeleteJobList } from "store/actions"
 
-import {
-  getProjects as onGetProjects,
-  addNewProject as onAddNewProject,
-  updateProject as onUpdateProject,
-  deleteProject as onDeleteProject,
-} from "../../../store/actions"
+import { deleteProject as onDeleteProject } from "../../../store/actions"
 
 //redux
 import { useSelector, useDispatch } from "react-redux"
@@ -169,7 +137,7 @@ const JobsList = () => {
     }
   }, [jobs])
 
-  const [dataField, setDataField] = useState(jobsList)
+  const [dataField, setDataField] = useState(null)
   const [modal, setModal] = useState(false)
   const [filteredJobName, setFilteredJobName] = useState(null)
   const [filteredJobNoOfDays, setFilteredJobNoOfDays] = useState(null)
@@ -300,23 +268,6 @@ const JobsList = () => {
     setTotalPages(Pages)
   }, [count, pageDataLimit])
 
-  // const handlePrevPage = () => {
-  //   console.log("handlePrevPage")
-  //   setPage(prevLength => prevLength - 1)
-  // }
-
-  // const handleNextPage = () => {
-  //   console.log("handleNextPage")
-  //   setPage(prevLength => prevLength + 1)
-  // }
-
-  // const onChangeInPage = e => {
-  //   const page = e.target.value
-  //   const limit = selectedShowOption.value
-  //   console.log("limit:", limit)
-  //   console.log("page:", page)
-  //   dispatch(fetchJobList("", "", "", "", "", limit, page))
-  // }
   const onChangeInPage = e => {
     const page = parseInt(e.target.value)
     const limit = selectedShowOption.value
@@ -453,9 +404,6 @@ const JobsList = () => {
                   value={selectedShowOption?.value}
                   style={{ maxWidth: "10%", fontSize: 16 }}
                 >
-                  {/* <option value="" disabled selected>
-                    Select Entity...
-                  </option> */}
                   {ShowOptions.map((ShowOption, index) => {
                     return (
                       <option
@@ -563,13 +511,7 @@ const JobsList = () => {
                           </td>
                           <td>
                             <h5 className="text-truncate font-size-14">
-                              {/* <Link
-                              to={`/projects-overview/${project.id}`}
-                              className="text-dark"
-                            > */}
-                              {/* <img src={img} alt="" className="avatar-sm" /> */}
                               {job.jobName}
-                              {/* </Link> */}
                             </h5>
                           </td>
                           <td>

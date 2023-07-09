@@ -16,7 +16,6 @@ import {
   CardTitle,
   Input,
   FormGroup,
-  FormFeedback,
   Label,
   Button,
   Form,
@@ -27,16 +26,6 @@ import {
   addNewCompany as onAddNewCompany,
   updateCompany as onUpdateCompany,
 } from "store/actions"
-
-import * as Yup from "yup"
-import { useFormik } from "formik"
-// Import Editor
-import { Editor } from "react-draft-wysiwyg"
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css"
-
-//Import Date Picker
-import DatePicker from "react-datepicker"
-import "react-datepicker/dist/react-datepicker.css"
 
 //Import Breadcrumb
 import Breadcrumbs from "../../../components/Common/Breadcrumb"
@@ -57,7 +46,6 @@ const CreateCompany = () => {
   const [id, setId] = useState(null)
   const [name, setName] = useState("")
   const [logo, setLogo] = useState(null)
-  const [indexNum, setIndexNum] = useState(0)
   const inpRow = []
   const [inputFields, setinputFields] = useState(inpRow)
 
@@ -88,13 +76,11 @@ const CreateCompany = () => {
       setId(data.id)
       setName(data.name)
       setLogo(data.logoUrl)
-      // setprofileImageURL(data.logoUrl)
       setinputFields(data?.tasks)
       if (data.logoUrl) {
         const blob = dataURItoBlob(data.logoUrl)
         setnewImageBlob(blob)
         const file = new File([blob], "logo.png", { type: "image/png" })
-        // setLogoFile(file)
         let url = URL.createObjectURL(blob)
         setprofileImageURL(url)
       }
@@ -120,36 +106,6 @@ const CreateCompany = () => {
     }
   }, [isEdit, isLoading, successAdd, successUpdate, errorAdd])
 
-  function handleAddFields() {
-    // setIndexNum(indexNum + 1)
-    const fields = [...inputFields]
-    if (indexNum > 0 && !fields[indexNum]) {
-      document.getElementById("taskError").style.display = "block"
-      document.getElementById("addButton").disabled = true
-    } else {
-      document.getElementById("taskError").style.display = "none"
-      document.getElementById("addButton").disabled = false
-      const item1 = []
-      setinputFields([...inputFields, item1])
-    }
-  }
-  function handleInputChange(e, index) {
-    // setIndexNum(index + 1)
-    const { value } = e.target
-    if (value !== "") {
-      const fields = [...inputFields]
-      fields[index] = value
-      setinputFields(fields)
-      document.getElementById("taskTextError" + index).style.display = "none"
-    }
-  }
-
-  function handleRemoveFields(idx) {
-    const fields = [...inputFields]
-    fields.splice(idx, 1)
-    setinputFields(fields)
-  }
-
   document.title = isEdit
     ? "Edit Site Admin | SAIT Job Board"
     : "Create Site Admin  | SAIT Job Board"
@@ -161,8 +117,6 @@ const CreateCompany = () => {
   }
 
   function handleClearClick() {
-    // setEditorState("")
-    // setinputFields([])
     setprofileImageURL(placeHolderImage)
     setnewImageBlob(null)
     setName("")
@@ -225,34 +179,6 @@ const CreateCompany = () => {
       console.log("Check fields")
     }
   }
-
-  // const handleSubmit = () => {
-  //   if (validateForm()) {
-  //     const imageFile = new File([newImageBlob], "image.png", {
-  //       type: "image/png",
-  //     })
-  //     console.log("iageblob:", newImageBlob)
-  //     let data = new FormData()
-  //     data.append("logo", newImageBlob, "logo.jpg")
-  //     data.append("name", name)
-  //     let input = { id: id, data: data }
-  //     if (isEdit) {
-  //       console.log("edit")
-  //       // dispatch(onUpdateCompany(input))
-  //     } else {
-  //       console.log("create")
-  //       console.log("create:", data)
-  //       // dispatch(onAddNewCompany(data))
-  //     }
-  //   } else {
-  //     console.log("Check fields")
-  //   }
-  // }
-
-  // const toggleModal = () => {
-  //   setimageModalVisible(!imageModalVisible)
-  // }
-
   const toggleModal = () => {
     if (imageModalVisible) {
       setimageModalVisible(false)
@@ -323,8 +249,6 @@ const CreateCompany = () => {
                   <Form>
                     <div data-repeater-list="outer-group" className="outer">
                       <div data-repeater-item className="outer">
-                        {/* <Row> */}
-                        {/* <Col className="col-12"> */}
                         <FormGroup className="mb-4" row>
                           <Label
                             htmlFor="name"
@@ -355,19 +279,12 @@ const CreateCompany = () => {
                                       toast.error(
                                         "Only image files will be selected"
                                       )
-
-                                      // displayInAppError(
-                                      //   props.t("upload.onlyImageAllowedError")
-                                      // )
                                     } else if (
                                       acceptedFiles[0].size > 5000000
                                     ) {
                                       toast.error(
                                         "Image size should be less than 5 Mbs"
                                       )
-                                      // displayInAppError(
-                                      //   props.t("upload.imageSizeError")
-                                      // )
                                     } else {
                                       handleAcceptedFiles(acceptedFiles)
                                     }
@@ -437,16 +354,6 @@ const CreateCompany = () => {
                                 </div>
                               </Modal>
                             </div>
-
-                            {/* <div
-                              style={{
-                                color: "red",
-                                display: "none",
-                              }}
-                              id={"nameError"}
-                            >
-                              Please Enter Your Wbs Name
-                            </div> */}
                           </Col>
 
                           <Label
@@ -462,15 +369,9 @@ const CreateCompany = () => {
                               type="text"
                               className="form-control"
                               placeholder="Enter Name..."
-                              // validate={{
-                              //   required: { value: true },
-                              // }}
                               onChange={e => {
                                 handleNameChange(e)
                               }}
-                              // onChange={e => {
-                              //   setName(e.target.value)
-                              // }}
                               value={name}
                             />
                             <div

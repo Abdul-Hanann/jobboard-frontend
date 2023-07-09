@@ -2,14 +2,10 @@ import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Card, CardBody, Col } from "reactstrap"
 
-//redux
-import { useSelector, useDispatch } from "react-redux"
-
 //import images
 import wechat from "../../../assets/images/companies/wechat.svg"
 
 const DetailsSection = ({ jobList }) => {
-  const dispatch = useDispatch()
   const navigate = useNavigate()
   const [data, setData] = useState(jobList)
   useEffect(() => {
@@ -63,13 +59,9 @@ const DetailsSection = ({ jobList }) => {
         <Card>
           <CardBody className="border-bottom">
             <div className="d-flex">
-              {/* <img src={wechat} alt="" height="50" /> */}
               <div className="flex-grow-1 ms-3">
                 <h4>Job WBS</h4>
-                {/* <h5 className="fw-semibold">{jobList.JobWBS}</h5> */}
-                {/* <h5 className="text-muted">{jobList.JobWBS}</h5> */}
                 <h5>{data?.jobWbs?.name}</h5>
-                {/* <h5 className="fw-semibold mb-3">Tasks</h5> */}
                 <ul className="text-muted">
                   {data?.jobWbs?.tasks?.map((task, index) => (
                     <li key={index}>{task}</li>

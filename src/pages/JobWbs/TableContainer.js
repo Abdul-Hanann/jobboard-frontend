@@ -3,7 +3,6 @@ import PropTypes from "prop-types"
 import {
   useTable,
   useGlobalFilter,
-  useAsyncDebounce,
   useSortBy,
   useFilters,
   useExpanded,
@@ -18,7 +17,6 @@ import {
   Modal,
   ModalHeader,
   ModalBody,
-  CardBody,
   DropdownItem,
   UncontrolledDropdown,
   DropdownToggle,
@@ -59,67 +57,15 @@ import { fetchJobWbs, deleteJobWbs as onDeleteJobWbs } from "store/actions"
 //redux
 import { useSelector, useDispatch } from "react-redux"
 
-import { isEmpty, map } from "lodash"
-// import { Filter, DefaultColumnFilter } from "./filters"
-import { Filter, DefaultColumnFilter } from "components/Common/filters"
-// import JobListGlobalFilter from "../../components/Common/GlobalSearchFilter"
-import JobListGlobalFilter from "components/Common/GlobalSearchFilter"
+import { map } from "lodash"
+import { DefaultColumnFilter } from "components/Common/filters"
 import { useNavigate } from "react-router-dom"
-
-// // Define a default UI for filtering
-// function GlobalFilter({
-//   preGlobalFilteredRows,
-//   globalFilter,
-//   setGlobalFilter,
-//   isJobListGlobalFilter,
-// }) {
-//   // const count = preGlobalFilteredRows.length
-//   const [value, setValue] = React.useState(globalFilter)
-//   const onChange = useAsyncDebounce(value => {
-//     setGlobalFilter(value || undefined)
-//   }, 200)
-
-//   return (
-//     <React.Fragment>
-//       <Col md={4}>
-//         <div className="search-box me-xxl-2 my-3 my-xxl-0 d-inline-block">
-//           <div className="position-relative">
-//             <label htmlFor="search-bar-0" className="search-label">
-//               <span id="search-bar-0-label" className="sr-only">
-//                 Search this table
-//               </span>
-//               <input
-//                 onChange={e => {
-//                   setValue(e.target.value)
-//                   onChange(e.target.value)
-//                 }}
-//                 id="search-bar-0"
-//                 type="text"
-//                 className="form-control"
-//                 placeholder={`${count} records...`}
-//                 value={value || ""}
-//               />
-//             </label>
-//             <i className="bx bx-search-alt search-icon"></i>
-//           </div>
-//         </div>
-//       </Col>
-//       {isJobListGlobalFilter && <JobListGlobalFilter />}
-//     </React.Fragment>
-//   )
-// }
 
 const TableContainer = ({
   columns,
   data,
   isGlobalFilter,
   isJobListGlobalFilter,
-  // isAddOptions,
-  // isAddUserList,
-  // handleOrderClicks,
-  // handleUserClick,
-  // handleCustomerClick,
-  // isAddCustList,
   customPageSize,
   className,
   customPageSizeOptions,
@@ -167,11 +113,6 @@ const TableContainer = ({
   const [paginationItems, setpaginationItems] = useState(1)
   const [selectedPaginationItem, setselectedPaginationItem] = useState(1)
   const [currentTableData, setcurrentTableData] = useState([])
-  const [searchInput, setSearchInput] = useState("")
-  const [filterOption, setFilterOption] = useState("")
-
-  // const count = data.length
-  const [value, setValue] = useState("")
   const [jobWbsList, setJobWbsList] = useState("")
   const [selectedShowOption, setSelectedShowOption] = useState({
     label: "Show 10",
@@ -245,35 +186,6 @@ const TableContainer = ({
   const navigate = useNavigate()
   const handleEditClick = data => {
     navigate("/jobWbs/edit", { state: { data: data, canEdit: true } })
-  }
-
-  const generateSortingIndicator = column => {
-    return column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : ""
-  }
-
-  const onChangeInSelect = event => {
-    setPageSize(Number(event.target.value))
-  }
-
-  const onChangeInInput = event => {
-    const page = event.target.value ? Number(event.target.value) - 1 : 0
-    gotoPage(page)
-  }
-
-  const handleSearch = e => {
-    setValue(e.target.value)
-    // if (e.target.value === "") {
-    //   setshowEntries(25)
-    // }
-    let currentList = data.filter(jobWbs => {
-      return e.target.value === ""
-        ? true
-        : jobWbs.projectName
-            .toLowerCase()
-            .includes(e.target.value.toLowerCase())
-    })
-
-    setcurrentTableData(currentList)
   }
 
   const handleViewClick = jobWbs => {
@@ -430,16 +342,13 @@ const TableContainer = ({
           </div>
           <div className="flex-shrink-0" style={{ marginRight: 20 }}>
             <button
-              // className="btn btn-primary mdi mdi-filter ms-2"
               className="btn btn-primary mdi mdi-filter me-1"
               style={{ backgroundColor: "green" }}
-              // onClick={() => handleSearch(searchInput, filterOption)}
               onClick={() => handleClick()}
             >
               {/* Search */}
             </button>
             <button
-              // className="btn btn-primary mdi mdi-refresh ms-2"
               className="btn btn-primary mdi mdi-refresh me-1"
               style={{ backgroundColor: "green" }}
               onClick={() => handleRefresh()}
@@ -473,9 +382,6 @@ const TableContainer = ({
             {isLoading ? (
               <tr>
                 <td colSpan="8" className="text-center">
-                  {/* <div className="spinner-border" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                  </div> */}
                   <div className="text-center my-3">
                     <i className="bx bx-loader bx-spin font-size-18 align-middle text-success me-2" />
                     Loading...
@@ -502,14 +408,7 @@ const TableContainer = ({
                       {rowdata?.name}
                     </h5>
                   </td>
-                  <td
-                  // style={{
-                  //   textOverflow: "ellipsis",
-                  //   whiteSpace: " nowrap",
-                  //   maxWidth: "600px",
-                  //   overflow: "hidden",
-                  // }}
-                  >
+                  <td>
                     {rowdata?.tasks?.join(", ")}
                     {/* {rowdata.tasks.join(", ")} */}
                     {/* {JSON.parse(rowdata?.tasks)?.blocks[0].text} */}
@@ -527,12 +426,7 @@ const TableContainer = ({
                           <i className="mdi mdi-view-dashboard font-size-16 text-success me-1" />{" "}
                           View
                         </DropdownItem>
-                        <DropdownItem
-                          // href="/siteadmin/edit"
-                          // to={`/siteadmin/edit/${rowdata: rowdata, isedit: true}`}
-                          // onClick={() => handleEditClick(rowdata)}
-                          onClick={() => handleEditClick(rowdata)}
-                        >
+                        <DropdownItem onClick={() => handleEditClick(rowdata)}>
                           <i className="mdi mdi-pencil font-size-16 text-success me-1" />{" "}
                           Edit
                         </DropdownItem>

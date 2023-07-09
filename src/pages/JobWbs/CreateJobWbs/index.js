@@ -16,7 +16,6 @@ import {
   CardTitle,
   Input,
   FormGroup,
-  FormFeedback,
   Label,
   Button,
   Form,
@@ -26,16 +25,6 @@ import {
   addNewJobWbs as onAddNewJobWbs,
   updateJobWbs as onUpdateJobWbs,
 } from "store/actions"
-
-import * as Yup from "yup"
-import { useFormik } from "formik"
-// Import Editor
-import { Editor } from "react-draft-wysiwyg"
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css"
-
-//Import Date Picker
-import DatePicker from "react-datepicker"
-import "react-datepicker/dist/react-datepicker.css"
 
 //Import Breadcrumb
 import Breadcrumbs from "../../../components/Common/Breadcrumb"
@@ -88,7 +77,6 @@ const TasksCreate = () => {
   }, [isEdit, isLoading, successAdd, successUpdate, error])
 
   function handleAddFields() {
-    // setIndexNum(indexNum + 1)
     const fields = [...inputFields]
     if (indexNum > 0 && !fields[indexNum]) {
       document.getElementById("taskError").style.display = "block"
@@ -239,15 +227,9 @@ const TasksCreate = () => {
                               type="text"
                               className="form-control"
                               placeholder="Enter Name..."
-                              // validate={{
-                              //   required: { value: true },
-                              // }}
                               onChange={e => {
                                 handleNameChange(e)
                               }}
-                              // onChange={e => {
-                              //   setName(e.target.value)
-                              // }}
                               value={name}
                             />
                             <div
@@ -321,13 +303,6 @@ const TasksCreate = () => {
                                     Add
                                   </Button>
                                 </div>
-                                {/* <FormFeedback
-                                  id="taskError"
-                                  style={{ display: "none" }}
-                                  type="invalid"
-                                >
-                                  Please Enter Your Wbs Tasks
-                                </FormFeedback> */}
                                 <div
                                   style={{
                                     color: "red",

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
-import { parseISO } from "date-fns"
-import { parse, format } from "date-fns"
 
 import toast from "toastr"
 import "toastr/build/toastr.min.css"
@@ -16,7 +14,6 @@ import {
   CardTitle,
   Input,
   FormGroup,
-  FormFeedback,
   Label,
   Button,
 } from "reactstrap"
@@ -52,9 +49,7 @@ const TasksCreate = () => {
   const [selectedJobSiteIdOption, setSelectedJobSiteIdOption] = useState(null)
   const [selectedjobWBSOption, setSelectedjobWBSOption] = useState(null)
   const inpRow = []
-  const [indexNum, setIndexNum] = useState(0)
   const [inputFields, setinputFields] = useState(inpRow)
-  const [technicianLimitForEachDay, setTechnicianLimitForEachDay] = useState({})
   const [companyData, setCompanyData] = useState("")
   const [siteIdData, setSiteIdData] = useState("")
 
@@ -121,8 +116,6 @@ const TasksCreate = () => {
   }, [isEdit, isLoading, successAdd, successUpdate, error])
 
   useEffect(() => {
-    // dispatch(fetchJobWbs())/
-    // dispatch(fetchSites())
     dispatch(fetchCompany())
   }, [dispatch])
 
@@ -147,82 +140,6 @@ const TasksCreate = () => {
     ? "Edit job List | SAIT Job Board"
     : "Create job List  | SAIT Job Board"
 
-  // const validatePage = () => {
-  //   let value = false
-  //   if (jobName === "") {
-  //     document.getElementById("jobNameError").style.display = "block"
-  //     return false
-  //   } else {
-  //     document.getElementById("jobNameError").style.display = "none"
-  //     value = true
-  //   }
-
-  //   if (selectedDate === null) {
-  //     document.getElementById("jobDateError").style.display = "block"
-  //     return false
-  //   } else {
-  //     document.getElementById("jobDateError").style.display = "none"
-  //     value = true
-  //   }
-  //   if (inputFields.length === 0) {
-  //     document.getElementById("JobNoOfDaysError").style.display = "block"
-  //     return false
-  //   } else {
-  //     document.getElementById("JobNoOfDaysError").style.display = "none"
-  //     value = true
-  //   }
-  //   console.log("inputfield:", inputFields)
-  //   inputFields.forEach((field, key) => {
-  //     console.log("field:", field)
-  //     console.log("key:", key)
-  //     console.log("field[key]:", field[key])
-  //     if (
-  //       field === "" ||
-  //       field === undefined ||
-  //       field === null ||
-  //       field.length === 0
-  //     ) {
-  //       console.log("field[key]:", field[key])
-  //       document.getElementById("JobNoOfDaysError" + key).style.display =
-  //         "block"
-  //       return false
-  //     } else {
-  //       document.getElementById("JobNoOfDaysError" + key).style.display = "none"
-  //       value = true
-  //     }
-  //   })
-
-  //   if (
-  //     selectedJobSiteIdOption?.value === "" ||
-  //     selectedJobSiteIdOption?.value === undefined
-  //   ) {
-  //     document.getElementById("jobSiteIdError").style.display = "block"
-  //     return false
-  //   } else {
-  //     document.getElementById("jobSiteIdError").style.display = "none"
-  //     value = true
-  //   }
-  //   if (jobNotes === "") {
-  //     document.getElementById("jobNotesError").style.display = "block"
-  //     return false
-  //   } else {
-  //     document.getElementById("jobNotesError").style.display = "none"
-  //     value = true
-  //   }
-  //   if (
-  //     selectedjobWBSOption?.value === "" ||
-  //     selectedjobWBSOption?.value === undefined ||
-  //     selectedjobWBSOption?.value === "undefined"
-  //   ) {
-  //     document.getElementById("jobWbsError").style.display = "block"
-  //     return false
-  //   } else {
-  //     document.getElementById("jobWbsError").style.display = "none"
-  //     value = true
-  //   }
-
-  //   return value
-  // }
   const validatePage = () => {
     let isValid = true
 
@@ -319,11 +236,9 @@ const TasksCreate = () => {
       let input = { id: id, data: data }
       if (isEdit) {
         console.log("edit")
-        console.log("edit:", input)
         dispatch(onUpdateJob(input))
       } else {
         console.log("Add")
-        console.log("Add:", data)
         dispatch(onAddNewJob(data))
       }
     } else {
@@ -337,7 +252,6 @@ const TasksCreate = () => {
 
   function handleClearClick() {
     setJobName("")
-    // setSelectedDate([])
     setJobNoOfDays("")
     setJobNotes("")
     setinputFields([])
@@ -374,13 +288,6 @@ const TasksCreate = () => {
     }
   }
 
-  const handlejobNoOfDaysChange = e => {
-    let value = e.target.value
-    setJobNoOfDays(e.target.value)
-    if (value !== "") {
-      document.getElementById("JobNoOfDaysError").style.display = "none"
-    }
-  }
   const handleSelectChange = e => {
     const selectedValue = e.target.value
     const selectedLabel = e.target.options[e.target.selectedIndex].text
@@ -395,9 +302,6 @@ const TasksCreate = () => {
       setSelectedjobWBSOption({ label: jobWbsName, value: jobWbsId })
       document.getElementById("jobWbsError").style.display = "none"
     }
-    // else {
-    //   setSelectedjobWBSOption({ label: "Select JobWBS", value: "" })
-    // }
   }
 
   const handleSelectCompanyChange = e => {
@@ -681,8 +585,6 @@ const TasksCreate = () => {
                                         type="select"
                                         className="form-select"
                                         onChange={handleSelectjobWBSChange}
-                                        // onChange={validation.handleChange}
-                                        // onBlur={validation.handleBlur}
                                         value={selectedjobWBSOption?.value}
                                       >
                                         <option value="" disabled selected>
@@ -870,8 +772,6 @@ const TasksCreate = () => {
                     </div>
                   </form>
                   <Row style={{ padding: 0, margin: 0 }}>
-                    {/* <Col lg="7"></Col> */}
-                    {/* <Col lg="2" className="mx-1" style={{ padding: 0 }}> */}
                     <Col className="mx-1">
                       <div className="text-end">
                         <button

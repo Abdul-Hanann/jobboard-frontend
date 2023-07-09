@@ -3,7 +3,6 @@ import PropTypes from "prop-types"
 import {
   useTable,
   useGlobalFilter,
-  useAsyncDebounce,
   useSortBy,
   useFilters,
   useExpanded,
@@ -15,10 +14,6 @@ import {
   Col,
   Button,
   Input,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  CardBody,
   DropdownItem,
   UncontrolledDropdown,
   DropdownToggle,
@@ -59,67 +54,15 @@ import { fetchCompany, deleteCompany } from "store/actions"
 //redux
 import { useSelector, useDispatch } from "react-redux"
 
-import { isEmpty, map } from "lodash"
-// import { Filter, DefaultColumnFilter } from "./filters"
-import { Filter, DefaultColumnFilter } from "components/Common/filters"
-// import JobListGlobalFilter from "../../components/Common/GlobalSearchFilter"
-import JobListGlobalFilter from "components/Common/GlobalSearchFilter"
+import { map } from "lodash"
+import { DefaultColumnFilter } from "components/Common/filters"
 import { useNavigate } from "react-router-dom"
-
-// // Define a default UI for filtering
-// function GlobalFilter({
-//   preGlobalFilteredRows,
-//   globalFilter,
-//   setGlobalFilter,
-//   isJobListGlobalFilter,
-// }) {
-//   // const count = preGlobalFilteredRows.length
-//   const [value, setValue] = React.useState(globalFilter)
-//   const onChange = useAsyncDebounce(value => {
-//     setGlobalFilter(value || undefined)
-//   }, 200)
-
-//   return (
-//     <React.Fragment>
-//       <Col md={4}>
-//         <div className="search-box me-xxl-2 my-3 my-xxl-0 d-inline-block">
-//           <div className="position-relative">
-//             <label htmlFor="search-bar-0" className="search-label">
-//               <span id="search-bar-0-label" className="sr-only">
-//                 Search this table
-//               </span>
-//               <input
-//                 onChange={e => {
-//                   setValue(e.target.value)
-//                   onChange(e.target.value)
-//                 }}
-//                 id="search-bar-0"
-//                 type="text"
-//                 className="form-control"
-//                 placeholder={`${count} records...`}
-//                 value={value || ""}
-//               />
-//             </label>
-//             <i className="bx bx-search-alt search-icon"></i>
-//           </div>
-//         </div>
-//       </Col>
-//       {isJobListGlobalFilter && <JobListGlobalFilter />}
-//     </React.Fragment>
-//   )
-// }
 
 const TableContainer = ({
   columns,
   data,
   isGlobalFilter,
   isJobListGlobalFilter,
-  // isAddOptions,
-  // isAddUserList,
-  // handleOrderClicks,
-  // handleUserClick,
-  // handleCustomerClick,
-  // isAddCustList,
   customPageSize,
   className,
   customPageSizeOptions,
@@ -163,9 +106,6 @@ const TableContainer = ({
     useExpanded,
     usePagination
   )
-
-  const [jobWbsList, setJobWbsList] = useState("")
-  const [value, setValue] = useState("")
   const [companyData, setCompanyData] = useState("")
 
   const dispatch = useDispatch()
@@ -205,29 +145,12 @@ const TableContainer = ({
   }, [company])
 
   const [modal, setModal] = useState(false)
-  const [filteredjobWbsName, setFilteredjobWbsName] = useState(null)
-
-  const toggle = () => {
-    if (modal) {
-      setModal(false)
-    } else {
-      setModal(true)
-    }
-  }
 
   const navigate = useNavigate()
   const handleEditClick = data => {
     navigate("/company/edit", { state: { data: data, canEdit: true } })
   }
 
-  const onChangeInInput = event => {
-    const page = event.target.value ? Number(event.target.value) - 1 : 0
-    gotoPage(page)
-  }
-
-  const handleViewClick = data => {
-    navigate("/company/view", { state: { data: data } })
-  }
   const onClickDelete = id => {
     dispatch(deleteCompany(id))
   }
@@ -242,24 +165,8 @@ const TableContainer = ({
     }
   }, [isLoading, errorDelete, error])
 
-  const handleClick = () => {
-    setFilteredjobWbsName(null)
-    toggle()
-  }
-
   const handleRefresh = () => {
     dispatch(fetchCompany())
-  }
-
-  const handleFilterClick = () => {
-    console.log("getting jobs")
-
-    const JobWbs = Array.isArray(filteredjobWbsName)
-      ? filteredjobWbsName?.map(item => item?.value)
-      : []
-
-    dispatch(fetchJobWbs(JobWbs))
-    toggle()
   }
 
   const [page, setPage] = useState(1)
@@ -282,7 +189,6 @@ const TableContainer = ({
   ]
 
   const handleChange = e => {
-    const selectedValue = e.target.value
     const limit = e.target.value
     const selectedLabel = e.target.options[e.target.selectedIndex].text
     setSelectedShowOption({ label: selectedLabel, value: limit })
@@ -311,47 +217,6 @@ const TableContainer = ({
 
   return (
     <Fragment>
-      {/* <Modal isOpen={modal} toggle={toggle} className="overflow-visible">
-        <ModalHeader toggle={toggle} tag="h4">
-          Filter
-        </ModalHeader>
-        <ModalBody>
-          <form>
-            <Row>
-              <Col lg="12">
-                <div id="external-events" className="mt-0">
-                  <p className="text-muted mt-3">Site Id </p>
-
-                  <AnimatedMulti
-                    options={
-                      Array.isArray(uniqueJobWbs)
-                        ? uniqueJobWbs.map(([id, name]) => ({
-                            label: name,
-                            value: name,
-                          }))
-                        : []
-                    }
-                    value={filteredjobWbsName}
-                    setValue={setFilteredjobWbsName}
-                  />
-                </div>
-              </Col>
-              <Col>
-                <div className="text-end mt-3">
-                  <Button
-                    type="button"
-                    className="btn btn-success save-user"
-                    onClick={handleFilterClick}
-                  >
-                    Search
-                  </Button>
-                </div>
-              </Col>
-            </Row>
-          </form>
-        </ModalBody>
-      </Modal> */}
-
       <Row className="mb-0">
         <div className="d-flex d-flex justify-content-end mt-2">
           <div className="mb-0 card-title flex-grow-1">
@@ -365,9 +230,6 @@ const TableContainer = ({
                 value={selectedShowOption?.value}
                 style={{ maxWidth: "10%", fontSize: 16 }}
               >
-                {/* <option value="" disabled selected>
-                    Select Entity...
-                  </option> */}
                 {ShowOptions.map((ShowOption, index) => {
                   return (
                     <option
@@ -383,12 +245,6 @@ const TableContainer = ({
             </h3>
           </div>
           <div className="flex-shrink-0" style={{ marginRight: 20 }}>
-            {/*   <button
-              className="btn btn-primary mdi mdi-filter me-1"
-              style={{ backgroundColor: "green" }}
-              onClick={() => handleClick()}
-            >
-            </button> */}
             <button
               className="btn btn-primary mdi mdi-refresh me-1"
               style={{ backgroundColor: "green" }}
@@ -462,8 +318,6 @@ const TableContainer = ({
                     <h5 className="text-truncate text-center font-size-14">
                       {rowdata?.name || "N/A"}
                     </h5>
-                    {/* {rowdata.tasks.join(", ")} */}
-                    {/* {JSON.parse(rowdata?.tasks)?.blocks[0].text} */}
                   </td>
                   <td>
                     <UncontrolledDropdown>
@@ -474,16 +328,7 @@ const TableContainer = ({
                         <i className="mdi mdi-dots-horizontal font-size-18" />
                       </DropdownToggle>
                       <DropdownMenu className="dropdown-menu-end">
-                        {/* <DropdownItem onClick={() => handleViewClick(rowdata)}>
-                          <i className="mdi mdi-view-dashboard font-size-16 text-success me-1" />{" "}
-                          View
-                        </DropdownItem> */}
-                        <DropdownItem
-                          // href="/siteadmin/edit"
-                          // to={`/siteadmin/edit/${rowdata: rowdata, isedit: true}`}
-                          // onClick={() => handleEditClick(rowdata)}
-                          onClick={() => handleEditClick(rowdata)}
-                        >
+                        <DropdownItem onClick={() => handleEditClick(rowdata)}>
                           <i className="mdi mdi-pencil font-size-16 text-success me-1" />{" "}
                           Edit
                         </DropdownItem>
