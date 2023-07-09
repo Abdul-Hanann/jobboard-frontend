@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import PropTypes from "prop-types"
 import { isEmpty } from "lodash"
 
@@ -31,13 +31,10 @@ import Select from "react-select"
 import makeAnimated from "react-select/animated"
 
 //import Images
-import verification from "../../assets/images/verification-img.png"
 import { convertToLocal } from "../../helpers/dateUtility"
 import {
   addNewEvent as onAddNewEvent,
   deleteEvent as onDeleteEvent,
-  getCategories as onGetCategories,
-  getEvents as onGetEvents,
   updateEvent as onUpdateEvent,
   fetchCompany,
   fetchJobList,
@@ -90,8 +87,6 @@ const Calender = props => {
   const [companyData, setCompanyData] = useState("")
   const [selectedTechniciansOption, setSelectedtechniciansOption] =
     useState(null)
-  const [selectedCompanyOption, setSelectedCompanyOption] = useState(null)
-  const [selectedStatusOption, setSelectedStatusOption] = useState(null)
 
   // events validation
   const validation = useFormik({
@@ -139,49 +134,10 @@ const Calender = props => {
     },
   })
 
-  // category validation
-  const categoryValidation = useFormik({
-    // enableReinitialize : use this flag when initial values needs to be changed
-    enableReinitialize: true,
-
-    initialValues: {
-      title: (event && event.title) || "",
-      category: (event && event.category) || "",
-    },
-    validationSchema: Yup.object({
-      title: Yup.string().required("Please Enter Your Event Name"),
-      category: Yup.string().required("Please Enter Your Billing Name"),
-    }),
-    onSubmit: values => {
-      const newEvent = {
-        id: Math.floor(Math.random() * 100),
-        title: values["title"],
-        start: selectedDay ? selectedDay.date : new Date(),
-        className: values.event_category
-          ? values.event_category + " text-white"
-          : "bg-danger text-white",
-      }
-      // save new event
-
-      dispatch(onAddNewEvent(newEvent))
-      toggleCategory()
-    },
-  })
-
-  const { events, categories } = useSelector(state => ({
+  const { events } = useSelector(state => ({
     events: state.calendar.events,
     categories: state.calendar.categories,
   }))
-  const companies = [
-    { value: "Company 1", label: "Company 1" },
-    { value: "Company 2", label: "Company 2" },
-    { value: "Company 3", label: "Company 3" },
-  ]
-  const jobStatus = [
-    { value: "approved", label: "Approved" },
-    { value: "pending", label: "Pending Approval" },
-    { value: "declined", label: "Declined" },
-  ]
   const mileOptions = [
     { value: "5", label: "5 miles" },
     { value: "10", label: "10 miles" },
@@ -206,14 +162,9 @@ const Calender = props => {
   )
   const [userId, setUserId] = useState(localStorage.getItem("userId"))
 
-  const {
-    jobListUser,
-    technicians,
-    technician,
-    isLoadingUser,
-    successAdd,
-    successUpdate,
-  } = useSelector(state => state.JobListUsersReducer)
+  const { jobListUser, technicians } = useSelector(
+    state => state.JobListUsersReducer
+  )
 
   const { jobs, isLoading, successDelete, errorDelete, error } = useSelector(
     state => state.JobListReducer
@@ -235,7 +186,6 @@ const Calender = props => {
   useEffect(() => {
     console.log("getting jobs")
     dispatch(fetchJobList())
-    // dispatch(fetchJobListUsers(userId, accessToken))
     dispatch(fetchAllTechnicians())
   }, [dispatch, userId, accessToken])
 
@@ -254,16 +204,7 @@ const Calender = props => {
       setData(jobListUser)
     }
   }, [jobListUser])
-  console.log("data+++++++++++++++++++++++++++:", data)
 
-  // Function to calculate the end date based on the start date and number of days
-  // const calculateEndDate = (startDate, numberOfDays) => {
-  //   const start = new Date(startDate)
-  //   const end = new Date(
-  //     start.getTime() + (numberOfDays - 1) * 24 * 60 * 60 * 1000
-  //   ) // Subtract 1 day from numberOfDays
-  //   return end.toISOString()
-  // }
   const calculateEndDate = (startDate, numberOfDays) => {
     const start = new Date(startDate)
     const end = new Date(start.getTime() + numberOfDays * 24 * 60 * 60 * 1000)
@@ -275,10 +216,6 @@ const Calender = props => {
       const mappedData = jobs?.jobs.map(job => ({
         id: job.id,
         title: job.jobName,
-        // start: convertToISOString(job.jobDate.split("T")[0]),
-        // end: convertToISOString(
-        //   calculateEndDate(job.jobDate, job.numberOfDays)
-        // ),
         start: handleValidDate(job.jobDate),
         end: handleValidDate(calculateEndDate(job.jobDate, job.numberOfDays)),
         numberOfDays: job.numberOfDays,
@@ -291,12 +228,7 @@ const Calender = props => {
   }, [jobs])
 
   useEffect(() => {
-    // dispatch(onGetCategories())
-    // dispatch(onGetEvents())
     dispatch(fetchCompany())
-    // new Draggable(document.getElementById("external-events"), {
-    //   itemSelector: ".external-event",
-    // })
   }, [dispatch])
 
   useEffect(() => {
@@ -324,22 +256,6 @@ const Calender = props => {
     const selectedValue = e.target.value
     const selectedLabel = e.target.options[e.target.selectedIndex].text
     setSelectedtechniciansOption({ label: selectedLabel, value: selectedValue })
-    // if (selectedValue !== "" || selectedValue !== undefined) {
-    //   document.getElementById("statusLabel").style.display = "block"
-    //   document.getElementById("statusBox").style.display = "block"
-    // }
-  }
-
-  const handleSelectCompanyChange = e => {
-    const selectedValue = e.target.value
-    const selectedLabel = e.target.options[e.target.selectedIndex].text
-    setSelectedCompanyOption({ label: selectedLabel, value: selectedValue })
-  }
-
-  const handleSelectStatusChange = e => {
-    const selectedValue = e.target.value
-    const selectedLabel = e.target.options[e.target.selectedIndex].text
-    setSelectedStatusOption({ label: selectedLabel, value: selectedValue })
   }
 
   const toggleCategory = () => {
@@ -395,40 +311,6 @@ const Calender = props => {
     const date1 = moment(new Date(date)).format("YYYY-MM-DD")
     return date1
   }
-  // function getFormattedEvents() {
-  //   if (data !== null) {
-  //     const { assignedJobs, unAssignedJobs } = data
-  //     const formattedEvents = []
-
-  //     assignedJobs.forEach(job => {
-  //       const event = {
-  //         title: job.title,
-  //         start: job.startDate,
-  //         end: job.endDate,
-  //         extendedProps: {
-  //           assigned: true,
-  //         },
-  //       }
-  //       formattedEvents.push(event)
-  //     })
-
-  //     unAssignedJobs.forEach(job => {
-  //       const event = {
-  //         title: job.title,
-  //         start: job.startDate,
-  //         end: job.endDate,
-  //         extendedProps: {
-  //           assigned: false,
-  //         },
-  //       }
-  //       formattedEvents.push(event)
-  //     })
-
-  //     return formattedEvents
-  //   } else {
-  //     console.log("data is null")
-  //   }
-  // }
 
   function getFormattedEvents() {
     const formattedEvents = []
@@ -565,17 +447,6 @@ const Calender = props => {
     }
   }, [events])
 
-  const handleCheckboxClick = (event, category) => {
-    event.stopPropagation()
-    if (!checkedCategories.includes(category.id)) {
-      setCheckedCategories(prevIds => [...prevIds, category.id])
-      category.checked = true
-    } else {
-      setCheckedCategories(prevIds => prevIds.filter(id => id !== category.id))
-      category.checked = false
-    }
-  }
-
   const filterJobs = () => {
     let tempEvent = events
     tempEvent = tempEvent.filter(event =>
@@ -598,9 +469,6 @@ const Calender = props => {
       setFilteredEndDate("")
       setFilteredMiles("")
       setFilteredZipcode("")
-      // setFilteredStatus("")
-      // document.getElementById("statusLabel").style.display = "none"
-      // document.getElementById("statusBox").style.display = "none"
     } else {
       setSelectedtechniciansOption(null)
       const selectElementTechnician = document.querySelector(
@@ -610,61 +478,18 @@ const Calender = props => {
         selectElementTechnician.selectedIndex = 0
       }
 
-      // const selectElementCompany = document.querySelector(
-      //   'select[name="Company"]'
-      // )
-      // if (selectElementCompany) {
-      //   selectElementCompany.selectedIndex = 0
-      // }
-      // const selectElementStatus = document.querySelector(
-      //   'select[name="statusBox"]'
-      // )
-      // if (selectElementStatus) {
-      //   selectElementStatus.selectedIndex = 0
-      // }
       setFilteredCompany("")
       setFilteredStartDate("")
       setFilteredEndDate("")
       setFilteredMiles("")
       setFilteredZipcode("")
       setFilteredStatus("")
-      // document.getElementById("statusLabel").style.display = "none"
-      // document.getElementById("statusBox").style.display = "none"
     }
     dispatch(fetchJobList())
   }
 
-  // const convertToISOString = date => {
-  //   date = new Date(date)
-  //   const padNumber = num => {
-  //     return num.toString().padStart(2, "0")
-  //   }
-
-  //   const year = date.getFullYear()
-  //   const month = padNumber(date.getMonth() + 1)
-  //   const day = padNumber(date.getDate())
-
-  //   return `${year}-${month}-${day}`
-  // }
-  const convertToISOString = date => {
-    date = new Date(date)
-    date.setMinutes(date.getMinutes() + date.getTimezoneOffset()) // Adjust to local time zone
-
-    const padNumber = num => {
-      return num.toString().padStart(2, "0")
-    }
-
-    const year = date.getFullYear()
-    const month = padNumber(date.getMonth() + 1)
-    const day = padNumber(date.getDate())
-
-    return `${year}-${month}-${day}`
-  }
-
   const handleFilterClick = () => {
     let data = {}
-    console.log("filteredStartDate:", filteredStartDate)
-    console.log("filteredEndDate:", filteredEndDate)
     if (userRole === userTypes.ROLE_TECHNICIAN) {
       data = {
         userId: localStorage.getItem("userId"),
@@ -681,10 +506,7 @@ const Calender = props => {
         maxDistance: filteredMiles?.value,
         zipcode: filteredZipcode,
       }
-      // technician: selectedTechniciansOption?.value
     }
-    // console.log("data:", data.userId)
-    // console.log("accessToken:", accessToken)
     dispatch(
       fetchJobListUserForCalendar(
         data.userId,
@@ -715,53 +537,10 @@ const Calender = props => {
                   <Card>
                     <CardBody>
                       <div className="d-grid" style={{ fontWeight: "bolder" }}>
-                        {/* <Button
-                          color="primary"
-                          className="font-16 btn-block"
-                          onClick={toggleCategory}
-                        >
-                          <i className="mdi mdi-plus-circle-outline me-1" />
-                          Create New Event
-                        </Button> */}
                         Your Job Schedule
                       </div>
 
                       <div id="external-events" className="mt-2">
-                        {/* <p className="text-muted">Filter your jobs </p> */}
-                        {/* {categories &&
-                          categories.map((category, i) => (
-                            <label
-                              key={i}
-                              className={`${category.type} categories text-white d-flex align-items-center`}
-                            >
-                              <div
-                              // key={"cat-" + category.id}
-                              // onClick={() => {
-                              //   filterJob(category.id)
-                              // }}
-                              // draggable
-                              // onDrag={event => onDrag(event, category)}
-                              >
-                                <input
-                                  type="checkbox"
-                                  className="custom-checkbox"
-                                  id={`custom-checkbox-${category.index}`}
-                                  name={category.title}
-                                  value={category.checked}
-                                  checked={category.checked}
-                                  onClick={e =>
-                                    handleCheckboxClick(e, category)
-                                  }
-                                />
-                                <span
-                                  className={`${category.type} categories text-white`}
-                                >
-                                  {category.title}
-                                </span>
-                              </div>
-                            </label>
-                          ))} */}
-                        {/* <Label>Technician</Label> */}
                         {userRole !== userTypes.ROLE_TECHNICIAN && (
                           <>
                             <div className="d-flex flex-row mb-1 justify-content-between align-items-center">
@@ -806,7 +585,10 @@ const Calender = props => {
                               {Array.isArray(techniciansData) &&
                               techniciansData.length > 0 ? (
                                 techniciansData.map((technician, index) => (
-                                  <option key={index} value={technician?.principalId}>
+                                  <option
+                                    key={index}
+                                    value={technician?.principalId}
+                                  >
                                     {technician.principalDisplayName}
                                   </option>
                                 ))
@@ -816,87 +598,11 @@ const Calender = props => {
                                 </option>
                               )}
                             </Input>
-                            {/* </div> */}
-
-                            {/* <p className="text-muted mt-3">
-                              Filter by Company{" "}
-                            </p>
-                            <Input
-                              name="Company"
-                              type="select"
-                              className="form-select"
-                              placeholder="Select Company"
-                              onChange={handleSelectCompanyChange}
-                              value={selectedCompanyOption?.value}
-                            >
-                              <option value="" disabled selected>
-                                Select Company
-                              </option>
-                              {Array.isArray(companyData) &&
-                              companyData.length > 0 ? (
-                                companyData.map((company, index) => (
-                                  <option key={index} value={company?.id}>
-                                    {company?.name}
-                                  </option>
-                                ))
-                              ) : (
-                                <option value="">No Company available</option>
-                              )}
-                            </Input> */}
                           </>
                         )}
-                        {/* <p
-                          className="text-muted mt-3"
-                          id="statusLabel"
-                          style={{ display: "none" }}
-                        >
-                          Filter by status{" "}
-                        </p>
-                        <Input
-                          id="statusBox"
-                          name="statusBox"
-                          style={{ display: "none" }}
-                          type="select"
-                          className="form-select"
-                          placeholder="Insert Technician"
-                          onChange={e => handleSelectStatusChange(e)}
-                          value={selectedStatusOption?.value}
-                          // setValue={setFilteredStatus}
-                        >
-                          <option value="" disabled selected>
-                            Select Technician
-                          </option>
-                          {jobStatus.map((technician, index) => (
-                            <option key={index} value={technician?.value}>
-                              {technician.label}
-                            </option>
-                          ))}
-                        </Input> */}
                         {userRole !== userTypes.ROLE_TECHNICIAN && (
                           <p className="text-muted mt-3">Filter by Dates</p>
                         )}
-
-                        {/* <Input
-                          type="date"
-                          className="filter-datepicker"
-                          value={filteredStartDate}
-                          onChange={event =>
-                            setFilteredStartDate(event.target.value)
-                          }
-                        />
-
-                        <p className="text-muted mt-3 d-flex justify-content-center align-items-center">
-                          --between--
-                        </p>
-
-                        <Input
-                          type="date"
-                          className="filter-datepicker"
-                          value={filteredStartDate}
-                          onChange={event =>
-                            setFilteredStartDate(event.target.value)
-                          }
-                        /> */}
                         <div className="d-flex align-items-center">
                           <Input
                             type="date"
@@ -951,83 +657,11 @@ const Calender = props => {
                           Filter
                         </Button>
                       </div>
-
-                      {/* <Row className="justify-content-center mt-5">
-                        <img
-                          src={verification}
-                          alt=""
-                          className="img-fluid d-block"
-                        />
-                      </Row> */}
                     </CardBody>
                   </Card>
                 </Col>
 
                 <Col lg={9}>
-                  {/* fullcalendar control */}
-                  {/* <FullCalendar
-                    className="full-calendar"
-                    plugins={[BootstrapTheme, dayGridPlugin, interactionPlugin]}
-                    slotDuration={"00:15:00"}
-                    handleWindowResize={true}
-                    themeSystem="bootstrap"
-                    headerToolbar={{
-                      left: "prev,next today",
-                      center: "title",
-                      right: "dayGridMonth,dayGridWeek,dayGridDay",
-                    }}
-                    events={data}
-                    // editable={true}
-                    // droppable={true}
-                    selectable={true}
-                    eventContent={arg => (
-                      <div
-                        className="fc-content"
-                        style={{
-                          backgroundColor: arg.isMirror
-                            ? "lightgray"
-                            : arg.backgroundColor,
-                          borderColor: arg.borderColor,
-                        }}
-                      >
-                        <div
-                          className="fc-title"
-                          style={{ fontWeight: "bold" }}
-                        >
-                          {arg.event.title}
-                        </div>
-                      </div>
-                    )}
-                    eventDidMount={arg => {
-                      const eventElement = arg.el
-
-                      // Add hover effect
-                      eventElement.addEventListener("mouseover", () => {
-                        eventElement.style.backgroundColor = "green"
-                        eventElement.style.borderColor = "red"
-                      })
-
-                      eventElement.addEventListener("mouseout", () => {
-                        eventElement.style.backgroundColor = arg.backgroundColor
-                        eventElement.style.borderColor = arg.borderColor
-                      })
-
-                      // Add click effect
-                      eventElement.addEventListener("click", () => {
-                        eventElement.style.backgroundColor = "darkgreen"
-                      })
-
-                      eventElement.addEventListener("dblclick", () => {
-                        eventElement.style.backgroundColor = arg.backgroundColor
-                      })
-                    }}
-                    // eventDidMount={info => {
-                    //   // Change event background color to green
-                    //   info.el.style.backgroundColor = "green"
-                    // }}
-                    eventClick={handleEventClick}
-                  /> */}
-
                   <FullCalendar
                     className="full-calendar"
                     plugins={[BootstrapTheme, dayGridPlugin, interactionPlugin]}
@@ -1159,17 +793,6 @@ const Calender = props => {
                                 </FormFeedback>
                               ) : null}
                             </div>
-                            {/* <div className="mb-3">
-                              <Label className="form-label">
-                                Job number of Days
-                              </Label>
-                              <Input
-                                name="jobNoOfDays"
-                                type="text"
-                                value={event ? event.numberOfDays : ""}
-                                disabled={true}
-                              />
-                            </div> */}
                           </Col>
                           <Col className="col-12">
                             <div className="mb-3">
@@ -1199,52 +822,9 @@ const Calender = props => {
                               ) : null}
                             </div>
                           </Col>
-                          {/* <Col className="col-12">
-                            <div className="mb-3">
-                              <Label className="form-label">Category</Label>
-                              <Input
-                                type="select"
-                                name="category"
-                                // value={event ? event.category : "bg-primary"}
-                                onChange={validation.handleChange}
-                                onBlur={validation.handleBlur}
-                                value={validation.values.category || ""}
-                                invalid={
-                                  validation.touched.category &&
-                                  validation.errors.category
-                                    ? true
-                                    : false
-                                }
-                              >
-                                <option value="bg-danger">Danger</option>
-                                <option value="bg-success">Success</option>
-                                <option value="bg-primary">Primary</option>
-                                <option value="bg-info">Info</option>
-                                <option value="bg-dark">Dark</option>
-                                <option value="bg-warning">Warning</option>
-                              </Input>
-                              {validation.touched.category &&
-                              validation.errors.category ? (
-                                <FormFeedback type="invalid">
-                                  {validation.errors.category}
-                                </FormFeedback>
-                              ) : null}
-                            </div>
-                          </Col> */}
                         </Row>
 
                         <Row className="mt-2">
-                          {/* <Col className="col-6">
-                            {!!isEdit && (
-                              <button
-                                type="button"
-                                className="btn btn-danger me-2"
-                                onClick={() => setDeleteModal(true)}
-                              >
-                                Delete
-                              </button>
-                            )}
-                          </Col>*/}
                           <Col className="col-6 text-start">
                             <button
                               type="button"
@@ -1253,127 +833,11 @@ const Calender = props => {
                             >
                               Close
                             </button>
-                            {/* <button
-                              type="submit"
-                              className="btn btn-success"
-                              id="btn-save-event"
-                            >
-                              Save
-                            </button> */}
                           </Col>
                         </Row>
                       </Form>
                     </ModalBody>
                   </Modal>
-
-                  {/* <Modal
-                    isOpen={modalcategory}
-                    toggle={toggleCategory}
-                    className={props.className}
-                    centered
-                  >
-                    <ModalHeader toggle={toggleCategory} tag="h5">
-                      Add Event
-                    </ModalHeader>
-                    <ModalBody className="p-4">
-                      <Form
-                        onSubmit={e => {
-                          e.preventDefault()
-                          categoryValidation.handleSubmit()
-                          return false
-                        }}
-                      >
-                        <Row>
-                          <Col className="col-12">
-                            <div className="mb-3">
-                              <Label className="form-label">Event Name</Label>
-                              <Input
-                                name="title"
-                                type="text"
-                                // value={event ? event.title : ""}
-                                placeholder="Insert Event Name"
-                                onChange={categoryValidation.handleChange}
-                                onBlur={categoryValidation.handleBlur}
-                                value={categoryValidation.values.title || ""}
-                                invalid={
-                                  categoryValidation.touched.title &&
-                                  categoryValidation.errors.title
-                                    ? true
-                                    : false
-                                }
-                              />
-                              {categoryValidation.touched.title &&
-                              categoryValidation.errors.title ? (
-                                <FormFeedback type="invalid">
-                                  {categoryValidation.errors.title}
-                                </FormFeedback>
-                              ) : null}
-                            </div>
-                          </Col>
-                          <Col className="col-12">
-                            <div className="mb-3">
-                              <Label className="form-label">Category</Label>
-                              <Input
-                                type="select"
-                                name="category"
-                                placeholder="All Day Event"
-                                onChange={categoryValidation.handleChange}
-                                onBlur={categoryValidation.handleBlur}
-                                value={categoryValidation.values.category || ""}
-                                invalid={
-                                  categoryValidation.touched.category &&
-                                  categoryValidation.errors.category
-                                    ? true
-                                    : false
-                                }
-                              >
-                                <option value="bg-danger">Danger</option>
-                                <option value="bg-success">Success</option>
-                                <option value="bg-primary">Primary</option>
-                                <option value="bg-info">Info</option>
-                                <option value="bg-dark">Dark</option>
-                                <option value="bg-warning">Warning</option>
-                              </Input>
-                              {categoryValidation.touched.category &&
-                              categoryValidation.errors.category ? (
-                                <FormFeedback type="invalid">
-                                  {categoryValidation.errors.category}
-                                </FormFeedback>
-                              ) : null}
-                            </div>
-                          </Col>
-                        </Row>
-
-                        <Row className="mt-2">
-                          <Col className="col-6">
-                            <button
-                              type="button"
-                              className="btn btn-danger"
-                              id="btn-delete-event"
-                            >
-                              Delete
-                            </button>
-                          </Col>
-                          <Col className="col-6 text-end">
-                            <button
-                              type="button"
-                              className="btn btn-light me-1"
-                              onClick={toggleCategory}
-                            >
-                              Close
-                            </button>
-                            <button
-                              type="submit"
-                              className="btn btn-success"
-                              id="btn-save-event"
-                            >
-                              Save
-                            </button>
-                          </Col>
-                        </Row>
-                      </Form>
-                    </ModalBody>
-                  </Modal> */}
                 </Col>
               </Row>
             </Col>
