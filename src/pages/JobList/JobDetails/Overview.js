@@ -1,16 +1,6 @@
 import React, { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
 import { Tooltip } from "react-tooltip"
 import "react-tooltip/dist/react-tooltip.css"
-import * as Yup from "yup"
-// import Select from "react-select"
-// import TextField from "@material-ui/core/TextField"
-// import Autocomplete from "@material-ui/lab/Autocomplete"
-// import Select from "@material-ui/core/Select"
-
-import Slider from "react-rangeslider"
-import "react-rangeslider/lib/index.css"
-import { useFormik } from "formik"
 import { userTypes } from "pages/Authentication/userTypes"
 import DeleteModal from "components/Common/DeleteModalCustom"
 import AddModal from "components/Common/AddModalCustom"
@@ -18,12 +8,9 @@ import AddModal from "components/Common/AddModalCustom"
 //redux
 import { useSelector, useDispatch } from "react-redux"
 import * as moment from "moment"
-// import avatar7 from "../../../assets"
-import Select from "react-select"
 import {
   fetchJobListUsers,
   fetchAllTechnicians,
-  fetchTechnician,
   addNewJobTechnician,
   updateJobTechnician,
   deleteJobTechnician,
@@ -35,9 +22,7 @@ import {
   Modal,
   ModalHeader,
   ModalBody,
-  Form,
   Input,
-  FormFeedback,
   Label,
   Card,
   CardBody,
@@ -57,18 +42,13 @@ const Overview = ({ jobList }) => {
 
   const [jobListId, setJobListId] = useState(null)
   const [jobDay, setJobDay] = useState(null)
-  const [totalJobDays, setTotalJobDays] = useState(null)
-  const [jobDayValue, setJobDayValue] = useState(null)
-  const [selectedGroup, setselectedGroup] = useState(null)
   const [selectedTechniciansOption, setSelectedtechniciansOption] =
     useState(null)
   const [selectedStatusOption, setSelectedStatusOption] = useState(null)
-  const [jobWbs, setJobWbs] = useState(null)
   // Inside your component
   const [userData, setUserData] = useState([])
   const [techniciansData, setTechniciansData] = useState([])
   const [technicianData, setTechnicianData] = useState(null)
-  const [jobStatus, setJobStatus] = useState(null)
 
   const [hoveredIndex, setHoveredIndex] = useState(null)
   const [dayIndex, setDayIndex] = useState(null)
@@ -83,7 +63,6 @@ const Overview = ({ jobList }) => {
 
   const userRoleType = localStorage.getItem("userRole")
   const [userRole, setUserRole] = useState(null)
-  const [userCount, setUserCount] = useState(0)
 
   const statusOptions = [
     {
@@ -121,10 +100,6 @@ const Overview = ({ jobList }) => {
     setLatitude(parseFloat(jobList?.site?.latitude))
     setLongitute(parseFloat(jobList?.site?.longitute))
   }, [jobList])
-  console.log("lat++++++++++++++++++++", latitude)
-  console.log("lat++++++++++++++++++++", typeof latitude)
-  console.log("lng++++++++++++++++++++", longitute)
-  console.log("lat++++++++++++++++++++", typeof longitute)
 
   let token = localStorage.getItem("accessToken")
 
@@ -161,7 +136,6 @@ const Overview = ({ jobList }) => {
   useEffect(() => {
     if (jobListId && accessToken) {
       console.log("getting jobsList users")
-      console.log("accessToken:", accessToken)
       dispatch(fetchJobListUsers(jobListId, accessToken))
     }
     // }
@@ -210,11 +184,6 @@ const Overview = ({ jobList }) => {
     }
   }, [technician])
 
-  // // Calculate the user count
-  // useEffect(() => {
-  //   setUserCount(dayData.userData.length)
-  // }, [dayData.userData])
-
   const toggle = () => {
     if (modal) {
       setModal(false)
@@ -224,7 +193,6 @@ const Overview = ({ jobList }) => {
       setDataField(jobList)
       if (jobListId && accessToken) {
         console.log("getting jobsList users")
-        console.log("accessToken:", accessToken)
         dispatch(fetchJobListUsers(jobListId, accessToken))
       }
     }
@@ -235,7 +203,6 @@ const Overview = ({ jobList }) => {
       setUpdateModal(false)
       if (jobListId && accessToken) {
         console.log("getting jobsList users")
-        console.log("accessToken:", accessToken)
         dispatch(fetchJobListUsers(jobListId, accessToken))
       }
     } else {
@@ -325,7 +292,6 @@ const Overview = ({ jobList }) => {
         jobDay: jobDay,
         status: status,
       }
-      console.log("Adding tech to Day:", data)
       dispatch(addNewJobTechnician(data))
       if (userRole === userTypes.ROLE_TECHNICIAN) {
         setAddModal(false)
@@ -343,7 +309,6 @@ const Overview = ({ jobList }) => {
       id: userinfo.id,
       status: selectedStatusOption?.value,
     }
-    console.log("Adding tech to Day:", data)
     dispatch(updateJobTechnician(data))
 
     updateToggle()
@@ -642,25 +607,6 @@ const Overview = ({ jobList }) => {
               <h4 className="card-title mb-2">Site Location on Map</h4>
               <div id="map" style={{ height: "300px", width: "100%" }}></div>
             </div>
-
-            {/* <h5 className="card-title">Technicians Limit</h5>
-            <div className="table-responsive">
-              <table className="table table-styling">
-                <tbody>
-                  {jobList?.technicianLimitForEachDay.map((noOfDays, index) => (
-                    <tr key={index}>
-                      <th scope="row" style={{ width: "150px" }}>
-                        Day {index + 1}
-                      </th>
-                      <td className="d-flex justify-content-center text-align-center">
-                        {`${noOfDays}`}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div> */}
-            {/* <CardBody> */}
             <h4 className="card-title mb-2">
               {userRole === userTypes.ROLE_TECHNICIAN ? "Apply" : "Assignees"}
             </h4>
@@ -952,10 +898,7 @@ const Overview = ({ jobList }) => {
                                         </button>
                                       </div>
                                     )}
-                                  {/* {dayData.userData.length >=
-                                    jobList.technicianLimitForEachDay[
-                                      index
-                                    ] && <p>Limit Reached</p>} */}
+
                                   {userRole === userTypes.ROLE_TECHNICIAN &&
                                     dayData.userData.filter(
                                       user => user.userId === userId
@@ -1044,100 +987,6 @@ const Overview = ({ jobList }) => {
                       )
                     })
                   )}
-
-                  {/* ///////////////////////////////////////////////// */}
-                  {/* <tr>
-                    <td style={{ width: "40px" }}></td>
-                    <td>
-                      <h5 className="text-truncate font-size-14 m-0">Day 1</h5>
-                    </td>
-                    <td>
-                      <div className="avatar-group">
-                        <div className="avatar-group-item">
-                          <img
-                            src={avatar4}
-                            alt=""
-                            className="rounded-circle avatar-xs"
-                          />
-                        </div>
-                        <div className="avatar-group-item">
-                          <img
-                            src={avatar5}
-                            alt=""
-                            className="rounded-circle avatar-xs"
-                          />
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            handleClick(jobList)
-                          }}
-                          className="btn btn-success btn-rounded ms-2"
-                        >
-                          <i className="fas fa-plus align-middle"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr> */}
-                  {/* <tr>
-                    <td></td>
-                    <td>
-                      <h5 className="text-truncate font-size-14 m-0">Day 2</h5>
-                    </td>
-                    <td>
-                      <div className="avatar-group">
-                        <div className="avatar-group-item">
-                          <img
-                            src={avatar1}
-                            alt=""
-                            className="rounded-circle avatar-xs"
-                          />
-                        </div>
-                        <div className="avatar-group-item">
-                          <img
-                            src={avatar2}
-                            alt=""
-                            className="rounded-circle avatar-xs"
-                          />
-                        </div>
-                        <div className="avatar-group-item">
-                          <div className="avatar-xs">
-                            <span className="avatar-title rounded-circle bg-success text-white font-size-16">
-                              A
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <div className="text-center">
-                        <span className="badge rounded-pill badge-soft-primary font-size-11">
-                          Approved
-                        </span>
-                      </div>
-                    </td>
-                  </tr> */}
-                  {/* <tr>
-                    <td></td>
-                    <td>
-                      <h5 className="text-truncate font-size-14 m-0">
-                        Day 3
-                      </h5>
-                    </td>
-                    <td>
-                      <div className="avatar-group">
-                        <button
-                          onClick={() => {
-                            handleClick(jobList)
-                          }}
-                          type="button"
-                          className="btn btn-success btn-rounded ms-2"
-                        >
-                          <i className="fas fa-plus align-middle"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr> */}
                 </tbody>
               </table>
             </div>
@@ -1151,74 +1000,6 @@ const Overview = ({ jobList }) => {
             )}
           </CardBody>
         </Card>
-
-        {/* <Card>
-          <CardBody>
-            <div className="text-center">
-              <img
-                src={adobephotoshop}
-                alt=""
-                height="50"
-                className="mx-auto d-block"
-              />
-              <h5 className="mt-3 mb-1">Themesbrand</h5>
-              <p className="text-muted mb-0">Since July 2017</p>
-            </div>
-
-            <ul className="list-unstyled mt-4">
-              <li>
-                <div className="d-flex">
-                  <i className="bx bx-phone text-primary fs-4"></i>
-                  <div className="ms-3">
-                    <h6 className="fs-14 mb-2">Phone</h6>
-                    <p className="text-muted fs-14 mb-0">+589 560 56555</p>
-                  </div>
-                </div>
-              </li>
-              <li className="mt-3">
-                <div className="d-flex">
-                  <i className="bx bx-mail-send text-primary fs-4"></i>
-                  <div className="ms-3">
-                    <h6 className="fs-14 mb-2">Email</h6>
-                    <p className="text-muted fs-14 mb-0">
-                      themesbrand@gmail.com
-                    </p>
-                  </div>
-                </div>
-              </li>
-              <li className="mt-3">
-                <div className="d-flex">
-                  <i className="bx bx-globe text-primary fs-4"></i>
-                  <div className="ms-3">
-                    <h6 className="fs-14 mb-2">Website</h6>
-                    <p className="text-muted fs-14 text-break mb-0">
-                      www.themesbrand.com
-                    </p>
-                  </div>
-                </div>
-              </li>
-              <li className="mt-3">
-                <div className="d-flex">
-                  <i className="bx bx-map text-primary fs-4"></i>
-                  <div className="ms-3">
-                    <h6 className="fs-14 mb-2">Location</h6>
-                    <p className="text-muted fs-14 mb-0">
-                      Oakridge Lane Richardson.
-                    </p>
-                  </div>
-                </div>
-              </li>
-            </ul>
-            <div className="mt-4">
-              <Link
-                to="#"
-                className="btn btn-soft-primary btn-hover w-100 rounded"
-              >
-                <i className="mdi mdi-eye"></i> View Profile
-              </Link>
-            </div>
-          </CardBody>
-        </Card> */}
       </Col>
     </React.Fragment>
   )
