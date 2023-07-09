@@ -42,53 +42,9 @@ import {
   updateJobTechnician,
   getSitesFilter,
 } from "helpers/backend_helper"
-import { addNewJobUser, updateSite, deleteSite } from "helpers/backend_helper"
-
-// Fetching All Notifications
-// function* fetchAllJobsSaga() {
-//   try {
-//     const allJobs = yield call(getRequestData, GET_JOB_LIST_URL)
-//     yield put(fetchJobListSuccess(allJobs))
-//   } catch (error) {
-//     yield put(fetchJobListFail(error))
-//   }
-// }
-// function* fetchAllSitesSaga() {
-//   try {
-//     // const {
-//     //   siteId,
-//     //   building,
-//     //   city,
-//     //   state,
-//     //   zipCode,
-//     //   timeZone,
-//     //   JobWbs,
-//     //   company,
-//     //   limit,
-//     //   page,
-//     // } = action
-//     const allJobListUsers = yield call(
-//       getSites,
-//       // siteId,
-//       // building,
-//       // city,
-//       // state,
-//       // zipCode,
-//       // timeZone,
-//       // JobWbs,
-//       // company,
-//       // limit,
-//       // page
-//     )
-//     yield put(fetchJobListUsersSuccess(allJobListUsers))
-//   } catch (error) {
-//     yield put(fetchJobListUsersFail(error))
-//   }
-// }
 
 function* fetchAllJobListUsersSaga(action) {
   try {
-    console.log("=======================================================")
     const { id, accessToken } = action
     const allJobListUsers = yield call(getJobListUsers, id, accessToken)
     yield put(fetchJobListUsersSuccess(allJobListUsers))
@@ -100,8 +56,6 @@ function* fetchAllJobListUsersSaga(action) {
 function* fetchAllJobListUserForCalendarSaga(action) {
   try {
     const { id, startDate, endDate, maxDistance, zipcode, accessToken } = action
-    console.log("startDate:", startDate)
-    console.log("endDate:", endDate)
     const allJobListUsers = yield call(
       getJobListUserForCalendar,
       id,
@@ -146,8 +100,6 @@ function* onAddNewJobTechnician({ payload: data }) {
 
 function* onUpdateJobTechnician({ payload: data }) {
   try {
-    console.log("data:", data)
-    console.log("data status:", data.status)
     const response = yield call(updateJobTechnician, data.id, data)
     yield put(updateJobTechnicianSuccess(response))
   } catch (error) {
@@ -164,7 +116,6 @@ function* onDeleteJobTechnician({ payload: id }) {
 }
 
 export function* watchFetchAllJobListUsers() {
-  // yield takeEvery(FETCH_SITES, fetchAllSitesSaga)
   yield takeEvery(FETCH_JOBLIST_USER, fetchAllJobListUsersSaga)
   yield takeEvery(
     FETCH_JOBLIST_USER_FOR_CALENDAR,

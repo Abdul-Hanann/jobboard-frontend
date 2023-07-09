@@ -54,7 +54,6 @@ function* fetchJobList(action) {
 }
 function* onAddNewJobList({ payload: data }) {
   try {
-    console.log("Data in saga:", data)
     const response = yield call(addNewJobList, data)
     yield put(addJobSuccess(response))
   } catch (error) {
@@ -63,8 +62,6 @@ function* onAddNewJobList({ payload: data }) {
 }
 function* onUpdateJobList({ payload: data }) {
   try {
-    // console.log("Data:", data)
-    // console.log("type of data id:", typeof data.id)
     const response = yield call(updateJobList, data.id, data.data)
     yield put(updateJobSuccess(response))
   } catch (error) {
@@ -82,7 +79,6 @@ function* onDeleteJobList({ payload: id }) {
 
 export function* watchFetchAllJobs() {
   yield takeEvery(FETCH_JOB_LIST, fetchJobList)
-  // yield takeEvery(FETCH_JOB_LIST_FILTERED, fetchJobListFiltered)
   yield takeEvery(ADD_NEW_JOB, onAddNewJobList)
   yield takeEvery(UPDATE_JOB_LIST, onUpdateJobList)
   yield takeEvery(DELETE_JOB_LIST, onDeleteJobList)

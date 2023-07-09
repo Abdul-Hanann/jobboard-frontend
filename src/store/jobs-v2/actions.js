@@ -13,10 +13,6 @@ import {
   DELETE_JOB_LIST_FAIL,
 } from "./actionTypes"
 
-// export const fetchJobList = () => ({
-//   type: FETCH_JOB_LIST,
-// })
-
 export const fetchJobList = (
   JobName,
   JobNoOfDays,
@@ -61,10 +57,6 @@ export const addJobFail = error => ({
   payload: error,
 })
 
-// export const updateJob = data => ({
-//   type: UPDATE_JOB_LIST,
-//   payload: data,
-// })
 export const updateJob = data => ({
   type: UPDATE_JOB_LIST,
   payload: data,

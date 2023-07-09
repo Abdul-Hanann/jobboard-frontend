@@ -8,7 +8,6 @@ import dashboardJobSaga from "./dashboard-jobs/saga"
 import AllJobsSaga from "./jobs-v2/saga"
 import AllSitesSaga from "./sites/saga"
 import AllJobWbsSaga from "./jobWbs/saga"
-// import AllCompanySaga from "./company/saga"
 import AllCompanySaga from "./company/saga"
 import AllJobListUsersSaga from "./JobListUser/saga"
 export default function* rootSaga() {
@@ -23,6 +22,5 @@ export default function* rootSaga() {
     fork(AllJobWbsSaga),
     fork(AllCompanySaga),
     fork(AllJobListUsersSaga),
-    // forK(AllJobListUsersSaga),
   ])
 }

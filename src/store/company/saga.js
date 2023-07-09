@@ -21,9 +21,6 @@ import {
   deleteCompanyFail,
 } from "./actions"
 
-import { COMPANY_URL } from "../../helpers/url_helper"
-import { getRequestData } from "../../helpers/GlobalUtils"
-
 import {
   getCompany,
   getCompanyById,
@@ -31,16 +28,6 @@ import {
   updateCompany,
   deleteCompany,
 } from "helpers/backend_helper"
-
-// Fetching All Notifications
-// function* fetchAllCompanySaga() {
-//   try {
-//     const allJobs = yield call(getRequestData, COMPANY_URL)
-//     yield put(fetchCompanySuccess(allJobs))
-//   } catch (error) {
-//     yield put(fetchCompanyFail(error))
-//   }
-// }
 
 function* fetchAllCompanySaga(action) {
   try {

@@ -3,7 +3,6 @@ import { takeEvery, fork, put, all, call } from "redux-saga/effects"
 // Redux States
 import {
   FETCH_SITES,
-  FETCH_SITES_BY_PARAMS,
   FETCH_SITE,
   ADD_NEW_SITE,
   UPDATE_SITE,
@@ -21,21 +20,9 @@ import {
   deleteSiteSuccess,
   deleteSiteFail,
 } from "./actions"
-import { getSites, getSite, getSitesFilter } from "helpers/backend_helper"
-
-import { GET_JOB_LIST_URL } from "../../helpers/url_helper"
-import { getRequestData } from "../../helpers/GlobalUtils"
+import { getSites, getSite } from "helpers/backend_helper"
 import { addNewSite, updateSite, deleteSite } from "helpers/backend_helper"
 
-// Fetching All Notifications
-// function* fetchAllJobsSaga() {
-//   try {
-//     const allJobs = yield call(getRequestData, GET_JOB_LIST_URL)
-//     yield put(fetchJobListSuccess(allJobs))
-//   } catch (error) {
-//     yield put(fetchJobListFail(error))
-//   }
-// }
 function* fetchAllSitesSaga(action) {
   try {
     const {
