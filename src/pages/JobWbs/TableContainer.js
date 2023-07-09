@@ -3,7 +3,6 @@ import PropTypes from "prop-types"
 import {
   useTable,
   useGlobalFilter,
-  useAsyncDebounce,
   useSortBy,
   useFilters,
   useExpanded,
@@ -18,7 +17,6 @@ import {
   Modal,
   ModalHeader,
   ModalBody,
-  CardBody,
   DropdownItem,
   UncontrolledDropdown,
   DropdownToggle,
@@ -59,9 +57,8 @@ import { fetchJobWbs, deleteJobWbs as onDeleteJobWbs } from "store/actions"
 //redux
 import { useSelector, useDispatch } from "react-redux"
 
-import { isEmpty, map } from "lodash"
-import { Filter, DefaultColumnFilter } from "components/Common/filters"
-import JobListGlobalFilter from "components/Common/GlobalSearchFilter"
+import { map } from "lodash"
+import { DefaultColumnFilter } from "components/Common/filters"
 import { useNavigate } from "react-router-dom"
 
 const TableContainer = ({
@@ -116,11 +113,6 @@ const TableContainer = ({
   const [paginationItems, setpaginationItems] = useState(1)
   const [selectedPaginationItem, setselectedPaginationItem] = useState(1)
   const [currentTableData, setcurrentTableData] = useState([])
-  const [searchInput, setSearchInput] = useState("")
-  const [filterOption, setFilterOption] = useState("")
-
-  // const count = data.length
-  const [value, setValue] = useState("")
   const [jobWbsList, setJobWbsList] = useState("")
   const [selectedShowOption, setSelectedShowOption] = useState({
     label: "Show 10",
@@ -194,35 +186,6 @@ const TableContainer = ({
   const navigate = useNavigate()
   const handleEditClick = data => {
     navigate("/jobWbs/edit", { state: { data: data, canEdit: true } })
-  }
-
-  const generateSortingIndicator = column => {
-    return column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : ""
-  }
-
-  const onChangeInSelect = event => {
-    setPageSize(Number(event.target.value))
-  }
-
-  const onChangeInInput = event => {
-    const page = event.target.value ? Number(event.target.value) - 1 : 0
-    gotoPage(page)
-  }
-
-  const handleSearch = e => {
-    setValue(e.target.value)
-    // if (e.target.value === "") {
-    //   setshowEntries(25)
-    // }
-    let currentList = data.filter(jobWbs => {
-      return e.target.value === ""
-        ? true
-        : jobWbs.projectName
-            .toLowerCase()
-            .includes(e.target.value.toLowerCase())
-    })
-
-    setcurrentTableData(currentList)
   }
 
   const handleViewClick = jobWbs => {

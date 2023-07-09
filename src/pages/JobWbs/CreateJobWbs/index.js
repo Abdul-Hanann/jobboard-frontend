@@ -16,7 +16,6 @@ import {
   CardTitle,
   Input,
   FormGroup,
-  FormFeedback,
   Label,
   Button,
   Form,
@@ -26,16 +25,6 @@ import {
   addNewJobWbs as onAddNewJobWbs,
   updateJobWbs as onUpdateJobWbs,
 } from "store/actions"
-
-import * as Yup from "yup"
-import { useFormik } from "formik"
-// Import Editor
-import { Editor } from "react-draft-wysiwyg"
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css"
-
-//Import Date Picker
-import DatePicker from "react-datepicker"
-import "react-datepicker/dist/react-datepicker.css"
 
 //Import Breadcrumb
 import Breadcrumbs from "../../../components/Common/Breadcrumb"
