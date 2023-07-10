@@ -95,7 +95,6 @@ const Overview = ({ jobList }) => {
 
   useEffect(() => {
     setJobListId(jobList.id)
-    console.log("jobList:", jobList)
     setAddressLine(jobList?.site?.addressLine1)
     setLatitude(parseFloat(jobList?.site?.latitude))
     setLongitute(parseFloat(jobList?.site?.longitute))
@@ -135,7 +134,6 @@ const Overview = ({ jobList }) => {
 
   useEffect(() => {
     if (jobListId && accessToken) {
-      console.log("getting jobsList users")
       dispatch(fetchJobListUsers(jobListId, accessToken))
     }
     // }
@@ -160,7 +158,6 @@ const Overview = ({ jobList }) => {
 
   useEffect(() => {
     if (jobListUsers && jobListUsers.length > 0) {
-      console.log("jobListUsers:", jobListUsers)
       const userDataArray = jobListUsers.map(item => ({
         jobId: item.jobId,
         jobDay: item.jobDay,
@@ -192,7 +189,6 @@ const Overview = ({ jobList }) => {
       setModal(true)
       setDataField(jobList)
       if (jobListId && accessToken) {
-        console.log("getting jobsList users")
         dispatch(fetchJobListUsers(jobListId, accessToken))
       }
     }
@@ -202,7 +198,6 @@ const Overview = ({ jobList }) => {
     if (updateModal) {
       setUpdateModal(false)
       if (jobListId && accessToken) {
-        console.log("getting jobsList users")
         dispatch(fetchJobListUsers(jobListId, accessToken))
       }
     } else {
@@ -631,7 +626,6 @@ const Overview = ({ jobList }) => {
                       const remainingDays =
                         noOfDays - (dayData?.userData.length || 0)
 
-                      console.log("dayData:", dayData)
                       let bColor = "green"
                       if (remainingDays == 0) {
                         bColor = "red"
@@ -663,7 +657,6 @@ const Overview = ({ jobList }) => {
                                 <>
                                   {/* let day_Index = {index + 1} */}
                                   {dayData.userData.map((user, userIndex) => {
-                                    // console.log("user:", user)
                                     let initials = ""
                                     if (user?.name) {
                                       const nameWithoutUnderscore =
